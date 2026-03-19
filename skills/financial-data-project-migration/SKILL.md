@@ -1,53 +1,59 @@
 ---
 name: financial-data-project-migration
-description: Plan migration of financial data projects from scattered scripts into a standard src-based repository layout, with directory planning, migration sequencing, and coordination guidance for related structure, documentation, takeover, and status-update skills.
+description: Advise financial-data Python projects that are migrating from scattered scripts, root-level functions, and transitional repositories into a standard src-based engineering layout. Use when Codex needs to inspect a project's current directory structure, script distribution, and document entrypoints; classify the project type and migration stage; recommend a target structure; classify file roles; produce a minimal migration TODO; and coordinate follow-up work with file-structure-check, documentation-governance, project-takeover, and update-project-status.
 ---
 
 # Financial Data Project Migration
 
-Use this skill to turn a finance-focused script collection into a standard `src` project blueprint before deeper refactoring begins.
+Turn a finance-oriented Python repository into a migration advisory pass before deeper refactoring begins.
 
-## Goal
+## Focus
 
-- Migrate projects built from scattered scripts into a maintainable `src`-oriented structure.
-- Focus on financial data extraction, transformation, analysis, reporting, and export workflows.
-- Produce a migration blueprint before code movement starts.
+- Inspect script-heavy or transition-state repositories.
+- Judge what kind of financial-data project the repository is today.
+- Judge how far the repository has already moved toward a standard `src` layout.
+- Recommend the smallest useful next migration step instead of attempting a full refactor in one pass.
 
-## Applicable Scenarios
+## Cover These Project Types
 
-- Data acquisition projects that mix API pulls, file ingestion, and ad hoc analysis scripts.
-- Quant or reporting repositories that grew from notebooks or task scripts into semi-structured codebases.
-- Financial data pipelines that need clearer separation between source code, configs, outputs, tests, and docs.
+- Data extraction projects.
+- Analysis and reporting projects.
+- Batch pipeline projects.
+- Migration-transition projects that mix old scripts with newer package structure.
 
-## Input
+## Use These Inputs
 
-- Existing project tree, including root scripts, notebooks, config files, and generated outputs.
-- Current entrypoints for extraction, analysis, report generation, or export tasks.
-- Known operational constraints such as scheduled jobs, local data directories, or environment requirements.
+- Read the current project directory structure.
+- Inspect where Python scripts are distributed across the root, subdirectories, and any emerging `src/` package.
+- Identify document entrypoints such as `README.md`, `docs/`, migration notes, or task/status files.
 
-## Output
+## Produce These Outputs
 
-- Recommended target structure centered on `src/`.
-- Migration blueprint describing which files move, which modules emerge, and which wrappers remain temporarily.
-- Directory planning for code, tests, configs, docs, data artifacts, and generated reports.
+- Project type judgment.
+- Migration stage judgment.
+- Target structure recommendation.
+- File role classification.
+- Minimal migration TODO.
 
-## Suggested Workflow
+## Follow This Workflow
 
-1. Inspect the current repository layout and identify script clusters by responsibility.
-2. Separate stable source code from runtime outputs, one-off experiments, and reference material.
-3. Draft a target `src` package layout for ingestion, processing, analytics, and output layers.
-4. Define a phased migration plan that preserves runnable entrypoints while modules are reorganized.
-5. Hand off follow-up checks to the related structure, documentation, onboarding, and status skills.
+1. Inspect the repository tree and note whether logic lives mainly in root scripts, grouped folders, notebooks, or `src/`.
+2. Cluster the current files into rough roles such as extraction, transformation, analytics, reporting, orchestration, configuration, tests, docs, and generated output.
+3. Infer the dominant project type from directory names, script names, and execution patterns.
+4. Infer the migration stage from signals such as the presence or absence of `src/`, root-level runnable scripts, tests, docs, and mixed old/new structures.
+5. Recommend a target `src`-oriented layout that keeps runtime data and generated artifacts outside the source package.
+6. Produce the smallest safe TODO list that helps the project move one stage forward without forcing a disruptive rewrite.
 
-## Relationship To Existing Skills
+## Coordinate With Other Skills
 
-- `file-structure-check`: validate the proposed or migrated directory layout against explicit rules.
-- `documentation-governance`: standardize migration docs, architecture notes, and operational guidance after the layout changes.
-- `project-takeover`: package the post-migration repository for new maintainers once the structure is stabilized.
-- `update-project-status`: keep taskboards and status artifacts current while migration phases are executed.
+- Use `file-structure-check` after drafting the target layout to validate whether the proposed or migrated structure is coherent.
+- Use `documentation-governance` when migration notes, architecture documents, handoff docs, or runbooks need cleanup after structure changes.
+- Use `project-takeover` after the repository becomes understandable enough to generate onboarding and takeover materials.
+- Use `update-project-status` to keep migration status, taskboards, and progress artifacts aligned with the current stage.
 
-## Safety Notes
+## Guardrails
 
-- Start with planning, not automated file moves.
-- Preserve backwards-compatible wrappers when jobs or operators still depend on old script entrypoints.
-- Keep generated financial outputs and sensitive data directories outside the planned source package.
+- Start with advisory analysis, not automated file movement.
+- Preserve old entry scripts as temporary wrappers when jobs, schedulers, or operators still depend on them.
+- Keep generated reports, exports, cache files, and local data directories outside the `src/` package.
+- Prefer minimal viable structure changes over abstract perfection.

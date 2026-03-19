@@ -21,5 +21,9 @@ Thumbs.db
 *.log
 
 # Temp
+.tmp/
 tmp/
 temp/
+
+# Env
+.env

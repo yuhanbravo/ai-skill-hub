@@ -1,0 +1,86 @@
+{
+  "project_profile": "application",
+  "strictness": "standard",
+  "required_directories": ["src", "tests", "docs"],
+  "optional_directories": ["config"],
+  "required_paths": [],
+  "allowed_source_directories": ["src", "scripts", "tools", "bin", "app", "lib", "packages"],
+  "allowed_test_directories": ["tests", "test"],
+  "allowed_doc_directories": ["docs", "doc"],
+  "allowed_config_directories": ["config", ".github", ".vscode"],
+  "root_doc_allowlist": [
+    "README.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "CODE_OF_CONDUCT.md",
+    "LICENSE.md",
+    "AGENTS.md",
+    "MIGRATION_PLAN.md"
+  ],
+  "root_config_allowlist": [
+    ".env",
+    ".env.example",
+    "pyproject.toml",
+    "package.json",
+    "package-lock.json",
+    "pnpm-lock.yaml",
+    "yarn.lock",
+    "Cargo.toml",
+    "go.mod",
+    "tsconfig.json",
+    "vite.config.ts",
+    "vite.config.js",
+    "docker-compose.yml",
+    "docker-compose.yaml",
+    "Dockerfile",
+    "Makefile"
+  ],
+  "skip_directories": [
+    ".git",
+    ".hg",
+    ".svn",
+    ".idea",
+    ".vscode",
+    ".pytest_cache",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".tox",
+    ".venv",
+    ".codex",
+    "venv",
+    "__pycache__",
+    "node_modules",
+    "dist",
+    "build",
+    "archive",
+    "backup",
+    "logs"
+  ],
+  "source_extensions": [".py", ".js", ".jsx", ".ts", ".tsx", ".java", ".go", ".rs", ".c", ".cc", ".cpp", ".h", ".hpp"],
+  "config_extensions": [".json", ".toml", ".yaml", ".yml", ".ini", ".cfg"],
+  "doc_extensions": [".md", ".rst", ".txt"],
+  "profiles": {
+    "application": {
+      "required_directories": ["src", "tests", "docs"],
+      "optional_directories": ["config"],
+      "required_paths": []
+    },
+    "data-project": {
+      "required_directories": ["data", "docs"],
+      "optional_directories": ["notebooks", "src", "tests", "config"],
+      "required_paths": []
+    },
+    "docs-only": {
+      "required_directories": ["docs"],
+      "optional_directories": ["assets"],
+      "required_paths": ["README.md"],
+      "allowed_source_directories": ["assets", "examples", "snippets"]
+    },
+    "monorepo": {
+      "required_directories": ["packages", "docs"],
+      "optional_directories": ["apps", "services", "tests", "config"],
+      "required_paths": []
+    }
+  }
+}

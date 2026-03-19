@@ -1,0 +1,12 @@
+{
+  "status_file": "reports/status.md",
+  "log_file": "reports/status.log",
+  "task_sources": [
+    {
+      "type": "file_glob",
+      "pattern": "docs/TASKBOARD.md",
+      "prefix": "docs/TASKBOARD.md"
+    }
+  ],
+  "sync_targets": []
+}

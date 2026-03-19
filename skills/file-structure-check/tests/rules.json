@@ -1,0 +1,12 @@
+{
+  "project_profile": "application",
+  "strictness": "standard",
+  "required_directories": [
+    "src",
+    "tests",
+    "docs"
+  ],
+  "required_paths": [
+    "README.md"
+  ]
+}

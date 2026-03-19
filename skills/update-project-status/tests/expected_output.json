@@ -1,0 +1,13 @@
+{
+  "stdout_contains": [
+    "Status file preview:",
+    "## Recent Features",
+    "feat: add sample feature",
+    "## Fixed Bugs",
+    "fix: patch sample bug",
+    "## Upcoming Tasks",
+    "docs/TASKBOARD.md: Review generated project status",
+    "Dry run status file target:",
+    "reports/status.md"
+  ]
+}

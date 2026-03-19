@@ -1,0 +1,19 @@
+{
+  "styleguide_paths": [
+    "docs/STYLEGUIDE.md"
+  ],
+  "scan_globs": [
+    "README.md",
+    "docs/**/*.md",
+    "docs_readable/**/*.md"
+  ],
+  "required_readme_sections": [
+    "overview",
+    "installation",
+    "usage"
+  ],
+  "api_doc_paths": [
+    "docs/api"
+  ],
+  "require_api_docs": true
+}

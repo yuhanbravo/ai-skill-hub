@@ -1,0 +1,17 @@
+{
+  "status_file": "docs/status.md",
+  "log_file": "docs/status_updates.log",
+  "shared_mode": "local_copy",
+  "feature_keywords": ["feat", "feature", "add", "implement", "support", "新增", "功能"],
+  "bugfix_keywords": ["fix", "bug", "hotfix", "repair", "修复", "问题"],
+  "next_task_keywords": ["todo", "next", "plan", "follow-up", "wip", "待办", "后续"],
+  "extra_source_globs": ["docs/TASKBOARD.md", "TODO.md", "todo.md"],
+  "task_sources": [
+    {"type": "file_glob", "pattern": "docs/**/*task*.md"},
+    {"type": "file_glob", "pattern": "TODO.md"},
+    {"type": "jira_json", "path": "exports/jira_issues.json", "accepted_statuses": ["To Do", "In Progress"]},
+    {"type": "trello_json", "path": "exports/trello_cards.json", "list_names": ["Todo", "Doing"]}
+  ],
+  "max_extra_tasks": 5,
+  "sync_targets": []
+}

@@ -1,0 +1,173 @@
+{
+  "styleguide_paths": [
+    "docs/STYLEGUIDE.md",
+    "docs/styleguide.md",
+    ".github/STYLEGUIDE.md"
+  ],
+  "root_readme": "README.md",
+  "scan_globs": [
+    "README.md",
+    "docs/**/*.md",
+    "docs_readable/**/*.md",
+    "*.md"
+  ],
+  "doc_layers": {
+    "engineering": {
+      "root": "docs"
+    },
+    "readable": {
+      "root": "docs_readable"
+    }
+  },
+  "categories": {
+    "architecture": {
+      "allowed_layers": ["engineering", "readable"],
+      "globs": [
+        "docs/architecture/**/*.md",
+        "docs/architecture/*.md",
+        "docs_readable/architecture/**/*.md",
+        "docs_readable/architecture/*.md"
+      ]
+    },
+    "design": {
+      "allowed_layers": ["engineering", "readable"],
+      "globs": [
+        "docs/design/**/*.md",
+        "docs/design/*.md",
+        "docs_readable/design/**/*.md",
+        "docs_readable/design/*.md"
+      ]
+    },
+    "decisions": {
+      "allowed_layers": ["engineering", "readable"],
+      "globs": [
+        "docs/decisions/**/*.md",
+        "docs/decisions/*.md",
+        "docs_readable/decisions/**/*.md",
+        "docs_readable/decisions/*.md"
+      ]
+    },
+    "runbooks": {
+      "allowed_layers": ["engineering"],
+      "globs": [
+        "docs/runbooks/**/*.md",
+        "docs/runbooks/*.md",
+        "docs_readable/runbooks/**/*.md",
+        "docs_readable/runbooks/*.md"
+      ]
+    },
+    "reference": {
+      "allowed_layers": ["engineering", "readable"],
+      "globs": [
+        "docs/reference/**/*.md",
+        "docs/reference/*.md",
+        "docs_readable/reference/**/*.md",
+        "docs_readable/reference/*.md"
+      ]
+    },
+    "api": {
+      "allowed_layers": ["engineering", "readable"],
+      "globs": [
+        "docs/api/**/*.md",
+        "docs/api/*.md",
+        "docs_readable/api/**/*.md",
+        "docs_readable/api/*.md"
+      ]
+    },
+    "onboarding": {
+      "allowed_layers": ["readable"],
+      "globs": [
+        "docs/onboarding/**/*.md",
+        "docs/onboarding/*.md",
+        "docs_readable/onboarding/**/*.md",
+        "docs_readable/onboarding/*.md"
+      ]
+    }
+  },
+  "authoritative_layer_roots": [
+    "docs/"
+  ],
+  "readable_target_categories": [
+    "architecture",
+    "design",
+    "decisions",
+    "reference",
+    "api",
+    "onboarding"
+  ],
+  "forbidden_name_patterns": [
+    "(?:^|[_\\-])v2\\.md$",
+    "(?:^|[_\\-])final\\.md$",
+    "(?:^|[_\\-])updated\\.md$"
+  ],
+  "archive_candidate_patterns": [
+    "(^|/)(archive|archives|history|historical)/",
+    "(^|/).*(legacy|deprecated|obsolete|superseded).*\\.md$"
+  ],
+  "dedupe_ignore_names": [
+    "README.md",
+    "STYLEGUIDE.md",
+    "AGENTS.md"
+  ],
+  "current_state_terms": [
+    "current state",
+    "current status",
+    "status:",
+    "last verified",
+    "current priority",
+    "current priorities"
+  ],
+  "decision_terms": [
+    "decision",
+    "decided",
+    "we decided",
+    "approved",
+    "authoritative"
+  ],
+  "required_readme_sections": [
+    "overview",
+    "installation",
+    "usage"
+  ],
+  "readme_section_aliases": {
+    "overview": ["overview", "about", "description", "project overview", "项目描述", "项目简介", "项目总览", "项目目标"],
+    "installation": ["installation", "install", "setup", "getting started", "安装说明", "安装", "部署"],
+    "usage": ["usage", "quick start", "run", "examples", "使用说明", "使用", "快速开始", "运行方式"]
+  },
+  "allow_section_substring_match": true,
+  "styleguide_required_section_headings": [
+    "Required README Sections",
+    "README Sections",
+    "README Requirements",
+    "必需的README章节",
+    "README章节要求",
+    "README必备章节"
+  ],
+  "api_doc_paths": [
+    "docs/api",
+    "docs/reference",
+    "openapi.yaml",
+    "openapi.yml",
+    "swagger.yaml",
+    "swagger.yml"
+  ],
+  "require_api_docs": false,
+  "template_language": "auto",
+  "default_templates": {
+    "overview": "## Overview\n\nDescribe the project goal, its main capabilities, and the current maintenance or release status.\n",
+    "installation": "## Installation\n\nDocument the supported setup flow for this project. Include the package manager, environment prerequisites, and at least one install command.\n",
+    "usage": "## Usage\n\nDocument the most common run flow for developers or operators. Include at least one local entrypoint and one validation command.\n"
+  },
+  "localized_templates": {
+    "en": {
+      "overview": "## Overview\n\nDescribe the project goal, its main capabilities, and the current maintenance or release status.\n",
+      "installation": "## Installation\n\nDocument the supported setup flow for this project. Include the package manager, environment prerequisites, and at least one install command.\n",
+      "usage": "## Usage\n\nDocument the most common run flow for developers or operators. Include at least one local entrypoint and one validation command.\n"
+    },
+    "zh": {
+      "overview": "## 项目概览\n\n请说明项目目标、核心能力以及当前维护或发布状态。\n",
+      "installation": "## 安装说明\n\n请补充本项目支持的安装流程，包括环境要求、包管理器以及至少一个安装命令。\n",
+      "usage": "## 使用说明\n\n请补充最常见的运行方式、入口命令或示例，并至少提供一个验证命令。\n"
+    }
+  }
+}

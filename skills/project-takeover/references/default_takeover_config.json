@@ -1,0 +1,11 @@
+{
+  "report_dir": "docs/takeover",
+  "safe_directories": ["src", "config", "tests", "docs"],
+  "doc_candidate_globs": ["README.md", "docs/**/*.md", "*.md"],
+  "priority_task_globs": ["docs/**/*task*.md", "docs/**/*todo*.md", "TODO.md", "todo.md", "*.todo.md"],
+  "shared_copy_mode": "local_copy",
+  "welcome_language": "en",
+  "install_commands": [],
+  "infer_install_commands": true,
+  "support_scripts": {}
+}

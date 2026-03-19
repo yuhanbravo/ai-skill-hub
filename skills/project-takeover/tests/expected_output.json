@@ -1,0 +1,10 @@
+{
+  "stdout_contains": [
+    "Planned report:",
+    "project_takeover_report.md",
+    "Planned onboarding summary:",
+    "project_onboarding_summary.md",
+    "Planned welcome email:",
+    "welcome_email.md"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "report_dir": "reports/takeover",
+  "doc_candidate_globs": [
+    "README.md",
+    "docs/**/*.md"
+  ],
+  "priority_task_globs": [
+    "docs/TASKS.md"
+  ],
+  "welcome_language": "en",
+  "safe_directories": [
+    "src",
+    "tests",
+    "docs"
+  ]
+}

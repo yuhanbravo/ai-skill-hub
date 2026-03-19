@@ -1,0 +1,34 @@
+{
+  "json_expect": [
+    {
+      "path": "missing_directories",
+      "contains": [
+        "src",
+        "tests",
+        "docs"
+      ]
+    },
+    {
+      "path": "missing_required_paths",
+      "len_equals": 0
+    },
+    {
+      "path": "misplaced_source_files",
+      "contains": [
+        "app.py"
+      ]
+    },
+    {
+      "path": "misplaced_config_files",
+      "contains": [
+        "settings.json"
+      ]
+    },
+    {
+      "path": "misplaced_doc_files",
+      "contains": [
+        "notes.md"
+      ]
+    }
+  ]
+}

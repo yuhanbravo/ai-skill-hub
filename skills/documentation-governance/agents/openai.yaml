@@ -1,0 +1,4 @@
+interface:
+  display_name: "Documentation Governance OS"
+  short_description: "Govern docs, docs_readable, naming, and source-of-truth boundaries."
+  default_prompt: "Audit this repository as a Documentation Governance OS: separate docs from docs_readable, detect duplicate or forbidden documents, and recommend merge, archive, or readable-summary actions."

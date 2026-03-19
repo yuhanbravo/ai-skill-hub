@@ -1,0 +1,61 @@
+{
+  "json_expect": [
+    {
+      "path": "styleguide_found",
+      "equals": true
+    },
+    {
+      "path": "readme.missing_sections",
+      "contains": [
+        "installation",
+        "usage"
+      ]
+    },
+    {
+      "path": "heading_issues",
+      "len_at_least": 1
+    },
+    {
+      "path": "api_docs_found",
+      "contains": [
+        "docs/api"
+      ]
+    },
+    {
+      "path": "forbidden_documents",
+      "contains": [
+        "docs/architecture/roadmap_v2.md"
+      ]
+    },
+    {
+      "path": "ssot_conflicts",
+      "len_at_least": 1
+    },
+    {
+      "path": "archive_candidates",
+      "contains": [
+        "docs/archive/legacy-notes.md"
+      ]
+    },
+    {
+      "path": "layer_placement_conflicts",
+      "len_at_least": 1
+    },
+    {
+      "path": "readable_second_truth_conflicts",
+      "len_at_least": 1
+    },
+    {
+      "path": "engineering_docs.category_counts.reference",
+      "equals": 1
+    },
+    {
+      "path": "engineering_docs.category_counts.api",
+      "equals": 1
+    },
+    {
+      "path": "readable_docs.category_counts.onboarding",
+      "equals": 1
+    }
+  ]
+}

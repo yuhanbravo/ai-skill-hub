@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Takeover"
+  short_description: "Generate onboarding artifacts with configurable audits and sources."
+  default_prompt: "Prepare this repository for handoff by checking environment readiness, running configurable audits, summarizing project documents, and generating onboarding outputs."

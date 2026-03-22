@@ -1,3 +1,18 @@
+<#
+用途：
+- 将当前 skill hub Git 仓库导出为 `.bundle` 文件，便于离线备份或跨机器分发。
+
+适合什么时候用：
+- 想把整个仓库打成可导入的 Git bundle
+- 想同步一份“最新快照”到网盘或移动存储
+
+最短调用示例：
+- `.\tools\export_bundle.ps1`
+- `.\tools\export_bundle.ps1 -RepoPath 'D:\dev\codex-skill-hub' -OutputDir 'D:\backup\Git_Bundle'`
+
+注意：
+- 导出前会自动检查仓库状态；若存在变更，会自动统一提交后再导出。
+#>
 [CmdletBinding()]
 param(
     [string]$RepoPath = 'D:\dev\codex-skill-hub',
@@ -79,8 +94,16 @@ try {
     Write-Step 'Checking working tree status'
     $statusLines = @(Invoke-Git -Arguments @('-C', $resolvedRepoPath, 'status', '--porcelain=v1') -CaptureOutput)
     if ($statusLines.Count -gt 0) {
-        Invoke-Git -Arguments @('-C', $resolvedRepoPath, 'status')
-        throw 'Working tree is dirty. Export aborted.'
+        Write-Info 'Detected uncommitted changes. Creating a unified auto-commit before export.'
+        $commitMessage = 'chore(bundle): auto-commit before export ({0})' -f (Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
+
+        Invoke-Git -Arguments @('-C', $resolvedRepoPath, 'add', '-A')
+        Invoke-Git -Arguments @('-C', $resolvedRepoPath, 'commit', '-m', $commitMessage)
+
+        Write-Success "Auto-commit created: $commitMessage"
+    }
+    else {
+        Write-Info 'Working tree is clean. No auto-commit needed.'
     }
 
     $currentBranch = @(Invoke-Git -Arguments @('-C', $resolvedRepoPath, 'branch', '--show-current') -CaptureOutput)

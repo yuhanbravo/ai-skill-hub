@@ -32,6 +32,40 @@ python .codex/skills/update-project-status/scripts/install_post_commit_hook.py -
 python .codex/skills/update-project-status/scripts/install_post_commit_hook.py --root <project-root> --dry-run
 ```
 
+## Prompt Template
+
+Use this template when you want Codex to apply the skill:
+
+```text
+Use the `update-project-status` skill on this repository.
+
+Goal:
+- generate or refresh the project status report from recent Git history and task sources
+
+Target project root:
+- <project-root>
+
+Please:
+- inspect recent commits
+- include configured task sources if available
+- update the status document and log
+- summarize important changes, risks, and pending work
+
+Optional constraints:
+- config: <path-or-none>
+- status file: <path-or-default>
+- log file: <path-or-default>
+- shared doc: <path-or-none>
+- commit limit: <n-or-default>
+- dry run: <yes-or-no>
+- install post-commit hook: <yes-or-no>
+
+Expected result:
+- refreshed status output
+- short summary of what changed
+- any follow-up items or publication concerns
+```
+
 ## Task Sources
 
 `task_sources` entries can be:

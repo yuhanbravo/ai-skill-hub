@@ -31,6 +31,41 @@ Optional flags:
 - `--structure-script <path>`
 - `--docs-script <path>`
 
+## Prompt Template
+
+Use this template when you want Codex to apply the skill for a repository:
+
+```text
+Use the `project-takeover` skill on this repository.
+
+Goal:
+- Prepare a takeover/onboarding packet for the project.
+
+Target project root:
+- <project-root>
+
+What to focus on:
+- summarize the most important docs
+- identify likely task sources
+- check environment readiness
+- generate onboarding outputs
+
+Optional constraints:
+- config: <path-or-none>
+- report dir: <path-or-default>
+- shared dir: <path-or-none>
+- use dry run: <yes-or-no>
+- apply safe fixes: <yes-or-no>
+- run install commands: <yes-or-no>
+- external structure script: <path-or-none>
+- external docs script: <path-or-none>
+
+Expected result:
+- explain what you found
+- generate the takeover artifacts
+- call out risks, missing docs, and follow-up actions
+```
+
 ## Configuration
 
 Project-local overrides can live at `.codex/skill-config/project-takeover.json`.

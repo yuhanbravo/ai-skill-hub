@@ -1,3 +1,18 @@
+<#
+用途：
+- 从 `.bundle` 文件导入或更新 skill hub Git 仓库。
+
+适合什么时候用：
+- 在新机器上从 bundle 恢复仓库
+- 用 bundle 给现有本地仓库补最新提交
+
+最短调用示例：
+- `.\tools\import_bundle.ps1`
+- `.\tools\import_bundle.ps1 -RepoPath 'D:\dev\codex-skill-hub' -BundlePath 'D:\backup\codex-skill-hub_latest.bundle'`
+
+注意：
+- 如果目标仓库已存在，脚本会先检查工作区是否干净；有未提交改动时会中止导入。
+#>
 [CmdletBinding()]
 param(
     [string]$RepoPath = 'D:\dev\codex-skill-hub',

@@ -1,3 +1,20 @@
+<#
+用途：
+- 将 skill hub 中的全部或单个 skill 同步到一个非 Git 项目的 `.codex\skills` 目录下。
+
+适合什么时候用：
+- 给业务项目下发最新 skills
+- 目标项目不是独立 Git 仓库，或你只想做文件级同步
+
+最短调用示例：
+- `.\tools\sync_skills_to_nongit_project.ps1 -SkillHubPath 'D:\dev\codex-skill-hub' -ProjectPath 'D:\my-project'`
+- `.\tools\sync_skills_to_nongit_project.ps1 -SkillHubPath 'D:\dev\codex-skill-hub' -ProjectPath 'D:\my-project' -SkillName 'project-takeover' -DryRun`
+
+注意：
+- 不传 `-SkillName` 时会同步全部 skills
+- 会在目标项目的 `.codex\skills` 下写入版本说明文件
+- 使用 `robocopy /MIR`，建议先用 `-DryRun` 预览同步结果
+#>
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)]

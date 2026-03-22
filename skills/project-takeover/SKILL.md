@@ -53,6 +53,34 @@ Useful flags:
 - `--install`
 - `--dry-run`
 
+## Prompt Template
+
+Use or adapt this request when invoking the skill:
+
+```text
+Use the `project-takeover` skill for this repository and prepare a takeover packet.
+
+Project root: <project-root>
+Primary goal: <new-maintainer onboarding | repository handoff | takeover audit>
+
+Please:
+- inspect the repo and relevant docs
+- check environment readiness
+- run the available structure/documentation audits if appropriate
+- generate the takeover outputs
+- summarize the highest-priority risks and next steps
+
+Options:
+- config path: <path-or-none>
+- report dir: <path-or-default>
+- shared dir: <path-or-none>
+- dry run: <yes-or-no>
+- apply safe fixes: <yes-or-no>
+- install: <yes-or-no>
+- structure script override: <path-or-none>
+- docs script override: <path-or-none>
+```
+
 ## Config Notes
 
 - Default config lives in `references/default_takeover_config.json`.

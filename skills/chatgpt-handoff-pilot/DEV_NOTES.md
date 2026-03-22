@@ -69,3 +69,10 @@
 - 最小示例
 
 不建议过早引入只适用于单一项目的强绑定规则。
+
+## 2026-03-20 收工点
+
+- 已完成 Long_Short_Fund_Analysis / phase-2 boundary review 的真实试跑
+- 已补 execution pre-summary rule
+- 已确认可同步回 skill-hub
+- next: 选一个“轻量代码施工任务”再验证一次 handoff 流

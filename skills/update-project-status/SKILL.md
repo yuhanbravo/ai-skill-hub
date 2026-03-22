@@ -55,6 +55,32 @@ Useful flags:
 - `--limit <n>`
 - `--dry-run`
 
+## Prompt Template
+
+Use or adapt this request when invoking the skill:
+
+```text
+Use the `update-project-status` skill for this repository and refresh the status report.
+
+Project root: <project-root>
+Primary goal: <status refresh | recent change summary | publish status>
+
+Please:
+- inspect recent Git history
+- pull in configured task sources when available
+- update the status markdown and status log
+- note key progress, open risks, and pending work
+
+Options:
+- config path: <path-or-none>
+- status file override: <path-or-none>
+- log file override: <path-or-none>
+- shared doc override: <path-or-none>
+- commit limit: <n-or-default>
+- dry run: <yes-or-no>
+- install post-commit hook: <yes-or-no>
+```
+
 ## Config Notes
 
 - Default config lives in `references/default_status_config.json`.

@@ -1,101 +1,22 @@
-# Update Project Status Skill
+# Update Project Status
 
-## Purpose
+## What is this
 
-`update-project-status` builds a status document from recent Git commits plus optional external task sources. It can also publish that status through configurable sync targets.
+`update-project-status` 是一个项目状态更新型 skill，用来把近期 Git 历史与可用任务来源整理为状态文档、状态日志和可选同步结果。
 
-## Running The Script
+它保留原有脚本、CLI 参数和输出文件，但把执行过程明确组织为 `scan -> understand -> structure -> output` 四个阶段。
 
-```powershell
-python .codex/skills/update-project-status/scripts/update_project_status.py --root <project-root>
-```
+## When to use
 
-```powershell
-python .codex/skills/update-project-status/scripts/update_project_status.py --root <project-root> --dry-run
-```
+适合在你需要刷新项目状态、整理近期变更、准备阶段汇报或 handoff 状态摘要时使用。
 
-Optional flags:
-- `--config <path>`
-- `--status-file <path>`
-- `--log-file <path>`
-- `--shared-doc <path>`
-- `--limit <n>`
-- `--dry-run`
+如果你的目标是首次接管项目而不是更新持续状态，应优先考虑 `project-takeover`。
 
-Hook installation:
-
-```powershell
-python .codex/skills/update-project-status/scripts/install_post_commit_hook.py --root <project-root>
-```
-
-```powershell
-python .codex/skills/update-project-status/scripts/install_post_commit_hook.py --root <project-root> --dry-run
-```
-
-## Prompt Template
-
-Use this template when you want Codex to apply the skill:
+## Quick Start
 
 ```text
-Use the `update-project-status` skill on this repository.
-
-Goal:
-- generate or refresh the project status report from recent Git history and task sources
-
-Target project root:
-- <project-root>
-
-Please:
-- inspect recent commits
-- include configured task sources if available
-- update the status document and log
-- summarize important changes, risks, and pending work
-
-Optional constraints:
-- config: <path-or-none>
-- status file: <path-or-default>
-- log file: <path-or-default>
-- shared doc: <path-or-none>
-- commit limit: <n-or-default>
-- dry run: <yes-or-no>
-- install post-commit hook: <yes-or-no>
-
-Expected result:
-- refreshed status output
-- short summary of what changed
-- any follow-up items or publication concerns
+Use the `update-project-status` skill for this repository and refresh the status report.
+Project root: <project-root>
 ```
 
-## Task Sources
-
-`task_sources` entries can be:
-- `file_glob`
-- `jira_json`
-- `trello_json`
-- `command`
-
-This lets the status report combine Git history with exported or CLI-fetched work items from Jira, Trello, or other tooling.
-
-## Sync Targets
-
-`sync_targets` entries can be:
-- `local_copy`
-- `command`
-- `confluence_rest`
-- `google_docs_rest`
-
-Remote targets require authentication through environment variables referenced in the config.
-
-## Side Effects
-
-Without `--dry-run`, the script writes:
-- the configured status file
-- the configured status log
-- any configured sync targets
-
-The hook installer writes `.git/hooks/post-commit`.
-
-## Cross-Project Notes
-
-- The hook script now embeds the resolved Python executable and status-script path instead of assuming a fixed repository layout.
-- Use `command` task sources or sync targets when your team already has a preferred CLI or wrapper for Jira, Trello, Confluence, or Google Workspace.
+如需更细控制，可补充 `config path`、`status file override`、`log file override`、`shared doc override`、`commit limit`、`dry run`、`install post-commit hook` 等参数。详细阶段化执行方式见 [SKILL.md](/d:/dev/codex-skill-hub/skills/update-project-status/SKILL.md)。

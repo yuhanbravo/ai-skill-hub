@@ -7,8 +7,8 @@
 - 目标项目不是独立 Git 仓库，或你只想做文件级同步
 
 最短调用示例：
-- `.\tools\sync_skills_to_nongit_project.ps1 -SkillHubPath 'D:\dev\codex-skill-hub' -ProjectPath 'D:\my-project'`
-- `.\tools\sync_skills_to_nongit_project.ps1 -SkillHubPath 'D:\dev\codex-skill-hub' -ProjectPath 'D:\my-project' -SkillName 'project-takeover' -DryRun`
+- `.\tools\sync_skills_to_nongit_project.ps1 -ProjectPath 'D:\my-project'`
+- `.\tools\sync_skills_to_nongit_project.ps1 -ProjectPath 'D:\my-project' -SkillName 'project-takeover' -DryRun`
 
 注意：
 - 不传 `-SkillName` 时会同步全部 skills
@@ -17,8 +17,7 @@
 #>
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory = $true)]
-    [string]$SkillHubPath,
+    [string]$SkillHubPath = (Resolve-Path (Join-Path $PSScriptRoot '..')).ProviderPath,
 
     [Parameter(Mandatory = $true)]
     [string]$ProjectPath,

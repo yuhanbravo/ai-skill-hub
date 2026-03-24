@@ -17,7 +17,7 @@
 #>
 [CmdletBinding()]
 param(
-    [string]$SkillHubPath = (Resolve-Path (Join-Path $PSScriptRoot '..')).ProviderPath,
+    [string]$SkillHubPath,
 
     [Parameter(Mandatory = $true)]
     [string]$ProjectPath,
@@ -31,6 +31,25 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+if ([string]::IsNullOrWhiteSpace($SkillHubPath)) {
+    $scriptFilePath = if (-not [string]::IsNullOrWhiteSpace($PSCommandPath)) {
+        $PSCommandPath
+    }
+    elseif ($MyInvocation.MyCommand.Path) {
+        $MyInvocation.MyCommand.Path
+    }
+    else {
+        $null
+    }
+
+    if ([string]::IsNullOrWhiteSpace($scriptFilePath)) {
+        throw 'SkillHubPath was not provided and the script location could not be determined. Please pass -SkillHubPath explicitly.'
+    }
+
+    $scriptDirectory = Split-Path -Path $scriptFilePath -Parent
+    $SkillHubPath = (Resolve-Path -LiteralPath (Join-Path $scriptDirectory '..')).ProviderPath
+}
 
 function Write-Step {
     param(
@@ -51,7 +70,7 @@ function Write-Info {
     Write-Host "[INFO] $Message" -ForegroundColor Yellow
 }
 
-function Write-WarnMessage {
+function Write-WarningMessage {
     param(
         [Parameter(Mandatory = $true)]
         [string]$Message
@@ -69,7 +88,7 @@ function Write-Success {
     Write-Host "[SUCCESS] $Message" -ForegroundColor Green
 }
 
-function Assert-DirectoryExists {
+function Confirm-DirectoryExists {
     param(
         [Parameter(Mandatory = $true)]
         [string]$Path,
@@ -83,7 +102,7 @@ function Assert-DirectoryExists {
     }
 }
 
-function Ensure-Directory {
+function Initialize-Directory {
     param(
         [Parameter(Mandatory = $true)]
         [string]$Path
@@ -203,13 +222,13 @@ try {
     }
 
     Write-Step 'Validating paths'
-    Assert-DirectoryExists -Path $SkillHubPath -Description 'Skill hub path'
-    Assert-DirectoryExists -Path $ProjectPath -Description 'Project path'
+    Confirm-DirectoryExists -Path $SkillHubPath -Description 'Skill hub path'
+    Confirm-DirectoryExists -Path $ProjectPath -Description 'Project path'
 
     $resolvedSkillHubPath = (Resolve-Path -LiteralPath $SkillHubPath).ProviderPath
     $resolvedProjectPath = (Resolve-Path -LiteralPath $ProjectPath).ProviderPath
     $sourceSkillsRoot = Join-Path $resolvedSkillHubPath 'skills'
-    Assert-DirectoryExists -Path $sourceSkillsRoot -Description 'Skill hub skills directory'
+    Confirm-DirectoryExists -Path $sourceSkillsRoot -Description 'Skill hub skills directory'
 
     $hubVersionPath = Join-Path $resolvedSkillHubPath $HubVersionFile
     $skillsetVersion = Get-HubVersion -FilePath $hubVersionPath
@@ -223,8 +242,8 @@ try {
     Write-Info "Skillset version: $skillsetVersion"
 
     Write-Step 'Preparing target directories'
-    Ensure-Directory -Path $projectCodexPath
-    Ensure-Directory -Path $targetSkillsRoot
+    Initialize-Directory -Path $projectCodexPath
+    Initialize-Directory -Path $targetSkillsRoot
 
     if ([string]::IsNullOrWhiteSpace($SkillName)) {
         $syncedScope = 'all'
@@ -235,9 +254,9 @@ try {
     else {
         $syncedScope = $SkillName.Trim()
         $sourcePath = Join-Path $sourceSkillsRoot $syncedScope
-        Assert-DirectoryExists -Path $sourcePath -Description 'Source skill'
+        Confirm-DirectoryExists -Path $sourcePath -Description 'Source skill'
         $targetPath = Join-Path $targetSkillsRoot $syncedScope
-        Ensure-Directory -Path $targetPath
+        Initialize-Directory -Path $targetPath
         Write-Step "Syncing single skill: $syncedScope"
     }
 
@@ -252,18 +271,20 @@ try {
         'Synced by sync_skills_to_nongit_project.ps1. No project-side git command was executed.'
     }
 
-    $versionFileContent = New-VersionFileContent `
-        -SourceHub $HubName `
-        -SourcePath $sourcePath `
-        -SkillsetVersion $skillsetVersion `
-        -SyncedScope $syncedScope `
-        -RobocopyExitCode $robocopyExitCode `
-        -ProjectPathValue $resolvedProjectPath `
-        -Note $note
+    $versionFileParameters = @{
+        SourceHub        = $HubName
+        SourcePath       = $sourcePath
+        SkillsetVersion  = $skillsetVersion
+        SyncedScope      = $syncedScope
+        RobocopyExitCode = $robocopyExitCode
+        ProjectPathValue = $resolvedProjectPath
+        Note             = $note
+    }
+    $versionFileContent = New-VersionFileContent @versionFileParameters
 
     Write-Step 'Writing sync metadata'
     if ($DryRun) {
-        Write-WarnMessage "DryRun: would write version file to $versionFilePath"
+        Write-WarningMessage "DryRun: would write version file to $versionFilePath"
         Write-Host $versionFileContent
     }
     else {

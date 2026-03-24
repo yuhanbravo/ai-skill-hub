@@ -44,6 +44,23 @@ description: 基于目录、规则配置与 profile 审计仓库结构，通过 
 - 输出是结构化 `report`，包括缺失项、错位项、配置来源和建议修复动作
 - 可选的 `fix` 不是默认执行，而是基于报告结果，在后续单独、显式地进行人工修复或其他受控修复动作
 
+Input:
+- 目标目录
+- 结构规则
+- `profile`
+- `strictness`
+- 可选项目本地配置
+
+Process:
+- `audit`
+- `report`
+- `fix(optional)`
+
+Output:
+- 结构化 `report`
+- 缺失项与错位项
+- 建议修复动作
+
 这样组织的原因是，结构治理首先需要可靠审计，而不是直接改动。先做 `audit`，再看 `report`，最后才决定是否需要 `fix`，可以避免把启发式规则误当成自动改造命令。
 
 ## 5. 核心原则（Principles）
@@ -120,6 +137,7 @@ description: 基于目录、规则配置与 profile 审计仓库结构，通过 
 - fix 必须显式触发
 
 预期输出：
+- 按 `audit -> report -> fix(optional)` 推进
 - 审计结果
 - 问题清单
 - 建议修复项

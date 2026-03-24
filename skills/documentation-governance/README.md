@@ -1,60 +1,22 @@
 # Documentation Governance OS
 
-## Purpose
+## What is this
 
-`documentation-governance` helps audit and reorganize repository markdown using a dual-layer model:
+`documentation-governance` 是一个文档治理审计型 skill，用来基于双层文档模型、单一事实源和命名规则检查仓库 markdown 结构，并输出治理报告。
 
-- `docs/` for engineering source documents
-- `docs_readable/` for reader-oriented derivatives
+## When to use
 
-This README is a usage guide only. The rule authority lives in `SKILL.md`.
+适合在需要检查 `docs/` 与 `docs_readable/` 的关系、识别重复主题、命名违规、归档候选或 README 治理缺口时使用；如果目标是直接批量改写文档，这个 skill 不应作为第一步。
 
-## When To Use It
+## Quick Start
 
-Use the skill when you need to:
+```text
+Use the `documentation-governance` skill on this repository and audit the documentation structure.
+Project root: <project-root>
 
-- audit markdown structure
-- review duplicate or conflicting topic docs
-- identify merge or archive candidates
-- check whether `docs_readable/` is correctly separated from `docs/`
-- generate focused governance reports in dry-run mode
-
-## Execution Model
-
-The skill uses one central engine plus focused wrappers:
-
-- engine: `scripts/check_documentation_governance.py`
-- wrappers: `scan_documents.py`, `classify_documents.py`, `deduplicate_documents.py`, `archive_documents.py`, `generate_readable_docs.py`
-
-The wrappers expose filtered outputs from the same governance engine. They are task-oriented views, not separate rule engines.
-
-## Commands
-
-Central engine:
-
-```powershell
-python .codex/skills/documentation-governance/scripts/check_documentation_governance.py --root <project-root> --dry-run
+# optional
+# Config path: <path-or-none>
+# Dry run: yes/no
 ```
 
-Focused wrappers:
-
-```powershell
-python .codex/skills/documentation-governance/scripts/scan_documents.py --root <project-root> --dry-run
-python .codex/skills/documentation-governance/scripts/classify_documents.py --root <project-root> --dry-run
-python .codex/skills/documentation-governance/scripts/deduplicate_documents.py --root <project-root> --dry-run
-python .codex/skills/documentation-governance/scripts/archive_documents.py --root <project-root> --dry-run
-python .codex/skills/documentation-governance/scripts/generate_readable_docs.py --root <project-root> --dry-run
-```
-
-## Outputs
-
-Depending on the wrapper, the skill can report:
-
-- layer summaries
-- category placement
-- forbidden filenames
-- duplicate-topic findings
-- source-of-truth conflicts
-- archive candidates
-- readable-summary targets
-- readable-layer authority risks
+详细治理模式见 [SKILL.md](/d:/dev/codex-skill-hub/skills/documentation-governance/SKILL.md)。

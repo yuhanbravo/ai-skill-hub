@@ -44,7 +44,22 @@ description: 为陌生仓库生成可交接的 takeover packet，通过阶段化
 - `structure`：把离散信息整理成可交接结构，包括文档摘要、任务来源摘要和环境结论
 - `output`：生成 takeover packet，并按需要写入报告目录或同步到本地共享目录
 
-输入是项目根目录、可选配置、可选脚本覆盖和运行参数；中间动作是阶段化检查与整理；输出是三类接管文档以及相关风险、后续动作和环境结论。
+Input:
+- 项目根目录
+- 可选配置
+- 可选脚本覆盖
+- 运行参数
+
+Process:
+- `scan`
+- `understand`
+- `structure`
+- `output`
+
+Output:
+- 三类接管文档
+- 风险与后续动作
+- 环境结论
 
 这样组织的原因是，项目接管并不是一次普通扫描，而是一个需要逐步建立理解的过程。先 `scan`，再 `understand`，再 `structure`，最后 `output`，可以在不改变原始脚本逻辑的情况下，让 AI 更稳定地执行整个接手流程。
 
@@ -123,6 +138,7 @@ description: 为陌生仓库生成可交接的 takeover packet，通过阶段化
 - 不做未授权的高风险副作用
 
 预期输出：
+- 按 `scan -> understand -> structure -> output` 推进
 - `project_takeover_report.md`
 - `project_onboarding_summary.md`
 - `welcome_email.md`

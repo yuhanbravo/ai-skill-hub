@@ -1,189 +1,170 @@
 ---
 name: documentation-governance
-description: Documentation Governance OS for repository documentation structure, dual-layer docs governance, source-of-truth control, deduplication, archiving, and readable-doc generation. Use when Codex needs to audit or reorganize project documentation, separate engineering docs from human-readable docs, prevent document sprawl, detect duplicate or conflicting markdown files, enforce naming rules, or generate docs_readable from docs.
+description: 基于双层文档模型、单一事实源与命名规则审计仓库文档，通过 audit、report 与显式 fix，帮助治理重复、冲突、归档和 docs_readable 派生文档。
 ---
 
 # Documentation Governance OS
 
-Use this skill to govern repository documentation as a two-layer system with one rule source, one execution engine, and one engineering source of truth per topic.
+## 1. 背景（Problem Context）
 
-## Authority Model
+这个 skill 用来解决仓库文档治理中的一个高频问题：文档会随着项目演进不断增长，但如果缺少稳定规则，就容易出现同主题多份文档、工程文档与阅读文档混杂、命名失控、过时文件悬挂、`README.md` 过度膨胀，以及 `docs_readable/` 反过来变成第二事实源等问题。
 
-Treat this file as the only top-level rule authority for the skill.
+`documentation-governance` 的目标不是简单“清理 markdown”，而是用一套稳定的治理模型来审计文档结构、识别来源冲突、控制双层文档关系，并在必要时对 README 或可读层文档进行受控修复。
 
-Use the rest of the skill folder by role only:
+它在 skill-hub 中更适合作为 `tool` 型 skill 理解，但不是普通脚本说明，而是一个围绕文档治理规则运行的审计型 pattern：先检查，再报告，最后才决定是否进入显式修复。
 
-- `README.md`
-  usage guide and operator-facing explanation only
-- `references/*.md`
-  explanatory supporting material only
-- `references/default_governance.json`
-  machine configuration only
-- `scripts/check_documentation_governance.py`
-  central execution engine
-- other `scripts/*.py`
-  focused wrappers over the central engine
+## 2. 适用场景（When to Use）
 
-If any supporting file appears to define a different rule than this file, follow this file and then fix the supporting file.
+适合在以下场景使用：
 
-## Layer Model
+- 仓库 markdown 文件持续增长，需要建立稳定文档治理结构
+- 需要区分 `docs/` 的工程事实层与 `docs_readable/` 的阅读衍生层
+- 需要识别重复文档、同主题多源、命名违规或归档候选文件
+- 需要判断新文档应新建、合并、归档，还是生成 readable summary
+- 需要对 README 章节完整性做治理检查，或在结构已明确后显式补写缺失章节
 
-Treat documentation as two layers:
+## 3. 不适用场景（When NOT to Use）
 
-- `docs/`
-  engineering layer and canonical source-of-truth layer
-- `docs_readable/`
-  human-readable derivative layer
+以下情况不适合使用这个 skill：
 
-Apply these non-negotiable rules:
+- 当前目标只是撰写单个新文档，而不是治理整体文档结构
+- 项目已经有更成熟且强制执行的本地文档治理机制，并且不需要额外报告
+- 任务只需要回答某个文档内容问题，而不是检查文档层级、命名和事实源关系
+- 希望直接批量重写、迁移或清理文档，但并未先做治理审计
+- 不允许对 README 或文档层做任何显式写入，而当前任务又要求自动修复
 
-- keep one engineering source of truth per topic
-- never let `docs_readable/` become an independent authority
-- prefer merge over creating a new sibling markdown file
-- treat `README.md` as the project entrypoint, not the full authority archive
+## 4. 核心模式（Pattern）
 
-## Category Model
+### Audit Pattern（审计模式）
 
-Use one shared category vocabulary across the skill:
+这个 pattern 的核心是把文档治理稳定组织为 `audit -> report -> fix(optional)`：
 
-- `architecture`
-- `design`
-- `decisions`
-- `runbooks`
-- `reference`
-- `api`
-- `onboarding`
+- 输入是项目根目录、治理配置、markdown 文件树、可选 style guide，以及可选 `--write`、`--report`、`--json` 等输出控制参数
+- 处理中执行扫描与校验，检查文档层级、分类归属、重复主题、命名违规、单一事实源冲突、README 章节缺口与 readable layer 风险
+- 输出是结构化 `report`，包括治理摘要、高优先级问题、建议动作、可生成目标和冲突清单
+- 可选的 `fix` 仅在显式授权时发生，例如补写缺失 README 章节或生成报告文件；默认不自动进入写入模式
 
-Apply category-to-layer rules:
+Input:
+- 项目根目录
+- 治理配置
+- markdown 文件树
+- 可选 style guide
+- 可选 `--write`、`--report`、`--json` 等输出控制参数
 
-- engineering-first categories:
-  `architecture`, `design`, `decisions`, `runbooks`, `reference`, `api`
-- readable-first category:
-  `onboarding`
-- dual-layer categories when a readable companion is justified:
-  `architecture`, `design`, `decisions`, `reference`, `api`
-- do not require readable mirrors for every category
-- do not place canonical runbooks in `docs_readable/` unless the file is explicitly a reader-oriented summary
+Process:
+- `audit`
+- `report`
+- `fix(optional)`
 
-## Trigger Conditions
+Output:
+- 结构化 `report`
+- 高优先级问题
+- 建议动作、可生成目标和冲突清单
 
-Use this skill when the repository has any of these goals or problems:
+这样组织的原因是，文档治理首先需要稳定判断“哪里失控、哪里重复、哪里越权”，而不是立刻改动文件。先 `audit`，再 `report`，最后才进入 `fix`，可以避免把治理规则误用成粗暴重写命令。
 
-- markdown files are growing without a stable structure
-- the project needs a clean split between maintainer docs and reader docs
-- multiple documents appear to cover the same topic
-- version-suffixed markdown files are appearing
-- Codex needs to decide merge vs archive vs create vs readable-summary
-- Codex needs to verify whether a new document should exist at all
+## 5. 核心原则（Principles）
 
-## Single Source Of Truth Rules
+- 先审计文档事实，再做结构治理。  
+  Audit documentation facts before enforcing structure changes.
 
-Before creating any new markdown file, answer all three checks:
+- 一个主题只保留一个工程事实源。  
+  Keep one engineering source of truth per topic.
 
-1. does a same-topic document already exist?
-2. should the new content be merged into that document instead?
-3. would the new file create a second engineering-layer source of truth?
+- 默认不改变项目，只做观察和结构化输出。  
+  Do not modify the project unless explicitly allowed.
 
-If the answer to any check is yes, do not create the new standalone file.
+- `docs_readable/` 只能是衍生层，不能反向成为权威层。  
+  Treat `docs_readable/` as a derivative layer, not an authority layer.
 
-## Hard Constraints
+- fix 必须显式触发，并且晚于审计结论。  
+  Any fix action must be explicit and come after the audit conclusion.
 
-Enforce these constraints without exception:
+## 6. 执行流程（Execution Steps）
 
-- do not create `*_v2.md`
-- do not create `*_final.md`
-- do not create `*_updated.md`
-- do not create two engineering-layer docs for the same topic unless the split is explicit and category-driven
-- do not place canonical engineering content in `docs_readable/`
-- do not place reader-facing derivative summaries in `docs/` when they belong in `docs_readable/`
-- do not let `docs_readable/` introduce current-state, decision, or status claims that are absent from the engineering source
+1. `audit`：解析治理输入。  
+   读取项目根目录、默认治理配置、项目覆盖配置和显式参数；确认 `--config`、`--dry-run`、`--write`、`--report`、`--json` 等输入，并识别 style guide、`README.md`、`docs/`、`docs_readable/` 以及本次适用的分类与命名规则。
 
-## Execution Model
+2. `audit`：扫描文档树并执行检查。  
+   收集 markdown 文件，检查 heading 结构、README 必需章节、分类放置、层级归属、禁止命名、重复主题、单一事实源冲突、readable layer 第二事实源风险、归档候选与可读层生成目标。此阶段默认只观察，不写入文档。
 
-Use a single execution engine with focused wrappers:
+3. `report`：输出治理结果。  
+   生成工程层摘要、阅读层摘要、高优先级问题、建议动作、冲突清单和归档候选；如启用 `--json`，输出机器可读结果；如指定 `--report`，则将治理报告写入目标文件。报告应清楚区分“问题发现”和“建议修复”，而不是把建议动作当成已执行事实。
 
-- central engine:
-  `scripts/check_documentation_governance.py`
-- focused wrappers:
-  `scan_documents.py`, `classify_documents.py`, `deduplicate_documents.py`, `archive_documents.py`, `generate_readable_docs.py`
+4. `fix`：决定是否进行显式修复。  
+   只有在用户明确授权，且治理结论已经清楚时，才允许进入 fix，例如使用 `--write` 为 README 补齐缺失章节，或在后续单独执行归档、去重、readable 生成等受控动作。默认不应自动合并、删除、重命名或改写文档内容。
 
-The wrappers do not implement independent governance engines. They invoke the central engine and expose focused views for specific tasks.
+5. 输出治理回顾。  
+   在最终结果中说明本次治理使用的配置来源、扫描范围、主要冲突、建议动作，以及哪些内容只是报告建议、哪些内容已经被显式写入或生成。
 
-## Workflow
+## 7. 约束（Constraints）
 
-1. run the central engine or the correct focused wrapper in `--dry-run`
-2. inspect layer placement, duplicate findings, forbidden names, archive candidates, and readable-layer risks
-3. decide the canonical engineering document for each topic
-4. archive or merge non-canonical files
-5. generate or refresh `docs_readable/` only when a real reading need exists
-6. patch README only after structure decisions are already stable
+- 默认只做审计与报告输出，不自动重命名、归档、合并或删除文档
+- `fix` 必须显式触发；`--write` 仅用于治理已经清楚后的 README 章节补写，不应扩展为任意文档重写
+- 不得改变既有 CLI 参数、双层文档模型、分类词汇、命名禁用规则或报告语义
+- `docs/` 应继续被视为工程事实层，`docs_readable/` 只能是衍生层，不能升格为第二权威层
+- 支持文件可以解释规则，但 `SKILL.md` 仍是该 skill 的顶层规则表达，不应被辅助文件覆盖
 
-## Inputs
+## 8. 风险（Risks）
 
-Typical inputs are:
+- 误判风险：主题去重、层级归属或分类判断可能对边界模糊的文档产生 false positive
+- 误修复风险：如果在未确认事实源前就执行归档、合并或 README 补写，可能强化错误结构
+- 规则不完整风险：项目实际文档体系若未被配置充分描述，报告可能遗漏冲突或给出过强建议
+- readable layer 风险：若忽视 `docs_readable/` 的衍生定位，可能让阅读文档反向成为第二事实源
+- 权威冲突风险：若使用 supporting files 覆盖 `SKILL.md` 规则，可能造成治理口径不一致
 
-- project root
-- optional governance config
-- markdown tree
-- optional style guide
+## 9. Prompt 模板（Reusable Prompt）
 
-## Outputs
+### 模板 1：标准文档治理审计模板
 
-The governance engine may report:
+```text
+请使用 `documentation-governance` 处理以下任务。
 
-- engineering-layer summary
-- readable-layer summary
-- forbidden filename findings
-- duplicate-topic findings
-- engineering-layer source-of-truth conflicts
-- readable-layer second-truth conflicts
-- archive candidates
-- missing readable-summary targets
-- concrete merge, rename, archive, or readable-summary actions
+背景：
+- 需要检查仓库文档结构、事实源关系和重复问题
 
-## Commands
+目标：
+- 输出文档治理审计结果，并给出建议动作
 
-Central engine:
+范围：
+- 检查 `docs/` 与 `docs_readable/` 的层级关系
+- 检查重复主题、命名违规、归档候选和 README 缺口
+- 默认只做 audit 和 report
 
-```powershell
-python .codex/skills/documentation-governance/scripts/check_documentation_governance.py --root <project-root> --dry-run
+约束：
+- 默认不改变项目，只做观察和结构化输出
+- fix 必须显式触发
+
+预期输出：
+- 按 `audit -> report -> fix(optional)` 推进
+- 治理报告
+- 高优先级问题
+- 建议动作与待确认项
 ```
 
-Focused wrappers:
+### 模板 2：严格治理执行模板
 
-```powershell
-python .codex/skills/documentation-governance/scripts/scan_documents.py --root <project-root> --dry-run
-python .codex/skills/documentation-governance/scripts/classify_documents.py --root <project-root> --dry-run
-python .codex/skills/documentation-governance/scripts/deduplicate_documents.py --root <project-root> --dry-run
-python .codex/skills/documentation-governance/scripts/archive_documents.py --root <project-root> --dry-run
-python .codex/skills/documentation-governance/scripts/generate_readable_docs.py --root <project-root> --dry-run
+```text
+请按 `documentation-governance` 的方法执行本次任务。
+
+要求：
+- 先总结你对治理目标的理解
+- 按 `audit -> report -> fix(optional)` 三段执行
+- 明确当前使用的配置来源、扫描范围和输出方式
+- 报告中区分“问题发现”和“建议修复”
+- 未显式授权时，不执行任何 fix
+
+任务内容：
+- Project root: <project-root>
+- Config path: <path-or-none>
+- Dry run: <yes-or-no>
+- JSON output: <yes-or-no>
+- Report path: <path-or-none>
+- Write README sections: <yes-or-no>
 ```
 
-Useful flags:
+## 10. 总结（Summary）
 
-- `--config <path>`
-- `--dry-run`
-- `--json`
-- `--report <path>`
-- `--write` only for README section patching after governance is already clear
+`documentation-governance` 最适合解决“文档结构是否失控、事实源是否冲突、哪些文档应该合并归档或生成 readable summary”这一类问题。它的核心价值是把文档治理变成稳定的审计和决策流程，而不是随手整理 markdown。
 
-## Resource Map
-
-Use these files as support, not as alternate law sources:
-
-- `references/document_structure_standard.md`
-  explains the category and placement model from this file
-- `references/naming_rules.md`
-  explains naming examples and anti-examples from this file
-- `references/anti_pattern.md`
-  explains typical failure modes covered by this file
-- `references/default_governance.json`
-  stores machine-readable defaults derived from this file
-
-## Safety Rules
-
-- prefer merge over creation
-- prefer archive over silent deletion
-- prefer one canonical engineering document plus one readable derivative over multiple peer files
-- keep the readable layer concise
-- if the project has protected operational docs, preserve filenames and improve placement or linkage around them instead of renaming casually
+使用时最重要的边界是两条：第一，默认只做 `audit` 和 `report`，不自动修改文档；第二，任何 `fix` 都必须显式触发，并基于单一事实源与双层文档模型做受控执行。

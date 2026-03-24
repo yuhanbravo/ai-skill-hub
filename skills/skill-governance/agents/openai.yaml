@@ -1,0 +1,10 @@
+name: skill-governance
+description: Evaluate and refactor skills in skill-hub using a controlled governance workflow.
+
+entry: prompts/skill-governor.md
+
+sub_agents:
+  evaluator:
+    path: prompts/skill-evaluator.md
+  refactor:
+    path: prompts/skill-refactor.md

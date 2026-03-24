@@ -1,31 +1,22 @@
 # Financial Data Project Migration
 
-This skill helps a financial-data Python project move from scattered scripts toward a more maintainable structure without forcing a rewrite.
+## What is this
 
-It does:
-- Judge the current project type and migration stage.
-- Detect conservative high-risk migration signals for desktop Excel + Wind projects.
-- Suggest a target structure for a later `src` transition.
-- Classify current files by role.
-- Produce a minimal migration TODO for the next step.
-- Include example mapping candidates from the current project.
+`financial-data-project-migration` 是一个面向金融数据 Python 项目的迁移顾问型 skill，用来先判断项目类型与迁移阶段，再给出最小安全迁移建议。
 
-It does not:
-- Perform large-scale refactors.
-- Move files automatically.
-- Integrate with live business repositories in this first version.
+## When to use
 
-It fits projects such as:
-- Data extraction repositories.
-- Analysis and reporting repositories.
-- Batch pipeline repositories.
-- Hybrid migration-state repositories that mix root scripts with emerging package structure.
-- Desktop Excel + Wind + network-share coupled script projects.
+适合在脚本密集、Excel 资产较多、存在 Wind 或桌面环境耦合时，先做保守迁移判断；如果目标是直接审计目录或立即重构，这个 skill 不是第一步。
 
-First-version output includes:
-- Project type judgment.
-- Migration stage judgment.
-- Fixed risk assessment.
-- Target structure recommendation with example mapping candidates.
-- File role classification.
-- Minimal migration TODO.
+## Quick Start
+
+```text
+Use the `financial-data-project-migration` skill on this repository and prepare a migration advisory.
+Project root: <project-root>
+
+# optional
+# Need mapping candidates: yes/no
+# Need minimal TODO: yes/no
+```
+
+详细迁移 playbook 见 [SKILL.md](/d:/dev/codex-skill-hub/skills/financial-data-project-migration/SKILL.md)。

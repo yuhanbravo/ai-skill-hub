@@ -84,7 +84,7 @@ function Assert-DirectoryExists {
     }
 }
 
-function Ensure-Directory {
+function New-DirectoryIfMissing {
     param(
         [Parameter(Mandatory = $true)]
         [string]$Path
@@ -112,8 +112,24 @@ function Get-NormalizedRelativePath {
         [string]$FullPath
     )
 
-    $relativePath = [System.IO.Path]::GetRelativePath($RootPath, $FullPath)
-    return $relativePath -replace '/', '\\'
+    $normalizedRootPath = [System.IO.Path]::GetFullPath($RootPath)
+    $normalizedFullPath = [System.IO.Path]::GetFullPath($FullPath)
+    $rootPrefix = if ($normalizedRootPath.EndsWith('\') -or $normalizedRootPath.EndsWith('/')) {
+        $normalizedRootPath
+    }
+    else {
+        "$normalizedRootPath\"
+    }
+
+    if ([System.IO.Path]::GetPathRoot($normalizedRootPath) -ne [System.IO.Path]::GetPathRoot($normalizedFullPath)) {
+        throw "Cannot compute relative path across different drive roots: $normalizedRootPath -> $normalizedFullPath"
+    }
+
+    if (-not $normalizedFullPath.StartsWith($rootPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+        throw "Path is not under root: $normalizedFullPath -> $normalizedRootPath"
+    }
+
+    return $normalizedFullPath.Substring($rootPrefix.Length)
 }
 
 function Get-SkillFiles {
@@ -176,7 +192,7 @@ function Copy-PlannedFiles {
     $copied = @()
     foreach ($item in $Plan) {
         $targetParent = Split-Path -Parent $item.TargetPath
-        Ensure-Directory -Path $targetParent
+        New-DirectoryIfMissing -Path $targetParent
 
         if ($DryRun) {
             Write-Info "DryRun: would copy $($item.RelativePath) [$($item.Status)]"
@@ -222,7 +238,7 @@ try {
         }
 
         Write-WarnMessage "Target skill does not exist and will be created: $targetSkillPath"
-        Ensure-Directory -Path $targetSkillPath
+        New-DirectoryIfMissing -Path $targetSkillPath
     }
 
     $copyPlan = @(Get-CopyPlan -SourceRoot $sourceSkillPath -TargetRoot $targetSkillPath)

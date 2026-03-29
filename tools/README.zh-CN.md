@@ -5,9 +5,11 @@
 ## export_bundle.ps1
 
 用途：
+
 - 把当前 skill hub Git 仓库导出成 `.bundle` 文件。
 
 适合什么时候用：
+
 - 需要离线备份仓库
 - 需要把仓库打包后同步到另一台机器
 
@@ -17,19 +19,31 @@
 .\tools\export_bundle.ps1
 ```
 
+显式传入提交日志：
+
+```powershell
+.\tools\export_bundle.ps1 `
+  -CommitMessage 'chore(bundle): export latest skill-hub snapshot'
+```
+
 常用参数：
+
 - `-RepoPath`：要导出的仓库路径
 - `-OutputDir`：bundle 输出目录
+- `-CommitMessage`：工作区不干净时可直接传入提交日志，避免交互输入
 
 注意：
-- 要求仓库工作区干净，否则会拒绝导出。
+
+- 工作区不干净时，脚本会要求输入提交日志，随后自动提交并导出。
 
 ## import_bundle.ps1
 
 用途：
+
 - 从 `.bundle` 文件恢复或更新本地 skill hub 仓库。
 
 适合什么时候用：
+
 - 新机器初始化 skill hub
 - 用 bundle 更新已有本地仓库
 
@@ -40,18 +54,22 @@
 ```
 
 常用参数：
+
 - `-RepoPath`：目标仓库路径
 - `-BundlePath`：bundle 文件路径
 
 注意：
+
 - 如果目标仓库已存在，必须是干净工作区。
 
 ## sync_skill_from_project_to_hub.ps1
 
 用途：
+
 - 把真实项目里的单个 skill 同步回当前 hub。
 
 适合什么时候用：
+
 - 你在业务项目里试跑并修改了 skill
 - 想把某个 skill 的改动回收进母库
 
@@ -65,6 +83,7 @@
 ```
 
 常用参数：
+
 - `-ProjectPath`：真实项目路径
 - `-SkillHubPath`：当前 hub 路径
 - `-SkillName`：要同步的 skill 名称
@@ -72,14 +91,17 @@
 - `-CreateIfMissing`：hub 中缺失时自动创建
 
 注意：
+
 - 来源固定为项目下的 `.codex\skills\<SkillName>`。
 
 ## sync_skills_to_nongit_project.ps1
 
 用途：
+
 - 把 hub 中的全部或单个 skill 下发到一个非 Git 项目的 `.codex\skills`。
 
 适合什么时候用：
+
 - 想把最新 skill 集合推送到业务项目
 - 目标项目只需要同步文件，不需要完整 Git 仓库
 
@@ -102,14 +124,58 @@
 ```
 
 常用参数：
+
 - `-SkillHubPath`：hub 路径
 - `-ProjectPath`：目标项目路径
 - `-SkillName`：可选，只同步一个 skill
 - `-DryRun`：只预览不同步
 
 注意：
+
 - 默认使用镜像同步思路，建议第一次先 `-DryRun`。
 - 同步后会在目标项目写入一个 `_skillset_version.txt` 元数据文件。
+- 全量同步时会同步 canonical skill 目录与 `_protocol/`，不会再把 `skills/` 根下的说明文件和模板文件一起下发。
+
+## generate_skill_metadata.py
+
+用途：
+
+- 从 canonical `skills/` 生成 `skills_index.json`，并刷新 `.agents/skills/*.md` flat summaries。
+
+适合什么时候用：
+
+- 你修改了某个 `SKILL.md` 的 metadata 或 Invocation
+- 想重新生成机器可读索引和 flat discovery 文件
+
+最短调用：
+
+```powershell
+python .\tools\generate_skill_metadata.py
+```
+
+## skill_router.py
+
+用途：
+
+- 根据 `task_description` 自动匹配最合适的 skill，并给出置信度和原因。
+
+最短调用：
+
+```powershell
+python .\tools\skill_router.py "整理技能索引并检查文档治理"
+```
+
+## skill_pipeline.py
+
+用途：
+
+- 将复合任务拆成子任务，并顺序匹配多个 skill。
+
+最短调用：
+
+```powershell
+python .\tools\skill_pipeline.py "接管仓库并更新状态"
+```
 
 ## 使用建议
 

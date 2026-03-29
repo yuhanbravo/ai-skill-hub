@@ -1,6 +1,16 @@
 ---
 name: file-structure-check
-description: 基于目录、规则配置与 profile 审计仓库结构，通过 audit、report 与可选 fix 建议，帮助识别缺失目录、缺失路径和错位文件。
+description: "Use when auditing repository folder structure, required directories, missing paths, or misplaced files against a profile."
+metadata:
+  triggers:
+    - audit repository folder structure
+    - check required directories and paths
+    - detect misplaced files in a repo
+    - validate project layout against a profile
+    - generate a structure audit report
+  side_effects:
+    - read_only
+    - write_files
 ---
 
 # File Structure Check
@@ -168,3 +178,53 @@ Output:
 `file-structure-check` 最适合解决“当前仓库结构是否符合既定规则，以及有哪些结构问题需要治理”这一类问题。它的核心价值是提供结构化审计与可追踪报告，而不是直接重构仓库。
 
 使用时最重要的边界是两条：第一，默认只做 `audit` 和 `report`；第二，任何 `fix` 都必须显式触发，并结合项目本地规则判断，而不能把建议修复自动当成正确答案。
+
+## Invocation
+
+### When to use
+
+- 当任务目标是检查仓库目录结构是否符合约定、识别缺失路径或错位文件，而不是直接重构目录时使用。
+
+### Input Example
+
+```text
+Use file-structure-check for this task.
+
+task_description:
+- Validate the repository layout against the data-project profile.
+
+constraints:
+- Do not move files or create directories.
+- Report suggested fixes separately from detected issues.
+
+expected_output:
+- Structure audit report
+- Missing paths list
+- Misplaced files list
+
+context_files:
+- skills/
+- tests/
+- docs/
+```
+
+### Output Example
+
+```text
+execution_plan:
+- Resolve the active profile and strictness.
+- Scan the repository tree.
+- Report missing paths and misplaced files.
+
+changes_made:
+- No files were modified.
+- Produced a structure audit summary.
+
+files_touched:
+- skills/
+- tests/
+- docs/
+
+risks:
+- Some directories may intentionally deviate from the default profile and need local confirmation.
+```

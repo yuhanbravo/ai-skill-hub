@@ -1,6 +1,16 @@
 ---
 name: documentation-governance
-description: 基于双层文档模型、单一事实源与命名规则审计仓库文档，通过 audit、report 与显式 fix，帮助治理重复、冲突、归档和 docs_readable 派生文档。
+description: "Use when auditing documentation structure, duplicate markdown, README governance, or docs/docs_readable boundaries."
+metadata:
+  triggers:
+    - audit repository documentation structure
+    - detect duplicate markdown documents
+    - fix README governance issues
+    - classify docs and docs_readable layers
+    - archive or merge outdated documentation
+  side_effects:
+    - read_only
+    - write_files
 ---
 
 # Documentation Governance OS
@@ -168,3 +178,53 @@ Output:
 `documentation-governance` 最适合解决“文档结构是否失控、事实源是否冲突、哪些文档应该合并归档或生成 readable summary”这一类问题。它的核心价值是把文档治理变成稳定的审计和决策流程，而不是随手整理 markdown。
 
 使用时最重要的边界是两条：第一，默认只做 `audit` 和 `report`，不自动修改文档；第二，任何 `fix` 都必须显式触发，并基于单一事实源与双层文档模型做受控执行。
+
+## Invocation
+
+### When to use
+
+- 当任务目标是审计文档结构、识别重复主题、控制事实源边界，而不是直接写新文档时使用。
+
+### Input Example
+
+```text
+Use documentation-governance for this task.
+
+task_description:
+- Audit the repository documentation structure and detect duplicate markdown topics.
+
+constraints:
+- Do not rewrite docs unless explicitly allowed.
+- Keep docs/ as the engineering source of truth.
+
+expected_output:
+- Documentation audit summary
+- Duplicate or conflict list
+- Suggested follow-up actions
+
+context_files:
+- README.md
+- docs/
+- docs_readable/
+```
+
+### Output Example
+
+```text
+execution_plan:
+- Scan markdown files and README structure.
+- Check duplicate topics and docs/docs_readable boundaries.
+- Produce an audit report without applying fixes.
+
+changes_made:
+- No repository files were modified.
+- Produced a governance summary with follow-up suggestions.
+
+files_touched:
+- README.md
+- docs/
+- docs_readable/
+
+risks:
+- Some duplicate-topic judgments still require project-local confirmation.
+```

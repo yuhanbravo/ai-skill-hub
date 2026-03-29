@@ -9,18 +9,30 @@
 最短调用示例：
 - `.\tools\export_bundle.ps1`
 - `.\tools\export_bundle.ps1 -RepoPath 'D:\dev\codex-skill-hub' -OutputDir 'D:\backup\Git_Bundle'`
+- `\.\tools\export_bundle.ps1 -CommitMessage 'chore(bundle): export latest skill-hub snapshot'`
 
 注意：
-- 导出前会自动检查仓库状态；若存在变更，会自动统一提交后再导出。
+- 导出前会自动检查仓库状态；若存在变更，会要求输入提交日志，然后自动提交并导出。
 #>
 [CmdletBinding()]
 param(
-    [string]$RepoPath = 'D:\dev\codex-skill-hub',
-    [string]$OutputDir = 'D:\BaiduSyncdisk\Python_Lib\Git_Bundle'
+    [string]$RepoPath,
+    [string]$OutputDir,
+    [string]$CommitMessage
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+if ([string]::IsNullOrWhiteSpace($RepoPath)) {
+    $scriptDirectory = Split-Path -Path $PSCommandPath -Parent
+    $RepoPath = (Resolve-Path -LiteralPath (Join-Path $scriptDirectory '..')).ProviderPath
+}
+
+if ([string]::IsNullOrWhiteSpace($OutputDir)) {
+    $repoParent = Split-Path -Path $RepoPath -Parent
+    $OutputDir = Join-Path $repoParent 'Git_Bundle'
+}
 
 function Write-Step {
     param(
@@ -48,6 +60,25 @@ function Write-Success {
     )
 
     Write-Host "[SUCCESS] $Message" -ForegroundColor Green
+}
+
+function Get-CommitMessage {
+    param(
+        [string]$ProvidedMessage
+    )
+
+    if (-not [string]::IsNullOrWhiteSpace($ProvidedMessage)) {
+        return $ProvidedMessage.Trim()
+    }
+
+    Write-Host "" 
+    Write-Host '[INPUT] Working tree has changes and export requires a commit message.' -ForegroundColor Magenta
+    $enteredMessage = Read-Host 'Enter commit message'
+    if ([string]::IsNullOrWhiteSpace($enteredMessage)) {
+        throw 'Commit message cannot be empty when exporting a dirty repository.'
+    }
+
+    return $enteredMessage.Trim()
 }
 
 function Invoke-Git {
@@ -94,13 +125,13 @@ try {
     Write-Step 'Checking working tree status'
     $statusLines = @(Invoke-Git -Arguments @('-C', $resolvedRepoPath, 'status', '--porcelain=v1') -CaptureOutput)
     if ($statusLines.Count -gt 0) {
-        Write-Info 'Detected uncommitted changes. Creating a unified auto-commit before export.'
-        $commitMessage = 'chore(bundle): auto-commit before export ({0})' -f (Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
+        Write-Info 'Detected uncommitted changes. A commit message is required before export.'
+        $resolvedCommitMessage = Get-CommitMessage -ProvidedMessage $CommitMessage
 
         Invoke-Git -Arguments @('-C', $resolvedRepoPath, 'add', '-A')
-        Invoke-Git -Arguments @('-C', $resolvedRepoPath, 'commit', '-m', $commitMessage)
+        Invoke-Git -Arguments @('-C', $resolvedRepoPath, 'commit', '-m', $resolvedCommitMessage)
 
-        Write-Success "Auto-commit created: $commitMessage"
+        Write-Success "Auto-commit created: $resolvedCommitMessage"
     }
     else {
         Write-Info 'Working tree is clean. No auto-commit needed.'

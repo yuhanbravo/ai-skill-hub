@@ -139,6 +139,49 @@ function Get-HubVersion {
     return $version
 }
 
+function Get-SyncableEntries {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$SkillsRoot
+    )
+
+    return Get-ChildItem -LiteralPath $SkillsRoot -Directory | Where-Object {
+        $_.Name -eq '_protocol' -or (Test-Path -LiteralPath (Join-Path $_.FullName 'SKILL.md') -PathType Leaf)
+    } | Sort-Object Name
+}
+
+function Remove-StaleTargetEntries {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$TargetRoot,
+
+        [Parameter(Mandatory = $true)]
+        [string[]]$AllowedNames,
+
+        [Parameter(Mandatory = $true)]
+        [string]$PreserveFileName
+    )
+
+    if (-not (Test-Path -LiteralPath $TargetRoot -PathType Container)) {
+        return
+    }
+
+    $preservedNames = @($AllowedNames + $PreserveFileName)
+    foreach ($entry in (Get-ChildItem -LiteralPath $TargetRoot -Force)) {
+        if ($preservedNames -contains $entry.Name) {
+            continue
+        }
+
+        if ($DryRun) {
+            Write-WarningMessage "DryRun: would remove stale entry $($entry.FullName)"
+        }
+        else {
+            Remove-Item -LiteralPath $entry.FullName -Recurse -Force
+            Write-Info "Removed stale entry: $($entry.FullName)"
+        }
+    }
+}
+
 function Invoke-RobocopySync {
     param(
         [Parameter(Mandatory = $true)]
@@ -249,7 +292,17 @@ try {
         $syncedScope = 'all'
         $sourcePath = $sourceSkillsRoot
         $targetPath = $targetSkillsRoot
-        Write-Step 'Syncing all skills'
+        $syncableEntries = @(Get-SyncableEntries -SkillsRoot $sourceSkillsRoot)
+        if ($syncableEntries.Count -eq 0) {
+            throw "No syncable skill directories found under: $sourceSkillsRoot"
+        }
+
+        $allowedEntryNames = @($syncableEntries | ForEach-Object { $_.Name })
+        Write-Step 'Cleaning stale target entries'
+        Remove-StaleTargetEntries -TargetRoot $targetSkillsRoot -AllowedNames $allowedEntryNames -PreserveFileName $VersionFileName
+
+        Write-Step 'Syncing all canonical skill entries'
+        Write-Info "Entries: $($allowedEntryNames -join ', ')"
     }
     else {
         $syncedScope = $SkillName.Trim()
@@ -260,7 +313,20 @@ try {
         Write-Step "Syncing single skill: $syncedScope"
     }
 
-    $robocopyExitCode = Invoke-RobocopySync -SourcePath $sourcePath -TargetPath $targetPath
+    if ([string]::IsNullOrWhiteSpace($SkillName)) {
+        $robocopyExitCodes = @()
+        foreach ($entry in $syncableEntries) {
+            $entryTargetPath = Join-Path $targetSkillsRoot $entry.Name
+            Initialize-Directory -Path $entryTargetPath
+            Write-Info "Syncing entry: $($entry.Name)"
+            $robocopyExitCodes += Invoke-RobocopySync -SourcePath $entry.FullName -TargetPath $entryTargetPath
+        }
+        $robocopyExitCode = @($robocopyExitCodes | Measure-Object -Maximum).Maximum
+    }
+    else {
+        $robocopyExitCode = Invoke-RobocopySync -SourcePath $sourcePath -TargetPath $targetPath
+    }
+
     Write-Info "robocopy exit code: $robocopyExitCode"
 
     $versionFilePath = Join-Path $targetSkillsRoot $VersionFileName

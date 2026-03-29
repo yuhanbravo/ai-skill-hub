@@ -1,6 +1,16 @@
 ---
 name: project-takeover
-description: 为陌生仓库生成可交接的 takeover packet，通过阶段化扫描、理解、结构化整理与产出，支持新维护者接管和 onboarding。
+description: "Use when onboarding a new maintainer or AI agent, scanning an unfamiliar repository, or generating a takeover packet."
+metadata:
+   triggers:
+      - prepare a repository takeover packet
+      - onboard a new maintainer or AI agent
+      - scan docs config and task sources
+      - generate an onboarding summary for a project
+      - analyze an unfamiliar repository before maintenance
+   side_effects:
+      - read_only
+      - write_files
 ---
 
 # Project Takeover
@@ -174,3 +184,53 @@ Output:
 `project-takeover` 最适合解决“第一次进入一个仓库，如何快速建立接手理解并生成可交付的 onboarding 材料”这一类问题。它的价值不只是扫描，而是把扫描结果组织成真正可用于交接的结构化产物。
 
 使用时最重要的边界有两条：第一，优先尊重项目本地配置和本地工具链；第二，把整个过程按 `scan → understand → structure → output` 推进，而不是跳过理解阶段直接生成报告。
+
+## Invocation
+
+### When to use
+
+- 当一个新维护者或 AI 需要首次进入陌生仓库，并快速生成 takeover packet 与 onboarding 材料时使用。
+
+### Input Example
+
+```text
+Use project-takeover for this task.
+
+task_description:
+- Prepare a takeover packet for this unfamiliar repository.
+
+constraints:
+- Prefer project-local configuration over shared assumptions.
+- Do not run install or safe-fix actions unless explicitly authorized.
+
+expected_output:
+- Takeover report
+- Onboarding summary
+- Risk list and next steps
+
+context_files:
+- README.md
+- docs/
+- tests/
+```
+
+### Output Example
+
+```text
+execution_plan:
+- Scan the repository environment, docs, and task sources.
+- Build a takeover understanding summary.
+- Produce takeover packet outputs.
+
+changes_made:
+- Generated takeover-oriented findings and onboarding summary.
+- Did not execute install or safe-fix actions.
+
+files_touched:
+- README.md
+- docs/
+- tests/
+
+risks:
+- Some project-local task sources may still require manual confirmation.
+```

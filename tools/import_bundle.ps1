@@ -15,12 +15,25 @@
 #>
 [CmdletBinding()]
 param(
-    [string]$RepoPath = 'D:\dev\codex-skill-hub',
-    [string]$BundlePath = 'D:\BaiduSyncdisk\Python_Lib\Git_Bundle\codex-skill-hub_latest.bundle'
+    [string]$RepoPath,
+    [string]$BundlePath
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+if ([string]::IsNullOrWhiteSpace($RepoPath)) {
+    $scriptDirectory = Split-Path -Path $PSCommandPath -Parent
+    $RepoPath = Join-Path (Split-Path -Path $scriptDirectory -Parent) 'codex-skill-hub'
+    if (Test-Path -LiteralPath $RepoPath -PathType Container) {
+        $RepoPath = (Resolve-Path -LiteralPath $RepoPath).ProviderPath
+    }
+}
+
+if ([string]::IsNullOrWhiteSpace($BundlePath)) {
+    $repoParent = Split-Path -Path $RepoPath -Parent
+    $BundlePath = Join-Path $repoParent 'Git_Bundle\codex-skill-hub_latest.bundle'
+}
 
 function Write-Step {
     param(

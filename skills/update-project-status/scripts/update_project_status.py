@@ -16,6 +16,18 @@ from typing import Any
 
 DEFAULT_CONFIG_PATH = Path(__file__).resolve().parents[1] / "references" / "default_status_config.json"
 PROJECT_OVERRIDE_PATH = Path(".codex/skill-config/update-project-status.json")
+SKILLHUB_TEMPLATE_PATH = Path(__file__).resolve().parents[1] / "templates" / "skillhub_status_template.md"
+
+DEFAULT_SKILLHUB_SECTIONS = [
+    "Current SkillHub Status",
+    "Skill Coverage",
+    "Invocation Readiness",
+    "Adapter / Discovery Coverage",
+    "Governance & Testing Status",
+    "Automation Readiness",
+    "Open Gaps",
+    "Next Recommended Moves",
+]
 
 
 @dataclass
@@ -268,6 +280,112 @@ def ensure_parent(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
 
 
+def format_commit_lines(commits: list[CommitEntry], empty_message: str, limit: int = 5) -> list[str]:
+    if not commits:
+        return [f"- {empty_message}"]
+    return [f"- `{commit.sha}` {commit.subject} ({commit.author}, {commit.date})" for commit in commits[:limit]]
+
+
+def select_commits_by_keywords(commits: list[CommitEntry], keywords: list[str]) -> list[CommitEntry]:
+    lowered_keywords = [keyword.lower() for keyword in keywords]
+    return [commit for commit in commits if any(keyword in commit.subject.lower() for keyword in lowered_keywords)]
+
+
+def load_skillhub_sections(path: Path = SKILLHUB_TEMPLATE_PATH) -> list[str]:
+    if not path.exists():
+        return DEFAULT_SKILLHUB_SECTIONS
+    headings = [
+        line[3:].strip()
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.startswith("## ")
+    ]
+    return headings or DEFAULT_SKILLHUB_SECTIONS
+
+
+def build_skillhub_status_content(
+    git_available: bool,
+    config_path: Path,
+    commits: list[CommitEntry],
+    features: list[CommitEntry],
+    bugfixes: list[CommitEntry],
+    next_task_items: list[str],
+    extra_tasks: list[str],
+    sync_targets: list[dict[str, Any]],
+    config: dict[str, Any],
+) -> str:
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    tracked_dimensions = [str(item) for item in config.get("status_dimensions", [])]
+    invocation_commits = select_commits_by_keywords(commits, ["invocation", "trigger", "router", "pipeline", "metadata", "handoff"])
+    adapter_commits = select_commits_by_keywords(commits, ["adapter", ".agents", ".github", "copilot", "index", "discovery"])
+    governance_commits = select_commits_by_keywords(commits, ["governance", "test", "validate", "template", "structure"])
+    automation_commits = select_commits_by_keywords(commits, ["tool", "script", "generate", "sync", "router", "pipeline", "automation"])
+
+    section_content: dict[str, list[str]] = {
+        "Current SkillHub Status": [
+            "- Repository mode: `skill-hub`.",
+            f"- Template type: `{config.get('template_type', 'default')}`.",
+            f"- Git data available: `{'yes' if git_available else 'no'}`.",
+            f"- Config source: `{config_path}`.",
+            f"- Recent commits inspected: `{len(commits)}`.",
+            (
+                "- Tracked status dimensions: "
+                + ", ".join(f"`{item}`" for item in tracked_dimensions)
+                if tracked_dimensions
+                else "- No explicit status dimensions configured."
+            ),
+        ],
+        "Skill Coverage": format_commit_lines(
+            features,
+            "No recent skill-expansion or standardization commits detected in the inspected window.",
+        ),
+        "Invocation Readiness": format_commit_lines(
+            invocation_commits,
+            "No explicit invocation-oriented commit subjects detected in the inspected window.",
+        ),
+        "Adapter / Discovery Coverage": format_commit_lines(
+            adapter_commits,
+            "No explicit adapter or discovery-layer commit subjects detected in the inspected window.",
+        ),
+        "Governance & Testing Status": format_commit_lines(
+            governance_commits or bugfixes,
+            "No explicit governance or test-oriented commit subjects detected in the inspected window.",
+        ),
+        "Automation Readiness": format_commit_lines(
+            automation_commits,
+            "No explicit automation-oriented commit subjects detected in the inspected window.",
+        ),
+        "Open Gaps": [],
+        "Next Recommended Moves": [f"- {item}" for item in next_task_items],
+    }
+
+    open_gaps = section_content["Open Gaps"]
+    if not extra_tasks:
+        open_gaps.append("- No extra task sources contributed items to enrich the status update.")
+    if not sync_targets:
+        open_gaps.append("- No configured sync targets are present for downstream publishing.")
+    if not invocation_commits:
+        open_gaps.append("- Invocation readiness must be inferred from repository state rather than recent commit subjects alone.")
+    if not adapter_commits:
+        open_gaps.append("- Adapter/discovery readiness is not explicitly visible in the inspected commit subjects.")
+    if not open_gaps:
+        open_gaps.append("- No major structural gaps were inferred from the inspected signals.")
+
+    lines = [
+        "# SkillHub Status",
+        "",
+        f"- Updated at: `{now}`",
+        f"- Git data available: `{'yes' if git_available else 'no'}`",
+        f"- Config: `{config_path}`",
+        f"- Template: `{SKILLHUB_TEMPLATE_PATH}`",
+        "",
+    ]
+    for heading in load_skillhub_sections():
+        lines.extend([f"## {heading}", ""])
+        lines.extend(section_content.get(heading, ["- No renderer output for this section."]))
+        lines.append("")
+    return "\n".join(lines).rstrip() + "\n"
+
+
 def build_status_content(git_available: bool, config_path: Path, commits: list[CommitEntry], features: list[CommitEntry], bugfixes: list[CommitEntry], next_task_items: list[str], extra_tasks: list[str], sync_targets: list[dict[str, Any]]) -> str:
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     lines = [
@@ -307,6 +425,32 @@ def build_status_content(git_available: bool, config_path: Path, commits: list[C
     if not git_available:
         lines.append("- Git repository metadata was not available in the target root, so the status relies on fallback task sources.")
     return "\n".join(lines) + "\n"
+
+
+def render_status_content(
+    git_available: bool,
+    config_path: Path,
+    commits: list[CommitEntry],
+    features: list[CommitEntry],
+    bugfixes: list[CommitEntry],
+    next_task_items: list[str],
+    extra_tasks: list[str],
+    sync_targets: list[dict[str, Any]],
+    config: dict[str, Any],
+) -> str:
+    if str(config.get("template_type", "default")).lower() == "skillhub":
+        return build_skillhub_status_content(
+            git_available,
+            config_path,
+            commits,
+            features,
+            bugfixes,
+            next_task_items,
+            extra_tasks,
+            sync_targets,
+            config,
+        )
+    return build_status_content(git_available, config_path, commits, features, bugfixes, next_task_items, extra_tasks, sync_targets)
 
 
 def append_log_line(git_available: bool, commits: list[CommitEntry], status_file: Path, sync_targets: list[dict[str, Any]]) -> str:
@@ -465,7 +609,17 @@ def main() -> int:
     extra_tasks = collect_external_tasks(root, config)
     next_task_items = [commit.subject for commit in explicit_next_tasks] or infer_next_tasks(features, bugfixes, others, extra_tasks)
     sync_target_config = build_sync_targets(config, shared_doc)
-    status_content = build_status_content(git_available, config_path, commits, features, bugfixes, next_task_items, extra_tasks, sync_target_config)
+    status_content = render_status_content(
+        git_available,
+        config_path,
+        commits,
+        features,
+        bugfixes,
+        next_task_items,
+        extra_tasks,
+        sync_target_config,
+        config,
+    )
     log_line = append_log_line(git_available, commits, status_file, sync_target_config)
 
     if args.dry_run:

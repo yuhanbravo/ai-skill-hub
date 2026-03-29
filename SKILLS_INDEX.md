@@ -1,0 +1,97 @@
+# SKILLS_INDEX
+
+This file is the cross-AI, repository-level skill index for tools that cannot automatically discover canonical skills or need a quick invocation-oriented overview.
+
+## Canonical Rule
+
+- Canonical source of truth: `skills/<skill>/`
+- Primary adapter layer: `.agents/skills/<skill>/SKILL.md`
+- Flat adapter summary: `.agents/skills/<skill>.md`
+- Copilot fallback layer: `.github/skills/<skill>.md`
+- Unified invocation contract: `skills/_protocol/skill_invocation.md`
+
+## Skill Catalog
+
+| Category | Use scenario classification | Name | Canonical path | Adapter entry | Flat entry | Copilot entry |
+| --- | --- | --- | --- | --- | --- | --- |
+| template | handoff / bounded execution | `chatgpt-handoff-pilot` | `skills/chatgpt-handoff-pilot/` | `.agents/skills/chatgpt-handoff-pilot/SKILL.md` | `.agents/skills/chatgpt-handoff-pilot.md` | `.github/skills/chatgpt-handoff-pilot.md` |
+| audit | documentation audit / README governance | `documentation-governance` | `skills/documentation-governance/` | `.agents/skills/documentation-governance/SKILL.md` | `.agents/skills/documentation-governance.md` | `.github/skills/documentation-governance.md` |
+| audit | folder structure audit / misplaced files | `file-structure-check` | `skills/file-structure-check/` | `.agents/skills/file-structure-check/SKILL.md` | `.agents/skills/file-structure-check.md` | `.github/skills/file-structure-check.md` |
+| project | financial-data migration advisory | `financial-data-project-migration` | `skills/financial-data-project-migration/` | `.agents/skills/financial-data-project-migration/SKILL.md` | `.agents/skills/financial-data-project-migration.md` | `.github/skills/financial-data-project-migration.md` |
+| project | repository onboarding / takeover packet | `project-takeover` | `skills/project-takeover/` | `.agents/skills/project-takeover/SKILL.md` | `.agents/skills/project-takeover.md` | `.github/skills/project-takeover.md` |
+| governance | single-skill evaluation / controlled rewrite | `skill-governance` | `skills/skill-governance/` | `.agents/skills/skill-governance/SKILL.md` | `.agents/skills/skill-governance.md` | `.github/skills/skill-governance.md` |
+| project | Git-based status refresh / weekly summary | `update-project-status` | `skills/update-project-status/` | `.agents/skills/update-project-status/SKILL.md` | `.agents/skills/update-project-status.md` | `.github/skills/update-project-status.md` |
+
+## Per-Skill Invocation Overview
+
+### chatgpt-handoff-pilot
+
+- Use scenario classification: `handoff`, `task package`, `bounded execution`, `execution report`
+- Triggers: `prepare a handoff task package`; `bounded execution with execution report`; `split planning and implementation across AI agents`; `update the project handoff manual`; `enforce task boundaries for another agent`
+- Side effects: `read_only`, `write_files`
+- Invocation example: `Use chatgpt-handoff-pilot for this task. task_description: Prepare a bounded handoff package for updating docs/HANDOFF.md.`
+- Inputs: task package, local handoff rules, target files or directories
+- Outputs: bounded implementation result, execution report, optional handoff document update
+
+### documentation-governance
+
+- Use scenario classification: `docs audit`, `duplicate detection`, `README governance`, `docs_readable boundary control`
+- Triggers: `audit repository documentation structure`; `detect duplicate markdown documents`; `fix README governance issues`; `classify docs and docs_readable layers`; `archive or merge outdated documentation`
+- Side effects: `read_only`, `write_files`
+- Invocation example: `Use documentation-governance for this task. task_description: Audit the repository documentation structure and detect duplicate markdown topics.`
+- Inputs: repository root, markdown tree, governance config, optional style guide
+- Outputs: audit report, duplicate/conflict findings, optional explicit doc fixes
+
+### file-structure-check
+
+- Use scenario classification: `folder audit`, `required path validation`, `misplaced file detection`
+- Triggers: `audit repository folder structure`; `check required directories and paths`; `detect misplaced files in a repo`; `validate project layout against a profile`; `generate a structure audit report`
+- Side effects: `read_only`, `write_files`
+- Invocation example: `Use file-structure-check for this task. task_description: Validate the repository layout against the data-project profile.`
+- Inputs: target directory, rules, profile, strictness, optional local overrides
+- Outputs: structure audit report, missing paths, misplaced files, repair suggestions
+
+### financial-data-project-migration
+
+- Use scenario classification: `migration advisory`, `Excel-heavy project assessment`, `boundary-first planning`
+- Triggers: `assess financial data project migration readiness`; `classify Excel and Python script sprawl`; `recommend a safe target structure for a data project`; `evaluate Wind or desktop Excel coupling`; `draft a minimal migration todo`
+- Side effects: `read_only`, `write_files`
+- Invocation example: `Use financial-data-project-migration for this task. task_description: Assess whether this financial-data Python repository is ready for structure migration.`
+- Inputs: project root, Python scripts, Excel assets, coupling signals, document entrypoints
+- Outputs: migration advisory, project-type judgment, risk summary, target-structure recommendation, minimal todo
+
+### project-takeover
+
+- Use scenario classification: `repository onboarding`, `takeover packet`, `first-repo scan`
+- Triggers: `prepare a repository takeover packet`; `onboard a new maintainer or AI agent`; `scan docs config and task sources`; `generate an onboarding summary for a project`; `analyze an unfamiliar repository before maintenance`
+- Side effects: `read_only`, `write_files`
+- Invocation example: `Use project-takeover for this task. task_description: Prepare a takeover packet for this unfamiliar repository.`
+- Inputs: project root, optional config, optional script overrides, runtime parameters
+- Outputs: takeover report, onboarding summary, environment findings, follow-up actions
+
+### skill-governance
+
+- Use scenario classification: `skill evaluation`, `diagnosis`, `controlled refactor gating`
+- Triggers: `evaluate a skill against the template`; `diagnose skill maturity and structure`; `score a skill and decide rewrite level`; `govern a single skill before refactor`; `perform a controlled skill rewrite`
+- Side effects: `read_only`, `write_files`
+- Invocation example: `Use skill-governance on <skill-path> rewrite=false`
+- Inputs: one target skill path, current structure, rewrite authorization
+- Outputs: scorecard, diagnosis, maturity decision, optional controlled rewrite result
+
+### update-project-status
+
+- Use scenario classification: `status refresh`, `weekly summary`, `handoff-ready status update`
+- Triggers: `refresh project status from Git history`; `generate a weekly project summary`; `merge commits and task sources into a status report`; `sync project status to a shared document`; `produce a handoff status update`
+- Side effects: `read_only`, `write_files`, `requires_git`
+- Invocation example: `Use update-project-status for this task. task_description: Refresh the project status report from recent Git history and current task sources.`
+- Inputs: project root, recent Git history, optional task sources, config, output overrides
+- Outputs: status markdown, status log, optional sync result, handoff-ready status summary
+
+## Interpretation Rules For Other AI Tools
+
+1. Always treat `skills/` as the canonical source.
+2. Use `.agents/skills/*.md` for the fastest flat discovery pass.
+3. Use `.agents/skills/<skill>/SKILL.md` when a skill-aware agent expects a directory-based entry.
+4. Use `.github/skills/` as the Copilot-oriented fallback discovery layer.
+5. If adapter files and canonical files differ, prefer `skills/<skill>/SKILL.md`.
+6. When invoking a skill, follow `skills/_protocol/skill_invocation.md` before applying any skill-specific steps.

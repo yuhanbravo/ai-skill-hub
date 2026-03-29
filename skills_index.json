@@ -1,0 +1,122 @@
+[
+  {
+    "name": "chatgpt-handoff-pilot",
+    "path": "skills/chatgpt-handoff-pilot",
+    "category": "template",
+    "triggers": [
+      "prepare a handoff task package",
+      "bounded execution with execution report",
+      "split planning and implementation across AI agents",
+      "update the project handoff manual",
+      "enforce task boundaries for another agent"
+    ],
+    "side_effects": [
+      "read_only",
+      "write_files"
+    ],
+    "invocation_example": "Use chatgpt-handoff-pilot for this task. task_description: - Prepare a bounded handoff package for updating docs/HANDOFF.md. constraints: - Do not edit any Python scripts. - Keep docs/HANDOFF.md as the single source of truth. expected_output: - Updated handoff document - Execution report context_files: - docs/HANDOFF.md - AGENTS.md"
+  },
+  {
+    "name": "documentation-governance",
+    "path": "skills/documentation-governance",
+    "category": "audit",
+    "triggers": [
+      "audit repository documentation structure",
+      "detect duplicate markdown documents",
+      "fix README governance issues",
+      "classify docs and docs_readable layers",
+      "archive or merge outdated documentation"
+    ],
+    "side_effects": [
+      "read_only",
+      "write_files"
+    ],
+    "invocation_example": "Use documentation-governance for this task. task_description: - Audit the repository documentation structure and detect duplicate markdown topics. constraints: - Do not rewrite docs unless explicitly allowed. - Keep docs/ as the engineering source of truth. expected_output: - Documentation audit summary - Duplicate or conflict list - Suggested follow-up actions context_files: - README.md - docs/ - docs_readable/"
+  },
+  {
+    "name": "file-structure-check",
+    "path": "skills/file-structure-check",
+    "category": "audit",
+    "triggers": [
+      "audit repository folder structure",
+      "check required directories and paths",
+      "detect misplaced files in a repo",
+      "validate project layout against a profile",
+      "generate a structure audit report"
+    ],
+    "side_effects": [
+      "read_only",
+      "write_files"
+    ],
+    "invocation_example": "Use file-structure-check for this task. task_description: - Validate the repository layout against the data-project profile. constraints: - Do not move files or create directories. - Report suggested fixes separately from detected issues. expected_output: - Structure audit report - Missing paths list - Misplaced files list context_files: - skills/ - tests/ - docs/"
+  },
+  {
+    "name": "financial-data-project-migration",
+    "path": "skills/financial-data-project-migration",
+    "category": "project",
+    "triggers": [
+      "assess financial data project migration readiness",
+      "classify Excel and Python script sprawl",
+      "recommend a safe target structure for a data project",
+      "evaluate Wind or desktop Excel coupling",
+      "draft a minimal migration todo"
+    ],
+    "side_effects": [
+      "read_only",
+      "write_files"
+    ],
+    "invocation_example": "Use financial-data-project-migration for this task. task_description: - Assess whether this financial-data Python repository is ready for structure migration. constraints: - Do not move files or create a src/ layout. - Keep recommendations conservative if desktop Excel or Wind coupling is detected. expected_output: - Migration advisory - Risk summary - Minimal next-step todo context_files: - *.py - *.xlsx - README.md"
+  },
+  {
+    "name": "project-takeover",
+    "path": "skills/project-takeover",
+    "category": "project",
+    "triggers": [
+      "prepare a repository takeover packet",
+      "onboard a new maintainer or AI agent",
+      "scan docs config and task sources",
+      "generate an onboarding summary for a project",
+      "analyze an unfamiliar repository before maintenance"
+    ],
+    "side_effects": [
+      "read_only",
+      "write_files"
+    ],
+    "invocation_example": "Use project-takeover for this task. task_description: - Prepare a takeover packet for this unfamiliar repository. constraints: - Prefer project-local configuration over shared assumptions. - Do not run install or safe-fix actions unless explicitly authorized. expected_output: - Takeover report - Onboarding summary - Risk list and next steps context_files: - README.md - docs/ - tests/"
+  },
+  {
+    "name": "skill-governance",
+    "path": "skills/skill-governance",
+    "category": "governance",
+    "triggers": [
+      "evaluate a skill against the template",
+      "diagnose skill maturity and structure",
+      "score a skill and decide rewrite level",
+      "govern a single skill before refactor",
+      "perform a controlled skill rewrite"
+    ],
+    "side_effects": [
+      "read_only",
+      "write_files"
+    ],
+    "invocation_example": "Use skill-governance on <skill-path> rewrite=false"
+  },
+  {
+    "name": "update-project-status",
+    "path": "skills/update-project-status",
+    "category": "project",
+    "triggers": [
+      "refresh project status from Git history",
+      "generate a weekly project summary",
+      "merge commits and task sources into a status report",
+      "sync project status to a shared document",
+      "produce a handoff status update"
+    ],
+    "side_effects": [
+      "read_only",
+      "write_files",
+      "requires_git"
+    ],
+    "invocation_example": "Use update-project-status for this task. task_description: - Refresh the project status report from recent Git history and current task sources. constraints: - Do not install hooks unless explicitly requested. - Treat external sync as opt-in. expected_output: - Updated status summary - Risk and next-step summary - Optional sync decision context_files: - .git/ - README.md - status config files"
+  }
+]

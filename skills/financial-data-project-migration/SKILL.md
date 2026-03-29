@@ -1,6 +1,16 @@
 ---
 name: financial-data-project-migration
-description: 面向金融数据 Python 项目的迁移顾问型 skill，用于扫描脚本分布、运行耦合、Excel 资产和文档入口，判断项目类型与迁移阶段，并给出最小安全迁移建议。
+description: "Use when assessing migration readiness for a financial-data Python project with script sprawl, Excel assets, or Wind/Desktop coupling."
+metadata:
+   triggers:
+      - assess financial data project migration readiness
+      - classify Excel and Python script sprawl
+      - recommend a safe target structure for a data project
+      - evaluate Wind or desktop Excel coupling
+      - draft a minimal migration todo
+   side_effects:
+      - read_only
+      - write_files
 ---
 
 # Financial Data Project Migration
@@ -180,3 +190,53 @@ Output:
 `financial-data-project-migration` 最适合解决“一个金融数据脚本项目是否已经具备安全迁移条件，以及下一步最小可行迁移动作是什么”这一类问题。它的价值不在于直接改结构，而在于先建立保守、可信、贴近真实运行边界的迁移判断。
 
 使用时最重要的边界是两条：第一，默认只做观察和结构化输出，不自动迁移项目；第二，越是 Excel、Wind、网络盘、桌面环境耦合强的仓库，越要优先采取 inventory-first 和 boundary-first 的保守建议。
+
+## Invocation
+
+### When to use
+
+- 当你面对一个 Excel、Wind、桌面运行或根目录脚本耦合较强的 Python 项目，需要先判断迁移边界时使用。
+
+### Input Example
+
+```text
+Use financial-data-project-migration for this task.
+
+task_description:
+- Assess whether this financial-data Python repository is ready for structure migration.
+
+constraints:
+- Do not move files or create a src/ layout.
+- Keep recommendations conservative if desktop Excel or Wind coupling is detected.
+
+expected_output:
+- Migration advisory
+- Risk summary
+- Minimal next-step todo
+
+context_files:
+- *.py
+- *.xlsx
+- README.md
+```
+
+### Output Example
+
+```text
+execution_plan:
+- Scan Python scripts, Excel assets, and document entrypoints.
+- Classify project type and migration stage.
+- Produce a conservative migration advisory.
+
+changes_made:
+- No project files were modified.
+- Produced a migration readiness assessment.
+
+files_touched:
+- README.md
+- root Python scripts
+- Excel asset inventory
+
+risks:
+- Wind/Desktop coupling may block any immediate package-first migration.
+```

@@ -1,6 +1,16 @@
 ---
 name: skill-governance
-description: 作为 Skill OS 的控制层，按受控治理流程评估、诊断并在显式授权时重写单个 skill，默认只做 dry-run 评估。
+description: "Use when evaluating, scoring, diagnosing, or explicitly refactoring a single skill under controlled governance."
+metadata:
+  triggers:
+    - evaluate a skill against the template
+    - diagnose skill maturity and structure
+    - score a skill and decide rewrite level
+    - govern a single skill before refactor
+    - perform a controlled skill rewrite
+  side_effects:
+    - read_only
+    - write_files
 ---
 
 # Skill Governance
@@ -163,7 +173,11 @@ Requirements:
 
 ## Invocation
 
-This skill follows the unified invocation protocol.
+### When to use
+
+- 当你需要治理单个 skill 的结构完整性、成熟度或是否进入受控重写，而不是修改业务逻辑时使用。
+
+### Input Example
 
 ```text
 Use skill-governance on <skill-path>
@@ -175,6 +189,25 @@ If rewrite is explicitly allowed:
 ```text
 Use skill-governance on <skill-path>
 rewrite=true
+```
+
+### Output Example
+
+```text
+execution_plan:
+- Evaluate the target skill against the template.
+- Produce SCORECARD, DIAGNOSIS, and LEVEL.
+- Decide whether rewrite is allowed.
+
+changes_made:
+- No rewrite was performed because rewrite=false.
+
+files_touched:
+- skills/<target-skill>/SKILL.md
+- skills/<target-skill>/README.md
+
+risks:
+- A rewrite decision without enough evidence may cause unnecessary drift.
 ```
 
 See also:

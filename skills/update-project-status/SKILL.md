@@ -1,6 +1,17 @@
 ---
 name: update-project-status
-description: 基于近期 Git 历史与可选任务源生成项目状态文档，通过阶段化扫描、理解、结构化整理与输出，支持状态更新、交接摘要和发布同步。
+description: "Use when refreshing project status from Git history, merging task sources, or generating a handoff-ready status report."
+metadata:
+   triggers:
+      - refresh project status from Git history
+      - generate a weekly project summary
+      - merge commits and task sources into a status report
+      - sync project status to a shared document
+      - produce a handoff status update
+   side_effects:
+      - read_only
+      - write_files
+      - requires_git
 ---
 
 # Update Project Status
@@ -185,3 +196,53 @@ Output:
 `update-project-status` 最适合解决“如何把近期 Git 变化与任务来源整理成持续可维护的项目状态输出”这一类问题。它的价值不只是写一份状态文档，而是把状态采集、理解、结构化和发布串成稳定流程。
 
 使用时最重要的边界有两条：第一，先按 `scan → understand → structure → output` 建立状态结论，再进入写入与同步；第二，默认坚持非侵入原则，只在显式授权时执行额外发布或 hook 安装动作。
+
+## Invocation
+
+### When to use
+
+- 当你需要根据近期 Git 历史和可用任务源刷新项目状态，并明确哪些动作会写文件或同步时使用。
+
+### Input Example
+
+```text
+Use update-project-status for this task.
+
+task_description:
+- Refresh the project status report from recent Git history and current task sources.
+
+constraints:
+- Do not install hooks unless explicitly requested.
+- Treat external sync as opt-in.
+
+expected_output:
+- Updated status summary
+- Risk and next-step summary
+- Optional sync decision
+
+context_files:
+- .git/
+- README.md
+- status config files
+```
+
+### Output Example
+
+```text
+execution_plan:
+- Load recent Git history and configured task sources.
+- Build the status summary and log entry.
+- Decide whether any sync action is authorized.
+
+changes_made:
+- Generated a refreshed status summary.
+- Did not install post-commit hook.
+
+files_touched:
+- .git/
+- status markdown output
+- status log output
+
+risks:
+- Missing external task sources may reduce summary completeness.
+```

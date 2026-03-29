@@ -1,0 +1,55 @@
+{
+  "template_type": "skillhub",
+  "status_file": "docs/status/skill-hub-status.md",
+  "log_file": "docs/status/skill-hub-status.log",
+  "status_dimensions": [
+    "skill_coverage",
+    "invocation_readiness",
+    "governance_readiness",
+    "automation_readiness"
+  ],
+  "shared_mode": "local_copy",
+  "feature_keywords": [
+    "feat",
+    "feature",
+    "add",
+    "implement",
+    "support",
+    "standardize",
+    "governance",
+    "adapter",
+    "invocation",
+    "router",
+    "pipeline",
+    "metadata",
+    "trigger",
+    "新增",
+    "标准化",
+    "治理",
+    "调度",
+    "编排"
+  ],
+  "bugfix_keywords": [
+    "fix",
+    "bug",
+    "hotfix",
+    "repair",
+    "修复",
+    "问题"
+  ],
+  "next_task_keywords": [
+    "todo",
+    "next",
+    "plan",
+    "follow-up",
+    "wip",
+    "phase",
+    "待办",
+    "后续",
+    "下一步"
+  ],
+  "extra_source_globs": [],
+  "task_sources": [],
+  "max_extra_tasks": 8,
+  "sync_targets": []
+}

@@ -151,6 +151,367 @@ function Get-SyncableEntries {
     } | Sort-Object Name
 }
 
+function Get-SkillEntries {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$SkillsRoot
+    )
+
+    return Get-ChildItem -LiteralPath $SkillsRoot -Directory | Where-Object {
+        Test-Path -LiteralPath (Join-Path $_.FullName 'SKILL.md') -PathType Leaf
+    } | Sort-Object Name
+}
+
+function Normalize-FrontmatterValue {
+    param(
+        [AllowEmptyString()]
+        [string]$Value
+    )
+
+    $trimmedValue = $Value.Trim()
+    if ($trimmedValue.Length -ge 2) {
+        $firstCharacter = $trimmedValue[0]
+        $lastCharacter = $trimmedValue[$trimmedValue.Length - 1]
+        if (($firstCharacter -eq '"' -and $lastCharacter -eq '"') -or ($firstCharacter -eq "'" -and $lastCharacter -eq "'")) {
+            return $trimmedValue.Substring(1, $trimmedValue.Length - 2)
+        }
+    }
+
+    return $trimmedValue
+}
+
+function Get-SkillMetadata {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$SkillFilePath
+    )
+
+    if (-not (Test-Path -LiteralPath $SkillFilePath -PathType Leaf)) {
+        throw "Skill file not found: $SkillFilePath"
+    }
+
+    $content = Get-Content -LiteralPath $SkillFilePath -Raw
+    $frontmatterMatch = [regex]::Match($content, '(?s)^---\r?\n(.*?)\r?\n---\r?\n')
+    if (-not $frontmatterMatch.Success) {
+        throw "Missing or invalid frontmatter in skill file: $SkillFilePath"
+    }
+
+    $name = ''
+    $description = ''
+    $triggers = New-Object 'System.Collections.Generic.List[string]'
+    $sideEffects = New-Object 'System.Collections.Generic.List[string]'
+    $inMetadata = $false
+    $activeListName = $null
+
+    foreach ($rawLine in ($frontmatterMatch.Groups[1].Value -split "`r?`n")) {
+        if ([string]::IsNullOrWhiteSpace($rawLine)) {
+            continue
+        }
+
+        $trimmedLine = $rawLine.Trim()
+        $indentation = $rawLine.Length - $rawLine.TrimStart().Length
+
+        if ($indentation -eq 0) {
+            if ($trimmedLine -eq 'metadata:') {
+                $inMetadata = $true
+                $activeListName = $null
+                continue
+            }
+
+            $inMetadata = $false
+            $activeListName = $null
+
+            if ($trimmedLine -match '^name:\s*(.+)$') {
+                $name = Normalize-FrontmatterValue -Value $matches[1]
+                continue
+            }
+
+            if ($trimmedLine -match '^description:\s*(.+)$') {
+                $description = Normalize-FrontmatterValue -Value $matches[1]
+            }
+
+            continue
+        }
+
+        if (-not $inMetadata) {
+            continue
+        }
+
+        if ($trimmedLine -match '^([A-Za-z0-9_-]+):$') {
+            $activeListName = $matches[1]
+            continue
+        }
+
+        if ($trimmedLine -match '^-\s+(.+)$') {
+            $listValue = Normalize-FrontmatterValue -Value $matches[1]
+            switch ($activeListName) {
+                'triggers' {
+                    $triggers.Add($listValue)
+                }
+                'side_effects' {
+                    $sideEffects.Add($listValue)
+                }
+            }
+        }
+    }
+
+    if ([string]::IsNullOrWhiteSpace($name)) {
+        $name = Split-Path -Path (Split-Path -Path $SkillFilePath -Parent) -Leaf
+    }
+
+    return [pscustomobject]@{
+        Name = $name
+        Description = $description
+        Triggers = @($triggers)
+        SideEffects = @($sideEffects)
+    }
+}
+
+function ConvertTo-YamlDoubleQuoted {
+    param(
+        [AllowEmptyString()]
+        [string]$Value
+    )
+
+    $escapedValue = $Value.Replace('\', '\\').Replace('"', '\"').Replace("`r", ' ').Replace("`n", ' ')
+    return '"' + $escapedValue + '"'
+}
+
+function Write-GeneratedFile {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Content
+    )
+
+    $parentPath = Split-Path -Path $Path -Parent
+    if (-not [string]::IsNullOrWhiteSpace($parentPath)) {
+        Initialize-Directory -Path $parentPath
+    }
+
+    if ($DryRun) {
+        Write-Info "DryRun: would write file $Path"
+        return
+    }
+
+    Set-Content -LiteralPath $Path -Value $Content -Encoding utf8
+    Write-Info "Wrote generated file: $Path"
+}
+
+function Remove-GeneratedEntry {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path
+    )
+
+    if ($DryRun) {
+        Write-WarningMessage "DryRun: would remove generated adapter entry $Path"
+        return
+    }
+
+    Remove-Item -LiteralPath $Path -Recurse -Force
+    Write-Info "Removed generated adapter entry: $Path"
+}
+
+function Test-ProjectGeneratedAgentsWrapper {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path
+    )
+
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+        return $false
+    }
+
+    $content = Get-Content -LiteralPath $Path -Raw
+    return $content.Contains('canonical_path: ../../../.codex/skills/') -and $content.Contains('Read the project-local skill before execution.')
+}
+
+function Test-ProjectGeneratedAgentsSummary {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path
+    )
+
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+        return $false
+    }
+
+    $content = Get-Content -LiteralPath $Path -Raw
+    return $content.Contains('- path: `.codex/skills/') -and $content.Contains('Read the project-local SKILL.md before execution.')
+}
+
+function Test-ProjectGeneratedGithubEntry {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path
+    )
+
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+        return $false
+    }
+
+    $content = Get-Content -LiteralPath $Path -Raw
+    return $content.Contains('Canonical skill path: `../../.codex/skills/') -and $content.Contains('This compatibility entry is generated from the project-local .codex skill copy.')
+}
+
+function Remove-StaleProjectAgentsEntries {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$TargetRoot,
+
+        [Parameter(Mandatory = $true)]
+        [string[]]$AllowedSkillNames
+    )
+
+    if (-not (Test-Path -LiteralPath $TargetRoot -PathType Container)) {
+        return
+    }
+
+    $allowedFileNames = @($AllowedSkillNames | ForEach-Object { "$_.md" }) + @('README.md', 'skills_index.md')
+    foreach ($entry in (Get-ChildItem -LiteralPath $TargetRoot -Force)) {
+        if ($entry.PSIsContainer) {
+            if ($AllowedSkillNames -contains $entry.Name) {
+                continue
+            }
+
+            $wrapperPath = Join-Path $entry.FullName 'SKILL.md'
+            if (Test-ProjectGeneratedAgentsWrapper -Path $wrapperPath) {
+                Remove-GeneratedEntry -Path $entry.FullName
+            }
+
+            continue
+        }
+
+        if ($allowedFileNames -contains $entry.Name -or $entry.Extension -ne '.md') {
+            continue
+        }
+
+        if (Test-ProjectGeneratedAgentsSummary -Path $entry.FullName) {
+            Remove-GeneratedEntry -Path $entry.FullName
+        }
+    }
+}
+
+function Remove-StaleProjectGithubEntries {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$TargetRoot,
+
+        [Parameter(Mandatory = $true)]
+        [string[]]$AllowedSkillNames
+    )
+
+    if (-not (Test-Path -LiteralPath $TargetRoot -PathType Container)) {
+        return
+    }
+
+    $allowedFileNames = @($AllowedSkillNames | ForEach-Object { "$_.md" })
+    foreach ($entry in (Get-ChildItem -LiteralPath $TargetRoot -File -Force)) {
+        if ($allowedFileNames -contains $entry.Name -or $entry.Extension -ne '.md') {
+            continue
+        }
+
+        if (Test-ProjectGeneratedGithubEntry -Path $entry.FullName) {
+            Remove-GeneratedEntry -Path $entry.FullName
+        }
+    }
+}
+
+function Emit-ProjectAgentsAdapter {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$ProjectPathValue,
+
+        [Parameter(Mandatory = $true)]
+        [object]$SkillMetadata
+    )
+
+    $agentsRoot = Join-Path $ProjectPathValue '.agents\skills'
+    $wrapperDirectory = Join-Path $agentsRoot $SkillMetadata.Name
+    $wrapperPath = Join-Path $wrapperDirectory 'SKILL.md'
+    $summaryPath = Join-Path $agentsRoot ("{0}.md" -f $SkillMetadata.Name)
+    $projectLocalSkillPath = ".codex/skills/$($SkillMetadata.Name)"
+    $relativeCanonicalPath = "../../../$projectLocalSkillPath"
+    $triggerLines = @($SkillMetadata.Triggers | ForEach-Object { "    - $_" })
+    $sideEffectLines = @($SkillMetadata.SideEffects | ForEach-Object { "    - $_" })
+    $summaryTriggers = if ($SkillMetadata.Triggers.Count -gt 0) {
+        $SkillMetadata.Triggers -join ', '
+    }
+    else {
+        ''
+    }
+
+    $wrapperContent = @(
+        '---'
+        "name: $($SkillMetadata.Name)"
+        "description: $(ConvertTo-YamlDoubleQuoted -Value $SkillMetadata.Description)"
+        'metadata:'
+        '  triggers:'
+        $triggerLines
+        '  side_effects:'
+        $sideEffectLines
+        "  canonical_path: $relativeCanonicalPath"
+        '  adapter_type: thin-wrapper'
+        '---'
+        ''
+        "# $($SkillMetadata.Name)"
+        ''
+        ('- Project-local skill directory: `{0}`' -f $relativeCanonicalPath)
+        ('- Project-local skill definition: `{0}/SKILL.md`' -f $relativeCanonicalPath)
+        '- This wrapper is generated for project-local discovery only.'
+        '- Read the project-local skill before execution.'
+        ''
+    ) -join [Environment]::NewLine
+
+    $summaryContent = @(
+        "# $($SkillMetadata.Name)"
+        ''
+        ('- name: `{0}`' -f $SkillMetadata.Name)
+        ('- description: `{0}`' -f $SkillMetadata.Description)
+        ('- triggers: `{0}`' -f $summaryTriggers)
+        ('- path: `{0}`' -f $projectLocalSkillPath)
+        ''
+        'Read the project-local SKILL.md before execution.'
+        ''
+    ) -join [Environment]::NewLine
+
+    Write-GeneratedFile -Path $wrapperPath -Content $wrapperContent
+    Write-GeneratedFile -Path $summaryPath -Content $summaryContent
+}
+
+function Emit-ProjectGithubAdapter {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$ProjectPathValue,
+
+        [Parameter(Mandatory = $true)]
+        [object]$SkillMetadata
+    )
+
+    $githubSkillsRoot = Join-Path $ProjectPathValue '.github\skills'
+    $entryPath = Join-Path $githubSkillsRoot ("{0}.md" -f $SkillMetadata.Name)
+    $relativeCanonicalPath = "../../.codex/skills/$($SkillMetadata.Name)"
+    $entryContent = @(
+        '---'
+        "name: $($SkillMetadata.Name)"
+        "description: $(ConvertTo-YamlDoubleQuoted -Value $SkillMetadata.Description)"
+        '---'
+        ''
+        "# $($SkillMetadata.Name)"
+        ''
+        ('- Canonical skill path: `{0}`' -f $relativeCanonicalPath)
+        ('- Canonical skill definition: `{0}/SKILL.md`' -f $relativeCanonicalPath)
+        '- This compatibility entry is generated from the project-local .codex skill copy.'
+        '- Read the project-local SKILL.md before execution.'
+        ''
+    ) -join [Environment]::NewLine
+
+    Write-GeneratedFile -Path $entryPath -Content $entryContent
+}
+
 function Remove-StaleTargetEntries {
     param(
         [Parameter(Mandatory = $true)]
@@ -329,6 +690,37 @@ try {
     }
 
     Write-Info "robocopy exit code: $robocopyExitCode"
+
+    $projectSkillEntries = @(Get-SkillEntries -SkillsRoot $targetSkillsRoot)
+    $projectAgentsRoot = Join-Path $resolvedProjectPath '.agents\skills'
+    $projectGithubRoot = Join-Path $resolvedProjectPath '.github\skills'
+
+    if ([string]::IsNullOrWhiteSpace($SkillName)) {
+        $projectSkillNames = @($projectSkillEntries | ForEach-Object { $_.Name })
+        Write-Step 'Cleaning stale project-local adapter entries'
+        Remove-StaleProjectAgentsEntries -TargetRoot $projectAgentsRoot -AllowedSkillNames $projectSkillNames
+        Remove-StaleProjectGithubEntries -TargetRoot $projectGithubRoot -AllowedSkillNames $projectSkillNames
+
+        Write-Step 'Emitting project-local adapter entries'
+        foreach ($entry in $projectSkillEntries) {
+            Write-Info "Generating project-local adapters for skill: $($entry.Name)"
+            $skillMetadata = Get-SkillMetadata -SkillFilePath (Join-Path $entry.FullName 'SKILL.md')
+            Emit-ProjectAgentsAdapter -ProjectPathValue $resolvedProjectPath -SkillMetadata $skillMetadata
+            Emit-ProjectGithubAdapter -ProjectPathValue $resolvedProjectPath -SkillMetadata $skillMetadata
+        }
+    }
+    else {
+        $syncedSkillFilePath = Join-Path $targetPath 'SKILL.md'
+        if (Test-Path -LiteralPath $syncedSkillFilePath -PathType Leaf) {
+            Write-Step "Emitting project-local adapter entries for skill: $syncedScope"
+            $skillMetadata = Get-SkillMetadata -SkillFilePath $syncedSkillFilePath
+            Emit-ProjectAgentsAdapter -ProjectPathValue $resolvedProjectPath -SkillMetadata $skillMetadata
+            Emit-ProjectGithubAdapter -ProjectPathValue $resolvedProjectPath -SkillMetadata $skillMetadata
+        }
+        else {
+            Write-Info "Skipped project-local adapter emit for non-skill entry: $syncedScope"
+        }
+    }
 
     $versionFilePath = Join-Path $targetSkillsRoot $VersionFileName
     $note = if ($DryRun) {

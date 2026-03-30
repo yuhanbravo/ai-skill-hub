@@ -1,76 +1,74 @@
 # Skill Hub Status
 
-- Updated at: `2026-03-29 23:10:00`
+- Updated at: `2026-03-30`
 - Scope: `ai-skill-hub`
-- Method: `update-project-status` dry-run analysis + working tree review
+- Method: `update-project-status` system-level status refresh
 - Config: `.codex/skill-config/update-project-status.json`
-- Data sources: Git history, unstaged changes, `skills/`, `docs/`, `tools/`, `tests/`
+- Data sources: Git history, working tree, `skills/`, distribution surfaces, governance assets, `tools/`, `tests/`
 
 ## Current Status
 
-`ai-skill-hub` 当前已经从“技能仓库存放区”推进到“可治理、可发现、可调用、可编排的 skill engineering 项目”。
+`ai-skill-hub` 当前处于 `Phase 3 - Controlled System`：它已经不再只是 skill 集合，而是一个具备 canonical source、distribution surfaces、局部治理能力和可重复工具链的 capability system。
 
-- Skill coverage: `7/7` canonical skills 已标准化到 `README.md + SKILL.md + metadata` 主轴，且覆盖 `template / audit / project / governance` 四类能力。
-- Adapter coverage: `7/7` canonical skills 已具备 `.agents/skills/` 与 `.github/skills/` 入口，跨 AI 发现层已成形。
-- Invocation readiness: 已具备统一调用协议、每个 skill 的 `Invocation` section、`skills_index.json`、flat adapter summaries，以及基础自动路由与 pipeline 编排工具。
-- Governance readiness: 已具备 skill 模板、结构校验、索引生成和主索引文档，但尚未进入 CI 级别的漂移防护。
-- Automation readiness: 已具备 metadata generator、skill router、skill pipeline、结构测试和路由测试，但调度策略仍是启发式实现。
+- Overall maturity: `evolving`
+- Stable core: canonical skill layer 已形成稳定事实源
+- Main direction: 从“可发现、可调用”继续推进到“可分发、可校验、可控漂移”的系统阶段
 
-## Recent Progress
+## Layer Status
 
-本轮迭代的推进重点，不是单个 skill 内容扩展，而是 skill-hub 的整体工程化能力提升。
+### Canonical Skill Layer (`skills/`)
 
-- 完成 canonical skill frontmatter 统一，形成 `name + description + metadata.triggers + metadata.side_effects` 的稳定基线。
-- 为全部 canonical skills 补齐 `Invocation` section，并引入统一调用协议，降低“可见但不可调用”的落差。
-- 增加 `.agents/skills/`、`.github/skills/`、`AI_USAGE.md`、`SKILLS_INDEX.md` 和 `skills_index.json`，把多 AI 兼容层从隐式约定变成显式结构。
-- 增加 `tools/generate_skill_metadata.py` 与 `tests/test_skill_structure.py`，把元数据生成和结构验证纳入自动化。
-- 完成 Phase 3 的轻量调度能力，新增 `tools/skill_router.py`、`tools/skill_pipeline.py` 和 `tests/test_skill_router.py`，支持单 skill 自动选择与多 skill 顺序编排。
+- Status: `stable`
+- Current shape: canonical source 维持在 `8` 个正式 skill 上，覆盖 `template / audit / project / governance / system` 五类能力。
+- Maturity judgment: canonical layer 已具备稳定的 skill 定义主轴、统一调用契约和可持续扩展边界，本轮没有引入新的 source-of-truth 歧义。
 
-## Key Changes
+### Distribution Layer (`.codex / .agents / .github`)
 
-### 1. Skill structure standardization
+- Status: `evolving`
+- Current shape: hub 内 discovery layer 已完整存在，项目侧 distribution 也已形成 `.codex/skills` 为内容落点、`.agents/.github` 为 project-local adapter surfaces 的闭环。
+- Maturity judgment: distribution 不再停留在“能下发 skill 内容”，而是进入“下发后仍保持 multi-AI discoverability”的阶段；但这一层仍主要依赖本地工具与脚本执行，不属于强约束治理。
 
-- [README.md](../../README.md) 已明确 `skills/` 为唯一事实源，并补充 adapter layer 说明。
-- [skills/SKILL_TEMPLATE.md](../../skills/SKILL_TEMPLATE.md) 现在定义了 metadata 与 Invocation 模板。
-- `7` 个 canonical `SKILL.md` 已全部具备统一 frontmatter 与调用示例。
+### Governance Layer (consistency checker)
 
-### 2. Multi-AI compatibility layer
+- Status: `evolving`
+- Current shape: governance 已从“结构约定 + 人工观察”推进到“脚本辅助漂移检测”，能够对 `.codex/skills`、`.agents/skills`、`.github/skills` 三层关系做只读一致性检查。
+- Maturity judgment: 当前治理能力已经能发现 missing adapter、orphan adapter 和 wrong reference，但仍属于本地脚本辅助，不是 CI 级 enforcement。
 
-- `.agents/skills/<skill>/SKILL.md` 提供目录型发现入口。
-- `.agents/skills/<skill>.md` 提供 flat discovery 入口。
-- `.github/skills/<skill>.md` 提供 Copilot fallback 入口。
-- [AI_USAGE.md](../../AI_USAGE.md) 和 [SKILLS_INDEX.md](../../SKILLS_INDEX.md) 负责统一解释层。
+### Tooling Layer (sync / tools)
 
-### 3. Invocation and metadata readiness
+- Status: `evolving`
+- Current shape: tooling 已覆盖 canonical sync、project-local adapter emit、metadata build、router、pipeline 和本地 governance check。
+- Maturity judgment: 工具链已经能够把多 AI capability system 的维护工作从手工操作推进到可重复流程，但调度、发布和治理仍是“可用但非完全受控”的状态。
 
-- [skills/_protocol/skill_invocation.md](../../skills/_protocol/skill_invocation.md) 定义统一输入输出契约。
-- [skills_index.json](../../skills_index.json) 已成为轻量运行时索引。
-- `metadata.triggers` 与 `metadata.side_effects` 已可被索引器、路由器和下游 AI 工具消费。
+## Phase Assessment
 
-### 4. Tests and automation
+- Current phase: `Phase 3 - Controlled System`
+- Phase meaning: 系统已经具备稳定 canonical layer、可用 distribution layer、脚本辅助 governance 和可重复 tooling，但还没有进入 CI-backed governance 或更强 orchestration 的下一阶段。
+- Stability: `stable` for canonical definition, `evolving` for distribution and governance, `experimental-to-evolving` for heuristic routing behavior.
 
-- [tools/generate_skill_metadata.py](../../tools/generate_skill_metadata.py) 负责生成机器可读索引和 flat adapter summaries。
-- [tests/test_skill_structure.py](../../tests/test_skill_structure.py) 覆盖 canonical skill 结构完整性。
-- [tools/skill_router.py](../../tools/skill_router.py) 与 [tools/skill_pipeline.py](../../tools/skill_pipeline.py) 提供 Phase 3 的调度层。
-- [tests/test_skill_router.py](../../tests/test_skill_router.py) 已验证英文路由、中文复合任务和 pipeline 编排。
+## New Capabilities In This Phase
+
+- Distribution capability: 项目侧 skill distribution 已具备 project-local adapter surfaces，不再只停留在内容复制。
+- Governance capability: 系统已具备 adapter drift detection，能够识别缺失、孤儿和错误引用三类一致性问题。
+- Layer clarity: canonical source、distribution surfaces 和 governance check 三层职责更加清晰，系统边界比上一阶段更明确。
+- Operational repeatability: 本地维护者或后续 AI agent 已可以用统一工具完成分发、发现层闭环和只读治理检查。
 
 ## Risks / Gaps
 
-- 调度仍基于 trigger 和关键词启发式，中文短句与模糊任务仍存在误选风险。
-- 当前 `update-project-status` 自带脚本模板仍偏普通项目视角，不能直接表达 skill coverage、adapter coverage 和 governance readiness，需要 repo-specific config 或自定义状态模板。
-- 结构验证与 metadata 生成尚未接入 CI，adapter 层和 canonical 层仍存在后续漂移的可能。
-- [docs/WORKSPACE_DIRECTORY_MAP.zh-CN.md](../WORKSPACE_DIRECTORY_MAP.zh-CN.md) 当前存在明显编码异常，已偏离可持续文档状态。
-- Git 历史未完全反映本轮工作重点，当前状态判断高度依赖 working tree；在未提交阶段，这会削弱仅基于 commit 的自动状态脚本准确度。
+- Canonical layer 已稳定，但 distribution 和 governance 仍依赖本地执行路径，尚未形成仓库级强制校验。
+- Routing 与 pipeline 仍具有启发式特征，系统整体还不是 fully deterministic orchestration stack。
+- 当前状态生成仍需要 skill-hub 视角模板；若退回普通项目模板，会削弱系统层表达能力。
+- [docs/WORKSPACE_DIRECTORY_MAP.zh-CN.md](../WORKSPACE_DIRECTORY_MAP.zh-CN.md) 仍存在编码异常，影响系统文档面的一致性。
+- 在未提交阶段，working tree 对状态判断影响较大，意味着 status refresh 仍然部分依赖即时工作上下文，而不是纯 Git 历史。
 
 ## Recommended Next Steps
 
-- 把 metadata generation 与结构测试接入仓库级 CI 或任务系统，降低人工回归成本。
-- 为 router 增加 repo-generated aliases 或可配置 intent hints，减少中文任务和短任务的平局命中。
-- 增加 adapter drift check，确保 `.agents/`、`.github/` 与 canonical metadata 始终一致。
-- 为 skill-hub 的状态更新保留专用模板，不再直接复用普通项目的 `docs/status.md` 风格。
-- 修复 [docs/WORKSPACE_DIRECTORY_MAP.zh-CN.md](../WORKSPACE_DIRECTORY_MAP.zh-CN.md) 的编码与可读性问题，避免它成为治理盲点。
+- 把 governance checker 提升到仓库级例行验证流程，减少 distribution drift 的人工发现成本。
+- 为 router 与 pipeline 补充更稳定的意图提示或别名层，降低启发式误选的系统风险。
+- 持续保持 skill-hub 专用状态模板，确保后续 status refresh 继续按 system layer 而不是业务功能视角表达。
+- 修复 [docs/WORKSPACE_DIRECTORY_MAP.zh-CN.md](../WORKSPACE_DIRECTORY_MAP.zh-CN.md) 的编码问题，避免文档层拖累系统治理成熟度。
 
 ## Notes
 
-- 本次状态更新优先采用 dry-run 思路，没有执行外部同步，也没有安装 post-commit hook。
-- 当前文档反映的是“最近 commit + 当前 working tree”的综合状态，而不是仅依据已提交历史生成的业务型周报。
+- 本次状态更新按 capability-system 视角组织，重点是 layer maturity 与 readiness，而不是普通项目的功能进度。
+- 当前判断反映的是“最近 commit + 当前 working tree”的综合系统状态，而不是仅基于已提交历史生成的业务型周报。

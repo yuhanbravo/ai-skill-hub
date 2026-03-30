@@ -12,6 +12,7 @@
 
 注意：
 - 不传 `-SkillName` 时会同步全部 skills
+- `.codex\skills` 仍作为项目消费侧兼容入口保留，不随 hub 改名而调整
 - 会在目标项目的 `.codex\skills` 下写入版本说明文件
 - 使用 `robocopy /MIR`，建议先用 `-DryRun` 预览同步结果
 #>
@@ -25,7 +26,7 @@ param(
     [string]$SkillName,
     [string]$VersionFileName = '_skillset_version.txt',
     [string]$HubVersionFile = 'VERSION',
-    [string]$HubName = 'AI-SKILL-HUB',
+    [string]$HubName = 'ai-skill-hub',
     [switch]$DryRun
 )
 

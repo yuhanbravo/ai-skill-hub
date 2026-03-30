@@ -2,6 +2,12 @@
 
 这个目录主要放一些本地 PowerShell 工具，用来做 skill hub 的导出、导入和同步。下面按“什么时候用”来快速说明，便于直接调用。
 
+## 命名与兼容说明
+
+- canonical name：`ai-skill-hub`
+- legacy name：`codex-skill-hub`
+- 项目消费侧仍保留 `.codex/`、`.codex/skills/` 等兼容入口；本轮只调整 hub 内部工具默认说明，不改项目消费目录结构。
+
 ## export_bundle.ps1
 
 用途：
@@ -23,7 +29,7 @@
 
 ```powershell
 .\tools\export_bundle.ps1 `
-  -CommitMessage 'chore(bundle): export latest skill-hub snapshot'
+  -CommitMessage 'chore(bundle): export latest ai-skill-hub snapshot'
 ```
 
 常用参数：
@@ -35,6 +41,7 @@
 注意：
 
 - 工作区不干净时，脚本会要求输入提交日志，随后自动提交并导出。
+- 不传 `-RepoPath` 时，默认使用当前脚本所在仓库根目录；当前 canonical 本地路径通常为 `D:\dev\ai-skill-hub`。
 - 默认会输出到 `D:\BaiduSyncdisk\Python_Lib\Git_Bundle`。
 - 导出的默认 bundle 文件名已切换为 `ai-skill-hub_latest.bundle` 和 `ai-skill-hub_<date>_v1.bundle`。
 
@@ -55,6 +62,14 @@
 .\tools\import_bundle.ps1
 ```
 
+显式指定 canonical 仓库与 bundle：
+
+```powershell
+.\tools\import_bundle.ps1 `
+  -RepoPath 'D:\dev\ai-skill-hub' `
+  -BundlePath 'D:\backup\ai-skill-hub_latest.bundle'
+```
+
 常用参数：
 
 - `-RepoPath`：目标仓库路径
@@ -63,6 +78,7 @@
 注意：
 
 - 如果目标仓库已存在，必须是干净工作区。
+- 不传 `-RepoPath` 时，默认使用当前脚本所在仓库根目录；当前 canonical 本地路径通常为 `D:\dev\ai-skill-hub`。
 - 默认从 `D:\BaiduSyncdisk\Python_Lib\Git_Bundle\ai-skill-hub_latest.bundle` 读取 bundle。
 
 ## sync_skill_from_project_to_hub.ps1
@@ -95,7 +111,7 @@
 
 注意：
 
-- 来源固定为项目下的 `.codex\skills\<SkillName>`。
+- 来源固定为项目下的 `.codex\skills\<SkillName>`，该入口继续作为兼容消费入口保留。
 
 ## sync_skills_to_nongit_project.ps1
 
@@ -136,6 +152,7 @@
 注意：
 
 - 默认使用镜像同步思路，建议第一次先 `-DryRun`。
+- 项目消费侧目录仍固定写入 `.codex\skills`，不因 hub canonical 名称切换而改名。
 - 同步后会在目标项目写入一个 `_skillset_version.txt` 元数据文件。
 - 全量同步时会同步 canonical skill 目录与 `_protocol/`，不会再把 `skills/` 根下的说明文件和模板文件一起下发。
 
@@ -155,6 +172,10 @@
 ```powershell
 python .\tools\generate_skill_metadata.py
 ```
+
+注意：
+
+- 脚本始终以当前仓库根目录作为 `ROOT`，生成仓库根下的 `skills_index.json` 与 `.agents/skills/*.md`，不会改动生成物结构。
 
 ## skill_router.py
 

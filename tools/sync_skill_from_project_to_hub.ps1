@@ -11,7 +11,7 @@
 - `\.\tools\sync_skill_from_project_to_hub.ps1 -ProjectPath 'D:\my-project' -SkillHubPath 'D:\dev\ai-skill-hub' -SkillName 'chatgpt-handoff-pilot' -DryRun`
 
 注意：
-- 来源目录固定读取项目下的 `.codex\skills\<SkillName>`
+- 来源目录固定读取项目下的 `.codex\skills\<SkillName>`，该入口继续作为兼容消费入口保留
 - 默认会覆盖 hub 中同名文件；建议先用 `-DryRun`
 - 如果 hub 中还没有这个 skill，可加 `-CreateIfMissing`
 #>

@@ -9,10 +9,11 @@
 最短调用示例：
 - `\.\tools\export_bundle.ps1`
 - `\.\tools\export_bundle.ps1 -RepoPath 'D:\dev\ai-skill-hub' -OutputDir 'D:\backup\Git_Bundle'`
-- `\.\tools\export_bundle.ps1 -CommitMessage 'chore(bundle): export latest skill-hub snapshot'`
+- `\.\tools\export_bundle.ps1 -CommitMessage 'chore(bundle): export latest ai-skill-hub snapshot'`
 
 注意：
 - 导出前会自动检查仓库状态；若存在变更，会要求输入提交日志，然后自动提交并导出。
+- 不传 `-RepoPath` 时，默认取当前脚本所在仓库根目录；当前 canonical 本地路径通常为 `D:\dev\ai-skill-hub`。
 - 默认 bundle 输出目录为 `D:\BaiduSyncdisk\Python_Lib\Git_Bundle`。
 #>
 [CmdletBinding()]

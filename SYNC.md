@@ -2,8 +2,8 @@
 
 ## 本仓库的角色
 
-- 规范仓库名是 `ai-skill-hub`，legacy 名称是 `codex-skill-hub`。
-- 当前本地物理目录在正式改名前仍可能沿用 legacy 目录名，但语义上的主仓名已切换为 `ai-skill-hub`。
+- 规范仓库名是 `ai-skill-hub`。
+- 当前本地物理目录与语义主仓名均以 `ai-skill-hub` 为准。
 - 所有 skill 的正式演进、治理和版本基线都应以本仓库为准。
 
 ## 与业务项目的关系

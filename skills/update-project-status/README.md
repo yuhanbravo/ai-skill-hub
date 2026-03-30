@@ -33,8 +33,8 @@ Project root: <project-root>
 }
 ```
 
-对应模板结构位于 [templates/skillhub_status_template.md](/d:/dev/codex-skill-hub/skills/update-project-status/templates/skillhub_status_template.md)。
+对应模板结构位于 [templates/skillhub_status_template.md](templates/skillhub_status_template.md)。
 
 切换后，状态输出会采用 skill-hub 口径，而不会继续使用普通项目的 `Recent Features / Fixed Bugs / Upcoming Tasks` 主视角。
 
-详细阶段化执行方式见 [SKILL.md](/d:/dev/codex-skill-hub/skills/update-project-status/SKILL.md)。
+详细阶段化执行方式见 [SKILL.md](SKILL.md)。

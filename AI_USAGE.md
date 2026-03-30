@@ -5,7 +5,6 @@ This document explains how this repository exposes skills to multiple AI tools w
 ## Naming
 
 - Canonical repository name: `ai-skill-hub`
-- Legacy repository name: `codex-skill-hub`
 - Consumer-facing compatibility directories such as `.codex/`, `.codex/skills/`, and `.codex/skill-config/` remain valid and are not renamed by this repository refactor.
 
 ## Discovery Paths

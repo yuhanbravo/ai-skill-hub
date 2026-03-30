@@ -1,6 +1,8 @@
 # ai-skill-hub
 
-这是当前机器上的本地 `skill hub` 仓库，用来集中维护、测试和分发各类 AI skills。
+这是当前机器上的本地 `ai-skill-hub` 仓库，也是一个面向多代理协作的 skill platform，用来集中维护、测试和分发各类 AI skills。
+
+它可以理解为 AI Capability OS 的 skill layer：以 `skills/` 作为 canonical source，通过 adapter、index、tools 和 automation 为不同 AI 入口提供统一的技能发现与分发能力。
 
 ## Legacy Alias
 
@@ -29,14 +31,14 @@
 - `SKILLS_INDEX.md`：跨 AI 通用 skill 索引
 - `AI_USAGE.md`：跨 AI 使用说明
 
-这个仓库最初是从业务项目中的 `.codex/skills` 同步副本重建出来的，目的是在不直接改动业务项目的前提下，统一管理 skill 的演进。
+这个仓库最初是从业务项目中的 `.codex/skills` 同步副本重建出来的。这个背景仅用于解释历史来源；当前默认主名与平台定位均以 `ai-skill-hub` 为准，目标是在不直接改动业务项目的前提下，统一管理 skill 的演进。
 
 ## AI 兼容入口（Cross-AI Adapter Layer）
 
 本仓库将 `skills/` 保持为唯一事实源，不在其他入口层复制完整 skill 内容。
 
 - `skills/<skill>/`：canonical source，包含真实 `SKILL.md`、脚本、测试、参考资料
-- `.agents/skills/<skill>/SKILL.md`：面向通用 AI 与兼容 Codex 的发现方式的薄入口
+- `.agents/skills/<skill>/SKILL.md`：面向通用 AI 与 legacy adapter discovery 的薄入口
 - `.github/skills/<skill>.md`：面向 Copilot 的兼容入口
 
 当前仓库未使用 symlink，而是采用“adapter + index”策略：
@@ -49,7 +51,7 @@
 
 ## SkillHub Status Template
 
-`ai-skill-hub` 本身就是一个 `skill-hub project`，它的主要演进对象不是业务功能，而是 skills、adapter layers、invocation contracts、indexes、tests 和 automation tools。
+`ai-skill-hub` 本身就是一个 multi-agent skill platform 项目，它的主要演进对象不是业务功能，而是 skills、adapter layers、invocation contracts、indexes、tests 和 automation tools。
 
 对这类仓库使用 [skills/update-project-status](skills/update-project-status) 时，建议在 `.codex/skill-config/update-project-status.json` 中设置 `template_type=skillhub`，这样状态输出会优先围绕 skill coverage、invocability、governance 和 automation 来组织。
 

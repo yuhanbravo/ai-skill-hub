@@ -27,4 +27,4 @@ Use the `chatgpt-handoff-pilot` skill to generate a task package, execute within
 # - do not generate minimal_handoff_manual.md by default
 ```
 
-详细模板见 [SKILL.md](/d:/dev/codex-skill-hub/skills/chatgpt-handoff-pilot/SKILL.md)。
+详细模板见 [SKILL.md](SKILL.md)。

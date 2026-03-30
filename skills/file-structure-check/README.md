@@ -19,4 +19,4 @@ Project root: <project-root>
 # Strictness: <relaxed | standard | strict>
 ```
 
-详细审计模式见 [SKILL.md](/d:/dev/codex-skill-hub/skills/file-structure-check/SKILL.md)。
+详细审计模式见 [SKILL.md](SKILL.md)。

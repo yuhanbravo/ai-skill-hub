@@ -2,11 +2,11 @@
 
 这个目录主要放一些本地 PowerShell 工具，用来做 skill hub 的导出、导入和同步。下面按“什么时候用”来快速说明，便于直接调用。
 
-## 命名与兼容说明
+## 当前默认来源
 
 - canonical name：`ai-skill-hub`
-- legacy name：`codex-skill-hub`
-- 项目消费侧仍保留 `.codex/`、`.codex/skills/` 等兼容入口；本轮只调整 hub 内部工具默认说明，不改项目消费目录结构。
+- 默认本地仓库路径示例：`D:\dev\ai-skill-hub`
+- 项目消费侧仍保留 `.codex/`、`.codex/skills/` 等兼容入口；这里说明的是当前 hub 默认来源，不改项目消费目录结构。
 
 ## export_bundle.ps1
 

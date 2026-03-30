@@ -5,7 +5,6 @@ This file is the cross-AI, repository-level skill index for tools that cannot au
 ## Naming
 
 - Canonical repository name: `ai-skill-hub`
-- Legacy repository name: `codex-skill-hub`
 - Compatibility directories such as `.codex/` remain consumer-side entrypoints and are intentionally preserved.
 
 ## Canonical Rule

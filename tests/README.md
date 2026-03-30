@@ -1,3 +1,3 @@
 # tests
 
-Repository-level test area for `codex-skill-hub`.
+Repository-level test area for `ai-skill-hub`.

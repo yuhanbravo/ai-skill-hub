@@ -19,4 +19,4 @@ Project root: <project-root>
 # Need minimal TODO: yes/no
 ```
 
-详细迁移 playbook 见 [SKILL.md](/d:/dev/codex-skill-hub/skills/financial-data-project-migration/SKILL.md)。
+详细迁移 playbook 见 [SKILL.md](SKILL.md)。

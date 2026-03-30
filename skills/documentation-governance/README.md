@@ -19,4 +19,4 @@ Project root: <project-root>
 # Dry run: yes/no
 ```
 
-详细治理模式见 [SKILL.md](/d:/dev/codex-skill-hub/skills/documentation-governance/SKILL.md)。
+详细治理模式见 [SKILL.md](SKILL.md)。

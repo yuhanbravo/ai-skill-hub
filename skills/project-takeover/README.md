@@ -19,4 +19,4 @@ Project root: <project-root>
 # Dry run: yes/no
 ```
 
-详细执行方式见 [SKILL.md](/d:/dev/codex-skill-hub/skills/project-takeover/SKILL.md)。
+详细执行方式见 [SKILL.md](SKILL.md)。

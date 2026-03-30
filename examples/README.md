@@ -1,3 +1,3 @@
 # examples
 
-Repository-level examples for `codex-skill-hub`.
+Repository-level examples for `ai-skill-hub`.

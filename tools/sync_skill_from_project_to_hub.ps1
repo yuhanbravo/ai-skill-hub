@@ -7,8 +7,8 @@
 - 想只同步一个 skill，而不是整个 `.codex/skills`
 
 最短调用示例：
-- `.\tools\sync_skill_from_project_to_hub.ps1 -ProjectPath 'D:\my-project' -SkillHubPath 'D:\dev\codex-skill-hub' -SkillName 'chatgpt-handoff-pilot'`
-- `.\tools\sync_skill_from_project_to_hub.ps1 -ProjectPath 'D:\my-project' -SkillHubPath 'D:\dev\codex-skill-hub' -SkillName 'chatgpt-handoff-pilot' -DryRun`
+- `\.\tools\sync_skill_from_project_to_hub.ps1 -ProjectPath 'D:\my-project' -SkillHubPath 'D:\dev\ai-skill-hub' -SkillName 'chatgpt-handoff-pilot'`
+- `\.\tools\sync_skill_from_project_to_hub.ps1 -ProjectPath 'D:\my-project' -SkillHubPath 'D:\dev\ai-skill-hub' -SkillName 'chatgpt-handoff-pilot' -DryRun`
 
 注意：
 - 来源目录固定读取项目下的 `.codex\skills\<SkillName>`

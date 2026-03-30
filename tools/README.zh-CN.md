@@ -36,6 +36,7 @@
 
 - 工作区不干净时，脚本会要求输入提交日志，随后自动提交并导出。
 - 默认会输出到 `D:\BaiduSyncdisk\Python_Lib\Git_Bundle`。
+- 导出的默认 bundle 文件名已切换为 `ai-skill-hub_latest.bundle` 和 `ai-skill-hub_<date>_v1.bundle`。
 
 ## import_bundle.ps1
 
@@ -62,7 +63,7 @@
 注意：
 
 - 如果目标仓库已存在，必须是干净工作区。
-- 默认从 `D:\BaiduSyncdisk\Python_Lib\Git_Bundle\codex-skill-hub_latest.bundle` 读取 bundle。
+- 默认从 `D:\BaiduSyncdisk\Python_Lib\Git_Bundle\ai-skill-hub_latest.bundle` 读取 bundle。
 
 ## sync_skill_from_project_to_hub.ps1
 
@@ -80,7 +81,7 @@
 ```powershell
 .\tools\sync_skill_from_project_to_hub.ps1 `
   -ProjectPath 'D:\my-project' `
-  -SkillHubPath 'D:\dev\codex-skill-hub' `
+  -SkillHubPath 'D:\dev\ai-skill-hub' `
   -SkillName 'chatgpt-handoff-pilot'
 ```
 
@@ -111,7 +112,7 @@
 
 ```powershell
 .\tools\sync_skills_to_nongit_project.ps1 `
-  -SkillHubPath 'D:\dev\codex-skill-hub' `
+  -SkillHubPath 'D:\dev\ai-skill-hub' `
   -ProjectPath 'D:\my-project'
 ```
 
@@ -119,7 +120,7 @@
 
 ```powershell
 .\tools\sync_skills_to_nongit_project.ps1 `
-  -SkillHubPath 'D:\dev\codex-skill-hub' `
+  -SkillHubPath 'D:\dev\ai-skill-hub' `
   -ProjectPath 'D:\my-project' `
   -SkillName 'project-takeover' `
   -DryRun

@@ -7,8 +7,8 @@
 - 想同步一份“最新快照”到网盘或移动存储
 
 最短调用示例：
-- `.\tools\export_bundle.ps1`
-- `.\tools\export_bundle.ps1 -RepoPath 'D:\dev\codex-skill-hub' -OutputDir 'D:\backup\Git_Bundle'`
+- `\.\tools\export_bundle.ps1`
+- `\.\tools\export_bundle.ps1 -RepoPath 'D:\dev\ai-skill-hub' -OutputDir 'D:\backup\Git_Bundle'`
 - `\.\tools\export_bundle.ps1 -CommitMessage 'chore(bundle): export latest skill-hub snapshot'`
 
 注意：
@@ -151,8 +151,8 @@ try {
 
     $resolvedOutputDir = (Resolve-Path -LiteralPath $OutputDir).ProviderPath
     $dateStamp = Get-Date -Format 'yyyy-MM-dd'
-    $latestBundlePath = Join-Path $resolvedOutputDir 'codex-skill-hub_latest.bundle'
-    $versionedBundlePath = Join-Path $resolvedOutputDir ("codex-skill-hub_{0}_v1.bundle" -f $dateStamp)
+    $latestBundlePath = Join-Path $resolvedOutputDir 'ai-skill-hub_latest.bundle'
+    $versionedBundlePath = Join-Path $resolvedOutputDir ("ai-skill-hub_{0}_v1.bundle" -f $dateStamp)
 
     Write-Step 'Creating latest bundle'
     Invoke-Git -Arguments @('-C', $resolvedRepoPath, 'bundle', 'create', $latestBundlePath, '--all')

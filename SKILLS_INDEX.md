@@ -2,6 +2,12 @@
 
 This file is the cross-AI, repository-level skill index for tools that cannot automatically discover canonical skills or need a quick invocation-oriented overview.
 
+## Naming
+
+- Canonical repository name: `ai-skill-hub`
+- Legacy repository name: `codex-skill-hub`
+- Compatibility directories such as `.codex/` remain consumer-side entrypoints and are intentionally preserved.
+
 ## Canonical Rule
 
 - Canonical source of truth: `skills/<skill>/`

@@ -25,7 +25,7 @@ param(
     [string]$SkillName,
     [string]$VersionFileName = '_skillset_version.txt',
     [string]$HubVersionFile = 'VERSION',
-    [string]$HubName = 'CODEX-SKILL-HUB',
+    [string]$HubName = 'AI-SKILL-HUB',
     [switch]$DryRun
 )
 

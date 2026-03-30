@@ -2,6 +2,12 @@
 
 This document explains how this repository exposes skills to multiple AI tools while keeping `skills/` as the single source of truth.
 
+## Naming
+
+- Canonical repository name: `ai-skill-hub`
+- Legacy repository name: `codex-skill-hub`
+- Consumer-facing compatibility directories such as `.codex/`, `.codex/skills/`, and `.codex/skill-config/` remain valid and are not renamed by this repository refactor.
+
 ## Discovery Paths
 
 - Primary canonical source: `skills/<skill>/`
@@ -9,7 +15,7 @@ This document explains how this repository exposes skills to multiple AI tools w
 - Copilot fallback layer: `.github/skills/<skill>.md`
 - Human-readable fallback index: `SKILLS_INDEX.md`
 
-## How To Use In Codex Or Other AI Tools That Scan `.agents/skills`
+## How To Use In AI Tools That Scan `.agents/skills`
 
 1. Discover the skill under `.agents/skills/<skill>/SKILL.md`.
 2. Read the wrapper frontmatter to get `name`, `description`, and `metadata`.

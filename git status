@@ -1,0 +1,271 @@
+warning: in the working copy of 'SYNC.md', CRLF will be replaced by LF the next time Git touches it
+[1mdiff --git a/AI_USAGE.md b/AI_USAGE.md[m
+[1mindex 9b25cad..b3b54cc 100644[m
+[1m--- a/AI_USAGE.md[m
+[1m+++ b/AI_USAGE.md[m
+[36m@@ -2,6 +2,12 @@[m
+ [m
+ This document explains how this repository exposes skills to multiple AI tools while keeping `skills/` as the single source of truth.[m
+ [m
+[32m+[m[32m## Naming[m
+[32m+[m
+[32m+[m[32m- Canonical repository name: `ai-skill-hub`[m
+[32m+[m[32m- Legacy repository name: `codex-skill-hub`[m
+[32m+[m[32m- Consumer-facing compatibility directories such as `.codex/`, `.codex/skills/`, and `.codex/skill-config/` remain valid and are not renamed by this repository refactor.[m
+[32m+[m
+ ## Discovery Paths[m
+ [m
+ - Primary canonical source: `skills/<skill>/`[m
+[36m@@ -9,7 +15,7 @@[m [mThis document explains how this repository exposes skills to multiple AI tools w[m
+ - Copilot fallback layer: `.github/skills/<skill>.md`[m
+ - Human-readable fallback index: `SKILLS_INDEX.md`[m
+ [m
+[31m-## How To Use In Codex Or Other AI Tools That Scan `.agents/skills`[m
+[32m+[m[32m## How To Use In AI Tools That Scan `.agents/skills`[m
+ [m
+ 1. Discover the skill under `.agents/skills/<skill>/SKILL.md`.[m
+ 2. Read the wrapper frontmatter to get `name`, `description`, and `metadata`.[m
+[1mdiff --git a/README.md b/README.md[m
+[1mindex 5144b9f..4e28bcf 100644[m
+[1m--- a/README.md[m
+[1m+++ b/README.md[m
+[36m@@ -1,6 +1,12 @@[m
+[31m-# codex-skill-hub[m
+[32m+[m[32m# ai-skill-hub[m
+ [m
+[31m-这是当前机器上的本地 `skill hub` 仓库，用来集中维护、测试和分发各类 `Codex skills`。[m
+[32m+[m[32m这是当前机器上的本地 `skill hub` 仓库，用来集中维护、测试和分发各类 AI skills。[m
+[32m+[m
+[32m+[m[32m## Legacy Alias[m
+[32m+[m
+[32m+[m[32m- canonical name: `ai-skill-hub`[m
+[32m+[m[32m- legacy name: `codex-skill-hub`[m
+[32m+[m[32m- 消费者侧目录如 `.codex/`、`.codex/skills/`、`.codex/skill-config/` 继续作为兼容入口保留，不因本次仓库内部重命名而强制调整。[m
+ [m
+ ## 当前包含的 Skills[m
+ [m
+[36m@@ -30,7 +36,7 @@[m
+ 本仓库将 `skills/` 保持为唯一事实源，不在其他入口层复制完整 skill 内容。[m
+ [m
+ - `skills/<skill>/`：canonical source，包含真实 `SKILL.md`、脚本、测试、参考资料[m
+[31m-- `.agents/skills/<skill>/SKILL.md`：面向通用 AI 与 Codex 风格发现的薄入口[m
+[32m+[m[32m- `.agents/skills/<skill>/SKILL.md`：面向通用 AI 与兼容 Codex 的发现方式的薄入口[m
+ - `.github/skills/<skill>.md`：面向 Copilot 的兼容入口[m
+ [m
+ 当前仓库未使用 symlink，而是采用“adapter + index”策略：[m
+[36m@@ -43,7 +49,7 @@[m
+ [m
+ ## SkillHub Status Template[m
+ [m
+[31m-`codex-skill-hub` 本身就是一个 `skill-hub project`，它的主要演进对象不是业务功能，而是 skills、adapter layers、invocation contracts、indexes、tests 和 automation tools。[m
+[32m+[m[32m`ai-skill-hub` 本身就是一个 `skill-hub project`，它的主要演进对象不是业务功能，而是 skills、adapter layers、invocation contracts、indexes、tests 和 automation tools。[m
+ [m
+ 对这类仓库使用 [skills/update-project-status](skills/update-project-status) 时，建议在 `.codex/skill-config/update-project-status.json` 中设置 `template_type=skillhub`，这样状态输出会优先围绕 skill coverage、invocability、governance 和 automation 来组织。[m
+ [m
+[36m@@ -51,7 +57,7 @@[m
+ [m
+ ## 同步到非 Git 项目（Sync To Non-Git Project）[m
+ [m
+[31m-使用 [tools/sync_skills_to_nongit_project.ps1](/d:/dev/codex-skill-hub/tools/sync_skills_to_nongit_project.ps1) 可以把当前仓库中的 skills 同步到某个项目的 `.codex/skills` 目录。  [m
+[32m+[m[32m使用 [tools/sync_skills_to_nongit_project.ps1](tools/sync_skills_to_nongit_project.ps1) 可以把当前仓库中的 skills 同步到某个项目的 `.codex/skills` 目录。[m[41m  [m
+ 这个脚本默认会以“当前仓库根目录”作为 `skill hub` 源路径（source path），因此通常只需要传入目标项目路径（`ProjectPath`）。[m
+ [m
+ ```powershell[m
+[36m@@ -72,4 +78,4 @@[m [mpwsh -File .\tools\sync_skills_to_nongit_project.ps1 `[m
+ [m
+ ## 导出仓库 Bundle（Export Bundle）[m
+ [m
+[31m-使用 [tools/export_bundle.ps1](/d:/dev/codex-skill-hub/tools/export_bundle.ps1) 可以把当前仓库导出为 `.bundle` 文件，适合做离线备份（offline backup）或跨机器分发。[m
+[32m+[m[32m使用 [tools/export_bundle.ps1](tools/export_bundle.ps1) 可以把当前仓库导出为 `.bundle` 文件，适合做离线备份（offline backup）或跨机器分发。[m
+[1mdiff --git a/SKILLS_INDEX.md b/SKILLS_INDEX.md[m
+[1mindex fe8f397..c2f4533 100644[m
+[1m--- a/SKILLS_INDEX.md[m
+[1m+++ b/SKILLS_INDEX.md[m
+[36m@@ -2,6 +2,12 @@[m
+ [m
+ This file is the cross-AI, repository-level skill index for tools that cannot automatically discover canonical skills or need a quick invocation-oriented overview.[m
+ [m
+[32m+[m[32m## Naming[m
+[32m+[m
+[32m+[m[32m- Canonical repository name: `ai-skill-hub`[m
+[32m+[m[32m- Legacy repository name: `codex-skill-hub`[m
+[32m+[m[32m- Compatibility directories such as `.codex/` remain consumer-side entrypoints and are intentionally preserved.[m
+[32m+[m
+ ## Canonical Rule[m
+ [m
+ - Canonical source of truth: `skills/<skill>/`[m
+[1mdiff --git a/SYNC.md b/SYNC.md[m
+[1mindex d503fb6..a444d0b 100644[m
+[1m--- a/SYNC.md[m
+[1m+++ b/SYNC.md[m
+[36m@@ -2,7 +2,8 @@[m
+ [m
+ ## 本仓库的角色[m
+ [m
+[31m-- `D:\dev\codex-skill-hub` 是 `skill-hub` 主仓（SSOT）。[m
+[32m+[m[32m- 规范仓库名是 `ai-skill-hub`，legacy 名称是 `codex-skill-hub`。[m
+[32m+[m[32m- 当前本地物理目录在正式改名前仍可能沿用 legacy 目录名，但语义上的主仓名已切换为 `ai-skill-hub`。[m
+ - 所有 skill 的正式演进、治理和版本基线都应以本仓库为准。[m
+ [m
+ ## 与业务项目的关系[m
+[36m@@ -23,18 +24,18 @@[m
+ ### 导出[m
+ [m
+ ```powershell[m
+[31m-git bundle create ..\codex-skill-hub.bundle --all[m
+[32m+[m[32mgit bundle create ..\ai-skill-hub.bundle --all[m
+ ```[m
+ [m
+ ### 新机器恢复[m
+ [m
+ ```powershell[m
+[31m-git clone codex-skill-hub.bundle codex-skill-hub[m
+[32m+[m[32mgit clone ai-skill-hub.bundle ai-skill-hub[m
+ ```[m
+ [m
+ ### 已有仓库更新[m
+ [m
+ ```powershell[m
+[31m-git fetch ..\codex-skill-hub.bundle[m
+[32m+[m[32mgit fetch ..\ai-skill-hub.bundle[m
+ git merge FETCH_HEAD[m
+ ```[m
+[1mdiff --git a/tools/README.zh-CN.md b/tools/README.zh-CN.md[m
+[1mindex 4be296c..1de1663 100644[m
+[1m--- a/tools/README.zh-CN.md[m
+[1m+++ b/tools/README.zh-CN.md[m
+[36m@@ -36,6 +36,7 @@[m
+ [m
+ - 工作区不干净时，脚本会要求输入提交日志，随后自动提交并导出。[m
+ - 默认会输出到 `D:\BaiduSyncdisk\Python_Lib\Git_Bundle`。[m
+[32m+[m[32m- 导出的默认 bundle 文件名已切换为 `ai-skill-hub_latest.bundle` 和 `ai-skill-hub_<date>_v1.bundle`。[m
+ [m
+ ## import_bundle.ps1[m
+ [m
+[36m@@ -62,7 +63,7 @@[m
+ 注意：[m
+ [m
+ - 如果目标仓库已存在，必须是干净工作区。[m
+[31m-- 默认从 `D:\BaiduSyncdisk\Python_Lib\Git_Bundle\codex-skill-hub_latest.bundle` 读取 bundle。[m
+[32m+[m[32m- 默认从 `D:\BaiduSyncdisk\Python_Lib\Git_Bundle\ai-skill-hub_latest.bundle` 读取 bundle。[m
+ [m
+ ## sync_skill_from_project_to_hub.ps1[m
+ [m
+[36m@@ -80,7 +81,7 @@[m
+ ```powershell[m
+ .\tools\sync_skill_from_project_to_hub.ps1 `[m
+   -ProjectPath 'D:\my-project' `[m
+[31m-  -SkillHubPath 'D:\dev\codex-skill-hub' `[m
+[32m+[m[32m  -SkillHubPath 'D:\dev\ai-skill-hub' `[m
+   -SkillName 'chatgpt-handoff-pilot'[m
+ ```[m
+ [m
+[36m@@ -111,7 +112,7 @@[m
+ [m
+ ```powershell[m
+ .\tools\sync_skills_to_nongit_project.ps1 `[m
+[31m-  -SkillHubPath 'D:\dev\codex-skill-hub' `[m
+[32m+[m[32m  -SkillHubPath 'D:\dev\ai-skill-hub' `[m
+   -ProjectPath 'D:\my-project'[m
+ ```[m
+ [m
+[36m@@ -119,7 +120,7 @@[m
+ [m
+ ```powershell[m
+ .\tools\sync_skills_to_nongit_project.ps1 `[m
+[31m-  -SkillHubPath 'D:\dev\codex-skill-hub' `[m
+[32m+[m[32m  -SkillHubPath 'D:\dev\ai-skill-hub' `[m
+   -ProjectPath 'D:\my-project' `[m
+   -SkillName 'project-takeover' `[m
+   -DryRun[m
+[1mdiff --git a/tools/export_bundle.ps1 b/tools/export_bundle.ps1[m
+[1mindex 1dede59..1151f0b 100644[m
+[1m--- a/tools/export_bundle.ps1[m
+[1m+++ b/tools/export_bundle.ps1[m
+[36m@@ -7,8 +7,8 @@[m
+ - 想同步一份“最新快照”到网盘或移动存储[m
+ [m
+ 最短调用示例：[m
+[31m-- `.\tools\export_bundle.ps1`[m
+[31m-- `.\tools\export_bundle.ps1 -RepoPath 'D:\dev\codex-skill-hub' -OutputDir 'D:\backup\Git_Bundle'`[m
+[32m+[m[32m- `\.\tools\export_bundle.ps1`[m
+[32m+[m[32m- `\.\tools\export_bundle.ps1 -RepoPath 'D:\dev\ai-skill-hub' -OutputDir 'D:\backup\Git_Bundle'`[m
+ - `\.\tools\export_bundle.ps1 -CommitMessage 'chore(bundle): export latest skill-hub snapshot'`[m
+ [m
+ 注意：[m
+[36m@@ -151,8 +151,8 @@[m [mtry {[m
+ [m
+     $resolvedOutputDir = (Resolve-Path -LiteralPath $OutputDir).ProviderPath[m
+     $dateStamp = Get-Date -Format 'yyyy-MM-dd'[m
+[31m-    $latestBundlePath = Join-Path $resolvedOutputDir 'codex-skill-hub_latest.bundle'[m
+[31m-    $versionedBundlePath = Join-Path $resolvedOutputDir ("codex-skill-hub_{0}_v1.bundle" -f $dateStamp)[m
+[32m+[m[32m    $latestBundlePath = Join-Path $resolvedOutputDir 'ai-skill-hub_latest.bundle'[m
+[32m+[m[32m    $versionedBundlePath = Join-Path $resolvedOutputDir ("ai-skill-hub_{0}_v1.bundle" -f $dateStamp)[m
+ [m
+     Write-Step 'Creating latest bundle'[m
+     Invoke-Git -Arguments @('-C', $resolvedRepoPath, 'bundle', 'create', $latestBundlePath, '--all')[m
+[1mdiff --git a/tools/import_bundle.ps1 b/tools/import_bundle.ps1[m
+[1mindex d870228..2d0e08d 100644[m
+[1m--- a/tools/import_bundle.ps1[m
+[1m+++ b/tools/import_bundle.ps1[m
+[36m@@ -7,12 +7,12 @@[m
+ - 用 bundle 给现有本地仓库补最新提交[m
+ [m
+ 最短调用示例：[m
+[31m-- `.\tools\import_bundle.ps1`[m
+[31m-- `.\tools\import_bundle.ps1 -RepoPath 'D:\dev\codex-skill-hub' -BundlePath 'D:\backup\codex-skill-hub_latest.bundle'`[m
+[32m+[m[32m- `\.\tools\import_bundle.ps1`[m
+[32m+[m[32m- `\.\tools\import_bundle.ps1 -RepoPath 'D:\dev\ai-skill-hub' -BundlePath 'D:\backup\ai-skill-hub_latest.bundle'`[m
+ [m
+ 注意：[m
+ - 如果目标仓库已存在，脚本会先检查工作区是否干净；有未提交改动时会中止导入。[m
+[31m-- 默认 bundle 路径为 `D:\BaiduSyncdisk\Python_Lib\Git_Bundle\codex-skill-hub_latest.bundle`。[m
+[32m+[m[32m- 默认 bundle 路径为 `D:\BaiduSyncdisk\Python_Lib\Git_Bundle\ai-skill-hub_latest.bundle`。[m
+ #>[m
+ [CmdletBinding()][m
+ param([m
+[36m@@ -25,14 +25,11 @@[m [m$ErrorActionPreference = 'Stop'[m
+ [m
+ if ([string]::IsNullOrWhiteSpace($RepoPath)) {[m
+     $scriptDirectory = Split-Path -Path $PSCommandPath -Parent[m
+[31m-    $RepoPath = Join-Path (Split-Path -Path $scriptDirectory -Parent) 'codex-skill-hub'[m
+[31m-    if (Test-Path -LiteralPath $RepoPath -PathType Container) {[m
+[31m-        $RepoPath = (Resolve-Path -LiteralPath $RepoPath).ProviderPath[m
+[31m-    }[m
+[32m+[m[32m    $RepoPath = (Resolve-Path -LiteralPath (Join-Path $scriptDirectory '..')).ProviderPath[m
+ }[m
+ [m
+ if ([string]::IsNullOrWhiteSpace($BundlePath)) {[m
+[31m-    $BundlePath = 'D:\BaiduSyncdisk\Python_Lib\Git_Bundle\codex-skill-hub_latest.bundle'[m
+[32m+[m[32m    $BundlePath = 'D:\BaiduSyncdisk\Python_Lib\Git_Bundle\ai-skill-hub_latest.bundle'[m
+ }[m
+ [m
+ function Write-Step {[m
+[1mdiff --git a/tools/sync_skill_from_project_to_hub.ps1 b/tools/sync_skill_from_project_to_hub.ps1[m
+[1mindex 5210041..1be546b 100644[m
+[1m--- a/tools/sync_skill_from_project_to_hub.ps1[m
+[1m+++ b/tools/sync_skill_from_project_to_hub.ps1[m
+[36m@@ -7,8 +7,8 @@[m
+ - 想只同步一个 skill，而不是整个 `.codex/skills`[m
+ [m
+ 最短调用示例：[m
+[31m-- `.\tools\sync_skill_from_project_to_hub.ps1 -ProjectPath 'D:\my-project' -SkillHubPath 'D:\dev\codex-skill-hub' -SkillName 'chatgpt-handoff-pilot'`[m
+[31m-- `.\tools\sync_skill_from_project_to_hub.ps1 -ProjectPath 'D:\my-project' -SkillHubPath 'D:\dev\codex-skill-hub' -SkillName 'chatgpt-handoff-pilot' -DryRun`[m
+[32m+[m[32m- `\.\tools\sync_skill_from_project_to_hub.ps1 -ProjectPath 'D:\my-project' -SkillHubPath 'D:\dev\ai-skill-hub' -SkillName 'chatgpt-handoff-pilot'`[m
+[32m+[m[32m- `\.\tools\sync_skill_from_project_to_hub.ps1 -ProjectPath 'D:\my-project' -SkillHubPath 'D:\dev\ai-skill-hub' -SkillName 'chatgpt-handoff-pilot' -DryRun`[m
+ [m
+ 注意：[m
+ - 来源目录固定读取项目下的 `.codex\skills\<SkillName>`[m
+[1mdiff --git a/tools/sync_skills_to_nongit_project.ps1 b/tools/sync_skills_to_nongit_project.ps1[m
+[1mindex ce32337..680301e 100644[m
+[1m--- a/tools/sync_skills_to_nongit_project.ps1[m
+[1m+++ b/tools/sync_skills_to_nongit_project.ps1[m
+[36m@@ -25,7 +25,7 @@[m [mparam([m
+     [string]$SkillName,[m
+     [string]$VersionFileName = '_skillset_version.txt',[m
+     [string]$HubVersionFile = 'VERSION',[m
+[31m-    [string]$HubName = 'CODEX-SKILL-HUB',[m
+[32m+[m[32m    [string]$HubName = 'AI-SKILL-HUB',[m
+     [switch]$DryRun[m
+ )[m
+ [m

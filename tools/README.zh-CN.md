@@ -35,6 +35,7 @@
 注意：
 
 - 工作区不干净时，脚本会要求输入提交日志，随后自动提交并导出。
+- 默认会输出到 `D:\BaiduSyncdisk\Python_Lib\Git_Bundle`。
 
 ## import_bundle.ps1
 
@@ -61,6 +62,7 @@
 注意：
 
 - 如果目标仓库已存在，必须是干净工作区。
+- 默认从 `D:\BaiduSyncdisk\Python_Lib\Git_Bundle\codex-skill-hub_latest.bundle` 读取 bundle。
 
 ## sync_skill_from_project_to_hub.ps1
 

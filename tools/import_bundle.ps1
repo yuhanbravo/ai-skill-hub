@@ -12,6 +12,7 @@
 
 注意：
 - 如果目标仓库已存在，脚本会先检查工作区是否干净；有未提交改动时会中止导入。
+- 默认 bundle 路径为 `D:\BaiduSyncdisk\Python_Lib\Git_Bundle\codex-skill-hub_latest.bundle`。
 #>
 [CmdletBinding()]
 param(
@@ -31,8 +32,7 @@ if ([string]::IsNullOrWhiteSpace($RepoPath)) {
 }
 
 if ([string]::IsNullOrWhiteSpace($BundlePath)) {
-    $repoParent = Split-Path -Path $RepoPath -Parent
-    $BundlePath = Join-Path $repoParent 'Git_Bundle\codex-skill-hub_latest.bundle'
+    $BundlePath = 'D:\BaiduSyncdisk\Python_Lib\Git_Bundle\codex-skill-hub_latest.bundle'
 }
 
 function Write-Step {

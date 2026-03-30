@@ -13,6 +13,7 @@
 
 注意：
 - 导出前会自动检查仓库状态；若存在变更，会要求输入提交日志，然后自动提交并导出。
+- 默认 bundle 输出目录为 `D:\BaiduSyncdisk\Python_Lib\Git_Bundle`。
 #>
 [CmdletBinding()]
 param(
@@ -30,8 +31,7 @@ if ([string]::IsNullOrWhiteSpace($RepoPath)) {
 }
 
 if ([string]::IsNullOrWhiteSpace($OutputDir)) {
-    $repoParent = Split-Path -Path $RepoPath -Parent
-    $OutputDir = Join-Path $repoParent 'Git_Bundle'
+    $OutputDir = 'D:\BaiduSyncdisk\Python_Lib\Git_Bundle'
 }
 
 function Write-Step {

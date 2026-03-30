@@ -25,6 +25,7 @@ This file is the cross-AI, repository-level skill index for tools that cannot au
 | project | financial-data migration advisory | `financial-data-project-migration` | `skills/financial-data-project-migration/` | `.agents/skills/financial-data-project-migration/SKILL.md` | `.agents/skills/financial-data-project-migration.md` | `.github/skills/financial-data-project-migration.md` |
 | project | repository onboarding / takeover packet | `project-takeover` | `skills/project-takeover/` | `.agents/skills/project-takeover/SKILL.md` | `.agents/skills/project-takeover.md` | `.github/skills/project-takeover.md` |
 | governance | single-skill evaluation / controlled rewrite | `skill-governance` | `skills/skill-governance/` | `.agents/skills/skill-governance/SKILL.md` | `.agents/skills/skill-governance.md` | `.github/skills/skill-governance.md` |
+| system | capability-system takeover / architecture assessment | `system-takeover` | `skills/system-takeover/` | `.agents/skills/system-takeover/SKILL.md` | `.agents/skills/system-takeover.md` | `.github/skills/system-takeover.md` |
 | project | Git-based status refresh / weekly summary | `update-project-status` | `skills/update-project-status/` | `.agents/skills/update-project-status/SKILL.md` | `.agents/skills/update-project-status.md` | `.github/skills/update-project-status.md` |
 
 ## Per-Skill Invocation Overview
@@ -82,6 +83,16 @@ This file is the cross-AI, repository-level skill index for tools that cannot au
 - Invocation example: `Use skill-governance on <skill-path> rewrite=false`
 - Inputs: one target skill path, current structure, rewrite authorization
 - Outputs: scorecard, diagnosis, maturity decision, optional controlled rewrite result
+
+### system-takeover
+
+- Use scenario classification: `capability system takeover`, `system architecture assessment`, `multi-agent system analysis`
+- Triggers: `analyze system architecture`; `analyze skill hub`; `analyze ai capability system`; `multi agent system analysis`; `analyze orchestration system`; `capability os assessment`
+- Side effects: `read_only`, `write_files`
+- Invocation example: `Use system-takeover for this task. task_description: Analyze this skill-hub system and evaluate its capability architecture.`
+- Inputs: system root, canonical skills, protocol docs, router and pipeline implementation, adapter entries, tooling, governance docs
+- Outputs: system structure, capability map, layered maturity assessment, top bottlenecks, evolution plan
+- Boundary: use `system-takeover` for capability systems and orchestration stacks; use `project-takeover` for ordinary repository onboarding and takeover packets
 
 ### update-project-status
 

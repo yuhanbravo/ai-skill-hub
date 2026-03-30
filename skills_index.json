@@ -102,6 +102,24 @@
     "invocation_example": "Use skill-governance on <skill-path> rewrite=false"
   },
   {
+    "name": "system-takeover",
+    "path": "skills/system-takeover",
+    "category": "system",
+    "triggers": [
+      "analyze system architecture",
+      "analyze skill hub",
+      "analyze ai capability system",
+      "multi agent system analysis",
+      "analyze orchestration system",
+      "capability os assessment"
+    ],
+    "side_effects": [
+      "read_only",
+      "write_files"
+    ],
+    "invocation_example": "Use system-takeover for this task. task_description: - Analyze this skill-hub system and evaluate its capability architecture. constraints: - Do not modify protocol, router, pipeline, or existing skills. - Treat this as a system-level takeover, not a business-project audit. expected_output: - System structure - Capability map - Layered maturity assessment - Top bottlenecks - Evolution plan context_files: - skills/ - tools/ - docs/ - .agents/ - .github/ - tests/"
+  },
+  {
     "name": "update-project-status",
     "path": "skills/update-project-status",
     "category": "project",

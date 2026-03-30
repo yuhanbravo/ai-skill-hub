@@ -34,6 +34,10 @@ def main() -> int:
             "expected_skill": "update-project-status",
         },
         {
+            "task": "analyze this skill hub system",
+            "expected_skill": "system-takeover",
+        },
+        {
             "task": "接管项目并整理文档",
             "expected_skill": "project-takeover",
         },

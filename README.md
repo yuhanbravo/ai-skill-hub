@@ -18,6 +18,7 @@
 - `financial-data-project-migration`
 - `project-takeover`
 - `skill-governance`
+- `system-takeover`
 - `update-project-status`
 
 ## 仓库结构（Repository Layout）

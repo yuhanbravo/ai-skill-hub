@@ -38,6 +38,14 @@ def main() -> int:
             "expected_skill": "system-takeover",
         },
         {
+            "task": "refresh the ai-skill-hub system status by layer and phase",
+            "expected_skill": "system-status-update",
+        },
+        {
+            "task": "update the skill hub handoff with system boundaries and next phase direction",
+            "expected_skill": "system-handoff",
+        },
+        {
             "task": "接管项目并整理文档",
             "expected_skill": "project-takeover",
         },

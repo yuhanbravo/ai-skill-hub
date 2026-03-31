@@ -18,6 +18,8 @@
 - `financial-data-project-migration`
 - `project-takeover`
 - `skill-governance`
+- `system-handoff`
+- `system-status-update`
 - `system-takeover`
 - `update-project-status`
 
@@ -75,9 +77,18 @@ pwsh -File .\tools\sync_skills_to_nongit_project.ps1 `
   -DryRun
 ```
 
+```powershell
+pwsh -File .\tools\sync_skills_to_nongit_project.ps1 `
+  -ProjectPath D:\dev\some-project `
+  -Targets codex
+```
+
 - 不传 `-SkillName`：同步全部 skills
 - 传入 `-SkillName`：只同步单个 skill
 - 加上 `-DryRun`：只预览 `robocopy` 结果，不实际写入
+- 不传 `-Targets`：默认同步 `codex + agents + github`
+- 传入 `-Targets codex`：只下发 `.codex/skills` 与版本文件，不写 adapter layer
+- 传入 `-Targets codex,agents,github`：显式指定完整 rollout 目标；adapter 仍指向项目内 `.codex/skills`
 
 ## 导出仓库 Bundle（Export Bundle）
 

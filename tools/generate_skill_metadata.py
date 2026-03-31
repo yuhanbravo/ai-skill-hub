@@ -90,7 +90,7 @@ def detect_category(skill_name: str) -> str:
         return "audit"
     if skill_name == "skill-governance":
         return "governance"
-    if skill_name == "system-takeover":
+    if skill_name in {"system-handoff", "system-status-update", "system-takeover"}:
         return "system"
     return "project"
 

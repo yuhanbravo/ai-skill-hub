@@ -9,9 +9,11 @@
 最短调用示例：
 - `.\tools\sync_skills_to_nongit_project.ps1 -ProjectPath 'D:\my-project'`
 - `.\tools\sync_skills_to_nongit_project.ps1 -ProjectPath 'D:\my-project' -SkillName 'project-takeover' -DryRun`
+- `\.\tools\sync_skills_to_nongit_project.ps1 -ProjectPath 'D:\my-project' -Targets codex`
 
 注意：
 - 不传 `-SkillName` 时会同步全部 skills
+- 不传 `-Targets` 时默认同步 `codex + agents + github`
 - `.codex\skills` 仍作为项目消费侧兼容入口保留，不随 hub 改名而调整
 - 会在目标项目的 `.codex\skills` 下写入版本说明文件
 - 使用 `robocopy /MIR`，建议先用 `-DryRun` 预览同步结果
@@ -24,6 +26,7 @@ param(
     [string]$ProjectPath,
 
     [string]$SkillName,
+    [string[]]$Targets = @('codex', 'agents', 'github'),
     [string]$VersionFileName = '_skillset_version.txt',
     [string]$HubVersionFile = 'VERSION',
     [string]$HubName = 'ai-skill-hub',
@@ -32,6 +35,7 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+$IsDryRun = [bool]$DryRun
 
 if ([string]::IsNullOrWhiteSpace($SkillHubPath)) {
     $scriptFilePath = if (-not [string]::IsNullOrWhiteSpace($PSCommandPath)) {
@@ -89,6 +93,15 @@ function Write-Success {
     Write-Host "[SUCCESS] $Message" -ForegroundColor Green
 }
 
+function Write-Plan {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Message
+    )
+
+    Write-Host "[PLAN] $Message" -ForegroundColor Magenta
+}
+
 function Confirm-DirectoryExists {
     param(
         [Parameter(Mandatory = $true)]
@@ -103,6 +116,43 @@ function Confirm-DirectoryExists {
     }
 }
 
+function Get-NormalizedTargets {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string[]]$RequestedTargets
+    )
+
+    $normalizedTargets = New-Object 'System.Collections.Generic.List[string]'
+    $allowedTargets = @('codex', 'agents', 'github')
+
+    foreach ($requestedTarget in $RequestedTargets) {
+        if ($null -eq $requestedTarget) {
+            continue
+        }
+
+        foreach ($targetPart in ($requestedTarget -split ',')) {
+            $normalizedTarget = $targetPart.Trim().ToLowerInvariant()
+            if ([string]::IsNullOrWhiteSpace($normalizedTarget)) {
+                continue
+            }
+
+            if ($allowedTargets -notcontains $normalizedTarget) {
+                throw "Unsupported target '$normalizedTarget'. Allowed targets: codex, agents, github."
+            }
+
+            if (-not $normalizedTargets.Contains($normalizedTarget)) {
+                $normalizedTargets.Add($normalizedTarget)
+            }
+        }
+    }
+
+    if ($normalizedTargets.Count -eq 0) {
+        throw 'Targets must contain at least one of: codex, agents, github.'
+    }
+
+    return @($normalizedTargets)
+}
+
 function Initialize-Directory {
     param(
         [Parameter(Mandatory = $true)]
@@ -113,8 +163,8 @@ function Initialize-Directory {
         return
     }
 
-    if ($DryRun) {
-        Write-Info "DryRun: would create directory $Path"
+    if ($IsDryRun) {
+        Write-Plan "Create directory: $Path"
         return
     }
 
@@ -291,8 +341,8 @@ function Write-GeneratedFile {
         Initialize-Directory -Path $parentPath
     }
 
-    if ($DryRun) {
-        Write-Info "DryRun: would write file $Path"
+    if ($IsDryRun) {
+        Write-Plan "Write file: $Path"
         return
     }
 
@@ -306,8 +356,8 @@ function Remove-GeneratedEntry {
         [string]$Path
     )
 
-    if ($DryRun) {
-        Write-WarningMessage "DryRun: would remove generated adapter entry $Path"
+    if ($IsDryRun) {
+        Write-Plan "Remove generated adapter entry: $Path"
         return
     }
 
@@ -435,10 +485,12 @@ function Emit-ProjectAgentsAdapter {
     $summaryPath = Join-Path $agentsRoot ("{0}.md" -f $SkillMetadata.Name)
     $projectLocalSkillPath = ".codex/skills/$($SkillMetadata.Name)"
     $relativeCanonicalPath = "../../../$projectLocalSkillPath"
-    $triggerLines = @($SkillMetadata.Triggers | ForEach-Object { "    - $_" })
-    $sideEffectLines = @($SkillMetadata.SideEffects | ForEach-Object { "    - $_" })
-    $summaryTriggers = if ($SkillMetadata.Triggers.Count -gt 0) {
-        $SkillMetadata.Triggers -join ', '
+    $triggerValues = @($SkillMetadata.Triggers)
+    $sideEffectValues = @($SkillMetadata.SideEffects)
+    $triggerLines = @($triggerValues | ForEach-Object { "    - $_" })
+    $sideEffectLines = @($sideEffectValues | ForEach-Object { "    - $_" })
+    $summaryTriggers = if ($triggerValues.Count -gt 0) {
+        $triggerValues -join ', '
     }
     else {
         ''
@@ -534,8 +586,8 @@ function Remove-StaleTargetEntries {
             continue
         }
 
-        if ($DryRun) {
-            Write-WarningMessage "DryRun: would remove stale entry $($entry.FullName)"
+        if ($IsDryRun) {
+            Write-Plan "Remove stale entry: $($entry.FullName)"
         }
         else {
             Remove-Item -LiteralPath $entry.FullName -Recurse -Force
@@ -563,8 +615,10 @@ function Invoke-RobocopySync {
         '/XF', '*.pyc', '*.pyo'
     )
 
-    if ($DryRun) {
-        $robocopyArguments += '/L'
+    if ($IsDryRun) {
+        Write-Plan ("Sync directory tree: {0} -> {1}" -f $SourcePath, $TargetPath)
+        Write-Plan ("Skip robocopy execution during DryRun: robocopy {0}" -f ($robocopyArguments -join ' '))
+        return 0
     }
 
     Write-Info ("Robocopy command: robocopy {0}" -f ($robocopyArguments -join ' '))
@@ -580,6 +634,77 @@ function Invoke-RobocopySync {
     }
 
     return [int]$exitCode
+}
+
+function Get-RecursiveFileCount {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string[]]$Paths
+    )
+
+    $total = 0
+    foreach ($path in $Paths) {
+        if (-not (Test-Path -LiteralPath $path)) {
+            continue
+        }
+
+        $total += @(Get-ChildItem -LiteralPath $path -Recurse -File -Force).Count
+    }
+
+    return $total
+}
+
+function Write-DryRunPlanSummary {
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$SkillCount,
+
+        [Parameter(Mandatory = $true)]
+        [string]$CanonicalTargetPath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$AgentsTargetPath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$GithubTargetPath,
+
+        [Parameter(Mandatory = $true)]
+        [int]$CanonicalFileCount,
+
+        [Parameter(Mandatory = $true)]
+        [int]$AdapterFileCount,
+
+        [Parameter(Mandatory = $true)]
+        [string[]]$SelectedTargets,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Scope
+    )
+
+    $selectedTargetText = $SelectedTargets -join ', '
+    $versionFileWrites = if ($SelectedTargets -contains 'codex') { 1 } else { 0 }
+
+    Write-Step 'DryRun plan summary'
+    Write-Plan "Scope: $Scope"
+    Write-Plan "Selected targets: $selectedTargetText"
+    Write-Plan "Skill count: $SkillCount"
+    if ($SelectedTargets -contains 'codex') {
+        Write-Plan "Canonical target: $CanonicalTargetPath"
+    }
+    if ($SelectedTargets -contains 'agents' -or $SelectedTargets -contains 'github') {
+        $adapterTargets = @()
+        if ($SelectedTargets -contains 'agents') {
+            $adapterTargets += $AgentsTargetPath
+        }
+        if ($SelectedTargets -contains 'github') {
+            $adapterTargets += $GithubTargetPath
+        }
+        Write-Plan ("Adapter targets: {0}" -f ($adapterTargets -join ' ; '))
+    }
+    Write-Plan "Estimated canonical files to copy or update: $CanonicalFileCount"
+    Write-Plan "Estimated adapter files to write or update: $AdapterFileCount"
+    Write-Plan ("Estimated total file writes: {0}" -f ($CanonicalFileCount + $AdapterFileCount + $versionFileWrites))
+    Write-Plan 'DryRun will not create directories, write files, remove entries, or execute robocopy.'
 }
 
 function New-VersionFileContent {
@@ -620,6 +745,11 @@ function New-VersionFileContent {
     ) -join [Environment]::NewLine
 }
 
+$selectedTargets = @(Get-NormalizedTargets -RequestedTargets $Targets)
+$syncCodex = $selectedTargets -contains 'codex'
+$syncAgents = $selectedTargets -contains 'agents'
+$syncGithub = $selectedTargets -contains 'github'
+
 try {
     Write-Step 'Checking required commands'
     if (-not (Get-Command robocopy -ErrorAction SilentlyContinue)) {
@@ -640,15 +770,14 @@ try {
 
     $projectCodexPath = Join-Path $resolvedProjectPath '.codex'
     $targetSkillsRoot = Join-Path $projectCodexPath 'skills'
+    $projectAgentsRoot = Join-Path $resolvedProjectPath '.agents\skills'
+    $projectGithubRoot = Join-Path $resolvedProjectPath '.github\skills'
 
     Write-Info "Skill hub path: $resolvedSkillHubPath"
     Write-Info "Project path: $resolvedProjectPath"
     Write-Info "Target skills path: $targetSkillsRoot"
     Write-Info "Skillset version: $skillsetVersion"
-
-    Write-Step 'Preparing target directories'
-    Initialize-Directory -Path $projectCodexPath
-    Initialize-Directory -Path $targetSkillsRoot
+    Write-Info "Selected targets: $($selectedTargets -join ', ')"
 
     if ([string]::IsNullOrWhiteSpace($SkillName)) {
         $syncedScope = 'all'
@@ -660,22 +789,79 @@ try {
         }
 
         $allowedEntryNames = @($syncableEntries | ForEach-Object { $_.Name })
-        Write-Step 'Cleaning stale target entries'
-        Remove-StaleTargetEntries -TargetRoot $targetSkillsRoot -AllowedNames $allowedEntryNames -PreserveFileName $VersionFileName
+        if ($syncCodex) {
+            Write-Step 'Cleaning stale target entries'
+            Remove-StaleTargetEntries -TargetRoot $targetSkillsRoot -AllowedNames $allowedEntryNames -PreserveFileName $VersionFileName
+        }
 
-        Write-Step 'Syncing all canonical skill entries'
-        Write-Info "Entries: $($allowedEntryNames -join ', ')"
+        $plannedSkillEntries = @(Get-SkillEntries -SkillsRoot $sourceSkillsRoot)
+        $estimatedCanonicalFileCount = if ($syncCodex) {
+            Get-RecursiveFileCount -Paths @($syncableEntries | ForEach-Object { $_.FullName })
+        }
+        else {
+            0
+        }
+
+        if ($syncCodex) {
+            Write-Step 'Syncing all canonical skill entries'
+            Write-Info "Entries: $($allowedEntryNames -join ', ')"
+        }
     }
     else {
         $syncedScope = $SkillName.Trim()
         $sourcePath = Join-Path $sourceSkillsRoot $syncedScope
         Confirm-DirectoryExists -Path $sourcePath -Description 'Source skill'
         $targetPath = Join-Path $targetSkillsRoot $syncedScope
-        Initialize-Directory -Path $targetPath
-        Write-Step "Syncing single skill: $syncedScope"
+        $plannedSkillEntries = @()
+        if (Test-Path -LiteralPath (Join-Path $sourcePath 'SKILL.md') -PathType Leaf) {
+            $plannedSkillEntries = @([pscustomobject]@{
+                Name     = $syncedScope
+                FullName = $sourcePath
+            })
+        }
+        $estimatedCanonicalFileCount = if ($syncCodex) {
+            Get-RecursiveFileCount -Paths @($sourcePath)
+        }
+        else {
+            0
+        }
+
+        if ($syncCodex) {
+            Write-Step "Syncing single skill: $syncedScope"
+        }
     }
 
-    if ([string]::IsNullOrWhiteSpace($SkillName)) {
+    if ($IsDryRun) {
+        $adapterFilesPerSkill = 0
+        if ($syncAgents) {
+            $adapterFilesPerSkill += 2
+        }
+        if ($syncGithub) {
+            $adapterFilesPerSkill += 1
+        }
+        $estimatedAdapterFileCount = $plannedSkillEntries.Count * $adapterFilesPerSkill
+        Write-DryRunPlanSummary `
+            -SkillCount $plannedSkillEntries.Count `
+            -CanonicalTargetPath $targetSkillsRoot `
+            -AgentsTargetPath $projectAgentsRoot `
+            -GithubTargetPath $projectGithubRoot `
+            -CanonicalFileCount $estimatedCanonicalFileCount `
+            -AdapterFileCount $estimatedAdapterFileCount `
+            -SelectedTargets $selectedTargets `
+            -Scope $syncedScope
+    }
+
+    if ($syncCodex) {
+        Write-Step 'Preparing target directories'
+        Initialize-Directory -Path $projectCodexPath
+        Initialize-Directory -Path $targetSkillsRoot
+
+        if (-not [string]::IsNullOrWhiteSpace($SkillName)) {
+            Initialize-Directory -Path $targetPath
+        }
+    }
+
+    if ($syncCodex -and [string]::IsNullOrWhiteSpace($SkillName)) {
         $robocopyExitCodes = @()
         foreach ($entry in $syncableEntries) {
             $entryTargetPath = Join-Path $targetSkillsRoot $entry.Name
@@ -685,70 +871,90 @@ try {
         }
         $robocopyExitCode = @($robocopyExitCodes | Measure-Object -Maximum).Maximum
     }
-    else {
+    elseif ($syncCodex) {
         $robocopyExitCode = Invoke-RobocopySync -SourcePath $sourcePath -TargetPath $targetPath
+    }
+    else {
+        $robocopyExitCode = 0
+        Write-Info 'Skipped canonical sync because Targets excludes codex.'
     }
 
     Write-Info "robocopy exit code: $robocopyExitCode"
 
-    $projectSkillEntries = @(Get-SkillEntries -SkillsRoot $targetSkillsRoot)
-    $projectAgentsRoot = Join-Path $resolvedProjectPath '.agents\skills'
-    $projectGithubRoot = Join-Path $resolvedProjectPath '.github\skills'
-
-    if ([string]::IsNullOrWhiteSpace($SkillName)) {
-        $projectSkillNames = @($projectSkillEntries | ForEach-Object { $_.Name })
-        Write-Step 'Cleaning stale project-local adapter entries'
-        Remove-StaleProjectAgentsEntries -TargetRoot $projectAgentsRoot -AllowedSkillNames $projectSkillNames
-        Remove-StaleProjectGithubEntries -TargetRoot $projectGithubRoot -AllowedSkillNames $projectSkillNames
-
-        Write-Step 'Emitting project-local adapter entries'
-        foreach ($entry in $projectSkillEntries) {
-            Write-Info "Generating project-local adapters for skill: $($entry.Name)"
-            $skillMetadata = Get-SkillMetadata -SkillFilePath (Join-Path $entry.FullName 'SKILL.md')
-            Emit-ProjectAgentsAdapter -ProjectPathValue $resolvedProjectPath -SkillMetadata $skillMetadata
-            Emit-ProjectGithubAdapter -ProjectPathValue $resolvedProjectPath -SkillMetadata $skillMetadata
+    $projectSkillEntries = @(
+        if ($IsDryRun -or -not $syncCodex) {
+            $plannedSkillEntries
         }
-    }
-    else {
-        $syncedSkillFilePath = Join-Path $targetPath 'SKILL.md'
-        if (Test-Path -LiteralPath $syncedSkillFilePath -PathType Leaf) {
-            Write-Step "Emitting project-local adapter entries for skill: $syncedScope"
-            $skillMetadata = Get-SkillMetadata -SkillFilePath $syncedSkillFilePath
-            Emit-ProjectAgentsAdapter -ProjectPathValue $resolvedProjectPath -SkillMetadata $skillMetadata
-            Emit-ProjectGithubAdapter -ProjectPathValue $resolvedProjectPath -SkillMetadata $skillMetadata
+        else {
+            Get-SkillEntries -SkillsRoot $targetSkillsRoot
+        }
+    )
+
+    if ($syncAgents -or $syncGithub) {
+        if ([string]::IsNullOrWhiteSpace($SkillName)) {
+            $projectSkillNames = @($projectSkillEntries | ForEach-Object { $_.Name })
+            Write-Step 'Cleaning stale project-local adapter entries'
+            if ($syncAgents) {
+                Remove-StaleProjectAgentsEntries -TargetRoot $projectAgentsRoot -AllowedSkillNames $projectSkillNames
+            }
+            if ($syncGithub) {
+                Remove-StaleProjectGithubEntries -TargetRoot $projectGithubRoot -AllowedSkillNames $projectSkillNames
+            }
+        }
+
+        if ($projectSkillEntries.Count -gt 0) {
+            Write-Step 'Emitting project-local adapter entries'
+            foreach ($entry in $projectSkillEntries) {
+                Write-Info "Generating project-local adapters for skill: $($entry.Name)"
+                $skillMetadata = Get-SkillMetadata -SkillFilePath (Join-Path $entry.FullName 'SKILL.md')
+                if ($syncAgents) {
+                    Emit-ProjectAgentsAdapter -ProjectPathValue $resolvedProjectPath -SkillMetadata $skillMetadata
+                }
+                if ($syncGithub) {
+                    Emit-ProjectGithubAdapter -ProjectPathValue $resolvedProjectPath -SkillMetadata $skillMetadata
+                }
+            }
         }
         else {
             Write-Info "Skipped project-local adapter emit for non-skill entry: $syncedScope"
         }
     }
+    else {
+        Write-Info 'Skipped adapter emit because Targets excludes agents and github.'
+    }
 
-    $versionFilePath = Join-Path $targetSkillsRoot $VersionFileName
-    $note = if ($DryRun) {
-        'DryRun preview only; version file was not written. No project-side git command was executed.'
+    if ($syncCodex) {
+        $versionFilePath = Join-Path $targetSkillsRoot $VersionFileName
+        $note = if ($DryRun) {
+            'DryRun preview only; version file was not written. No project-side git command was executed.'
+        }
+        else {
+            'Synced by sync_skills_to_nongit_project.ps1. No project-side git command was executed.'
+        }
+
+        $versionFileParameters = @{
+            SourceHub        = $HubName
+            SourcePath       = $sourcePath
+            SkillsetVersion  = $skillsetVersion
+            SyncedScope      = $syncedScope
+            RobocopyExitCode = $robocopyExitCode
+            ProjectPathValue = $resolvedProjectPath
+            Note             = $note
+        }
+        $versionFileContent = New-VersionFileContent @versionFileParameters
+
+        Write-Step 'Writing sync metadata'
+        if ($IsDryRun) {
+            Write-Plan "Write version file: $versionFilePath"
+            Write-Host $versionFileContent
+        }
+        else {
+            Set-Content -LiteralPath $versionFilePath -Value $versionFileContent -Encoding utf8
+            Write-Info "Version file written: $versionFilePath"
+        }
     }
     else {
-        'Synced by sync_skills_to_nongit_project.ps1. No project-side git command was executed.'
-    }
-
-    $versionFileParameters = @{
-        SourceHub        = $HubName
-        SourcePath       = $sourcePath
-        SkillsetVersion  = $skillsetVersion
-        SyncedScope      = $syncedScope
-        RobocopyExitCode = $robocopyExitCode
-        ProjectPathValue = $resolvedProjectPath
-        Note             = $note
-    }
-    $versionFileContent = New-VersionFileContent @versionFileParameters
-
-    Write-Step 'Writing sync metadata'
-    if ($DryRun) {
-        Write-WarningMessage "DryRun: would write version file to $versionFilePath"
-        Write-Host $versionFileContent
-    }
-    else {
-        Set-Content -LiteralPath $versionFilePath -Value $versionFileContent -Encoding utf8
-        Write-Info "Version file written: $versionFilePath"
+        Write-Info 'Skipped sync metadata write because Targets excludes codex.'
     }
 
     Write-Success "Skill sync completed for scope: $syncedScope"

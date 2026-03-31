@@ -102,6 +102,41 @@
     "invocation_example": "Use skill-governance on <skill-path> rewrite=false"
   },
   {
+    "name": "system-handoff",
+    "path": "skills/system-handoff",
+    "category": "system",
+    "triggers": [
+      "update ai-skill-hub system handoff",
+      "maintain skill-hub handoff sections",
+      "refresh system boundaries in docs HANDOFF md",
+      "capture next phase direction for ai capability system",
+      "merge system-level handoff updates without full rewrite"
+    ],
+    "side_effects": [
+      "read_only",
+      "write_files"
+    ],
+    "invocation_example": "Use system-handoff for this task. task_description: - Update ai-skill-hub handoff as a system document without rewriting the whole file. constraints: - Reuse chatgpt-handoff-pilot as the canonical handoff flow. - Keep docs/HANDOFF.md section-aware and system-oriented. expected_output: - Current Status - Hard Boundaries - Key Design Decisions - Intentional Gaps - Next Phase Direction context_files: - docs/HANDOFF.md - docs/status/skill-hub-status.md - README.md"
+  },
+  {
+    "name": "system-status-update",
+    "path": "skills/system-status-update",
+    "category": "system",
+    "triggers": [
+      "refresh ai-skill-hub system status",
+      "update skill-hub layer status and phase",
+      "generate a capability-system status summary",
+      "produce layer-oriented status for ai-skill-hub",
+      "summarize canonical distribution governance and tooling layers"
+    ],
+    "side_effects": [
+      "read_only",
+      "write_files",
+      "requires_git"
+    ],
+    "invocation_example": "Use system-status-update for this task. task_description: - Refresh ai-skill-hub as a capability system and report the current layer status. constraints: - Reuse update-project-status as the canonical status engine. - Do not output file-level change lists. expected_output: - Layer Status - Current Phase - Capabilities - Stability context_files: - docs/status/skill-hub-status.md - skills/ - .agents/ - .github/ - tools/"
+  },
+  {
     "name": "system-takeover",
     "path": "skills/system-takeover",
     "category": "system",

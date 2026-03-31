@@ -68,6 +68,23 @@ SKILL_ALIASES: dict[str, list[str]] = {
         "重写 skill",
         "skill 评分",
     ],
+    "system-handoff": [
+        "system handoff",
+        "skill hub handoff",
+        "system level handoff",
+        "更新 system handoff",
+        "更新 skill hub handoff",
+        "系统交接",
+    ],
+    "system-status-update": [
+        "system status",
+        "skill hub status",
+        "layer status",
+        "phase status",
+        "系统状态",
+        "层状态",
+        "阶段状态",
+    ],
     "update-project-status": [
         "project status",
         "weekly summary",

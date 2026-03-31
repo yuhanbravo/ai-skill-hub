@@ -10,6 +10,9 @@ This file mirrors the canonical skills for AI tools that can inspect `.agents/sk
 | `financial-data-project-migration` | `../../skills/financial-data-project-migration/` | `./financial-data-project-migration/SKILL.md` |
 | `project-takeover` | `../../skills/project-takeover/` | `./project-takeover/SKILL.md` |
 | `skill-governance` | `../../skills/skill-governance/` | `./skill-governance/SKILL.md` |
+| `system-handoff` | `../../skills/system-handoff/` | `./system-handoff/SKILL.md` |
+| `system-status-update` | `../../skills/system-status-update/` | `./system-status-update/SKILL.md` |
+| `system-takeover` | `../../skills/system-takeover/` | `./system-takeover/SKILL.md` |
 | `update-project-status` | `../../skills/update-project-status/` | `./update-project-status/SKILL.md` |
 
 If deeper metadata is required, use `../../SKILLS_INDEX.md`.

@@ -25,6 +25,8 @@ This file is the cross-AI, repository-level skill index for tools that cannot au
 | project | financial-data migration advisory | `financial-data-project-migration` | `skills/financial-data-project-migration/` | `.agents/skills/financial-data-project-migration/SKILL.md` | `.agents/skills/financial-data-project-migration.md` | `.github/skills/financial-data-project-migration.md` |
 | project | repository onboarding / takeover packet | `project-takeover` | `skills/project-takeover/` | `.agents/skills/project-takeover/SKILL.md` | `.agents/skills/project-takeover.md` | `.github/skills/project-takeover.md` |
 | governance | single-skill evaluation / controlled rewrite | `skill-governance` | `skills/skill-governance/` | `.agents/skills/skill-governance/SKILL.md` | `.agents/skills/skill-governance.md` | `.github/skills/skill-governance.md` |
+| system | skill-hub handoff / section-aware system merge | `system-handoff` | `skills/system-handoff/` | `.agents/skills/system-handoff/SKILL.md` | `.agents/skills/system-handoff.md` | `.github/skills/system-handoff.md` |
+| system | system-layer status refresh / phase summary | `system-status-update` | `skills/system-status-update/` | `.agents/skills/system-status-update/SKILL.md` | `.agents/skills/system-status-update.md` | `.github/skills/system-status-update.md` |
 | system | capability-system takeover / architecture assessment | `system-takeover` | `skills/system-takeover/` | `.agents/skills/system-takeover/SKILL.md` | `.agents/skills/system-takeover.md` | `.github/skills/system-takeover.md` |
 | project | Git-based status refresh / weekly summary | `update-project-status` | `skills/update-project-status/` | `.agents/skills/update-project-status/SKILL.md` | `.agents/skills/update-project-status.md` | `.github/skills/update-project-status.md` |
 
@@ -83,6 +85,26 @@ This file is the cross-AI, repository-level skill index for tools that cannot au
 - Invocation example: `Use skill-governance on <skill-path> rewrite=false`
 - Inputs: one target skill path, current structure, rewrite authorization
 - Outputs: scorecard, diagnosis, maturity decision, optional controlled rewrite result
+
+### system-handoff
+
+- Use scenario classification: `system handoff`, `section-aware merge`, `skill-hub handoff maintenance`
+- Triggers: `update ai-skill-hub system handoff`; `maintain skill-hub handoff sections`; `refresh system boundaries in docs HANDOFF md`; `capture next phase direction for ai capability system`; `merge system-level handoff updates without full rewrite`
+- Side effects: `read_only`, `write_files`
+- Invocation example: `Use system-handoff for this task. task_description: Update ai-skill-hub handoff as a system document without rewriting the whole file.`
+- Inputs: `docs/HANDOFF.md`, current phase and capability facts, system boundaries, current design decisions
+- Outputs: section-aware handoff update, system-oriented section content, bounded execution report
+- Boundary: reuse `chatgpt-handoff-pilot`; do not rewrite the full handoff document or degrade into diff-oriented reporting
+
+### system-status-update
+
+- Use scenario classification: `system status`, `layer status refresh`, `phase summary`
+- Triggers: `refresh ai-skill-hub system status`; `update skill-hub layer status and phase`; `generate a capability-system status summary`; `produce layer-oriented status for ai-skill-hub`; `summarize canonical distribution governance and tooling layers`
+- Side effects: `read_only`, `write_files`, `requires_git`
+- Invocation example: `Use system-status-update for this task. task_description: Refresh ai-skill-hub as a capability system and report the current layer status.`
+- Inputs: system root, Git history, `skills/`, distribution surfaces, tooling and governance docs
+- Outputs: `Layer Status`, `Current Phase`, `Capabilities`, `Stability`
+- Boundary: reuse `update-project-status`; do not output file-by-file change lists or project-style construction summaries
 
 ### system-takeover
 

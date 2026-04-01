@@ -1,6 +1,6 @@
 # Skill Hub Status
 
-- Updated at: `2026-03-31`
+- Updated at: `2026-04-01`
 - Scope: `ai-skill-hub`
 - Method: `system-status-update` wrapper over `update-project-status`
 - Config: `.codex/skill-config/update-project-status.json`
@@ -31,14 +31,14 @@
 ### Governance Layer (consistency checker)
 
 - Status: `evolving`
-- Current shape: governance 已从“结构约定 + 人工观察”推进到“脚本辅助漂移检测 + 关键回归覆盖”，能够对 `.codex/skills`、`.agents/skills`、`.github/skills` 三层关系做只读一致性检查，并锁定 DryRun 无副作用与 adapter 引用正确性。
-- Maturity judgment: 当前治理能力已经能发现 missing adapter、orphan adapter 和 wrong reference，并能回归校验 DryRun 与 adapter contract；但仍属于本地脚本与测试辅助，不是 CI 级 enforcement。
+- Current shape: governance 已从“结构约定 + 人工观察”推进到“脚本辅助漂移检测 + 关键回归覆盖”，能够对 `.codex/skills`、`.agents/skills`、`.github/skills` 三层关系做只读一致性检查，并锁定 DryRun 无副作用、adapter 引用正确性，以及 re-seed 前目标分类是否清晰。
+- Maturity judgment: 当前治理能力已经能发现 missing adapter、orphan adapter、wrong reference，以及“哪些项目适合进入 clean re-seed 流程”这一类 rollout 前问题；但仍属于本地脚本与测试辅助，不是 CI 级 enforcement。
 
 ### Tooling Layer (sync / tools)
 
 - Status: `evolving`
-- Current shape: tooling 已覆盖 canonical sync、project-local adapter emit、metadata build、router、pipeline、本地 governance check，以及 `sync_skills_to_nongit_project.ps1` 的 target-scoped rollout 与无副作用 DryRun contract。
-- Maturity judgment: 工具链已经能够把多 AI capability system 的维护工作从手工操作推进到可重复流程，并开始支持更可控的分发边界；但调度、发布和治理仍是“可用但非完全受控”的状态。
+- Current shape: tooling 已覆盖 canonical sync、project-local adapter emit、metadata build、router、pipeline、本地 governance check，以及 `sync_skills_to_nongit_project.ps1` 的 target-scoped rollout 与无副作用 DryRun contract；同时新增了 `audit_reseed_targets.ps1`，把 clean re-seed 前的批量预审计收口为独立只读工具，并能识别 hub repository 以避免把 `ai-skill-hub` 本体误当成普通消费项目。
+- Maturity judgment: 工具链已经能够把多 AI capability system 的维护工作从手工操作推进到可重复流程，并开始支持更可控的分发边界与 rollout 前分流判断；但调度、发布和治理仍是“可用但非完全受控”的状态。
 
 ## Phase Assessment
 
@@ -54,6 +54,8 @@
 - Operational repeatability: 本地维护者或后续 AI agent 已可以用统一工具完成分发、发现层闭环和只读治理检查。
 - System invocation capability: 系统现在具备 `system-status-update` 与 `system-handoff` 两个标准 wrapper 入口，用于把 status 与 handoff 收口到 system-layer 语义。
 - Controlled rollout capability: 分发工具现在支持 target-scoped rollout，在保持默认行为不变的前提下控制 `codex / agents / github` 层级输出。
+- Preflight audit capability: 系统现在具备独立的 re-seed 预审计工具，可批量判断项目是 `already_seeded`、`ready_for_reseed`、`risky_manual_review`、`missing_config`、`no_skill_structure`、`inaccessible` 还是 `hub_repository`。
+- Hub boundary awareness: 工具层现在显式识别 `ai-skill-hub` 本体属于 hub repository，而不是普通 clean re-seed 目标，从而减少把系统仓库误送入 rollout 流程的风险。
 
 ## Risks / Gaps
 
@@ -62,6 +64,7 @@
 - 当前 system wrapper 仍依赖显式调用；若退回普通项目模板或普通 handoff 口径，会削弱系统层表达能力。
 - [docs/WORKSPACE_DIRECTORY_MAP.zh-CN.md](../WORKSPACE_DIRECTORY_MAP.zh-CN.md) 仍存在编码异常，影响系统文档面的一致性。
 - 在未提交阶段，working tree 对状态判断影响较大，意味着 status refresh 仍然部分依赖即时工作上下文，而不是纯 Git 历史。
+- hub self-detection 目前刻意保持保守，只在强信号足够明确时才判为 `hub_repository`；这降低了误伤普通项目的概率，但也意味着未来可能存在“应识别但未识别”的漏判空间。
 
 ## DryRun Contract Fix (sync_skills_to_nongit_project.ps1)
 
@@ -97,6 +100,7 @@
 - 继续保持 `system-status-update` 与 `system-handoff` 的 wrapper 定位，避免把 system invocation surface 扩张成新的 controller framework。
 - 为 router 与 pipeline 补充更稳定的意图提示或别名层，降低启发式误选的系统风险。
 - 修复 [docs/WORKSPACE_DIRECTORY_MAP.zh-CN.md](../WORKSPACE_DIRECTORY_MAP.zh-CN.md) 的编码问题，避免文档层拖累系统治理成熟度。
+- 若后续进入更大规模 rollout，可继续迭代 re-seed 审计规则与报告格式，但应保持“先审计、再 DryRun、再分发”的只读前置模式，而不是把审计器扩展成执行器。
 
 ## Notes
 

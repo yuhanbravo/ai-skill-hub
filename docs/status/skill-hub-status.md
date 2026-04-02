@@ -1,6 +1,6 @@
 # Skill Hub Status
 
-- Updated at: `2026-04-01`
+- Updated at: `2026-04-02`
 - Scope: `ai-skill-hub`
 - Method: `system-status-update` wrapper over `update-project-status`
 - Config: `.codex/skill-config/update-project-status.json`
@@ -8,19 +8,19 @@
 
 ## Current Status
 
-`ai-skill-hub` 当前处于 `Phase 3 - Controlled System`：它已经不再只是 skill 集合，而是一个具备 canonical source、distribution surfaces、局部治理能力和可重复工具链的 capability system。
+`ai-skill-hub` 当前处于 `Phase 3 - Controlled System`：它已经不再只是 skill 集合，而是一个具备 canonical source、distribution surfaces、局部治理能力、显式文档分层、bridge 引用边界可见性和可重复工具链的 capability system。
 
 - Overall maturity: `evolving`
 - Stable core: canonical skill layer 已形成稳定事实源
-- Main direction: 从“可发现、可调用”继续推进到“可分发、可校验、可控漂移、可标准化系统调用”的系统阶段
+- Main direction: 从“可发现、可调用”继续推进到“可分发、可校验、可控漂移、可标准化系统调用与文档分层治理”的系统阶段
 
 ## Layer Status
 
 ### Canonical Skill Layer (`skills/`)
 
 - Status: `stable`
-- Current shape: canonical source 维持在 `10` 个正式 skill 上，覆盖 `template / audit / project / governance / system` 五类能力，并补齐了 system-level status 与 handoff wrapper 入口。
-- Maturity judgment: canonical layer 继续保持单一事实源；新引入的 `system-status-update` 与 `system-handoff` 通过 wrapper 方式复用 canonical skill，没有制造第二套实现或新的 source-of-truth 歧义。
+- Current shape: canonical source 维持在 `10` 个正式 skill 上，覆盖 `template / audit / project / governance / system` 五类能力，并补齐了 system-level status 与 handoff wrapper 入口；同时 `SKILL.md` 已进一步收口为 execution-focused contract，由 `README / prompts / examples / templates` 分担说明与交换资产。
+- Maturity judgment: canonical layer 继续保持单一事实源；新引入的 `system-status-update` 与 `system-handoff` 通过 wrapper 方式复用 canonical skill，没有制造第二套实现或新的 source-of-truth 歧义；skill 文档职责边界也比上一阶段更清晰。
 
 ### Distribution Layer (`.codex / .agents / .github`)
 
@@ -31,8 +31,8 @@
 ### Governance Layer (consistency checker)
 
 - Status: `evolving`
-- Current shape: governance 已从“结构约定 + 人工观察”推进到“脚本辅助漂移检测 + 关键回归覆盖”，能够对 `.codex/skills`、`.agents/skills`、`.github/skills` 三层关系做只读一致性检查，并锁定 DryRun 无副作用、adapter 引用正确性，以及 re-seed 前目标分类是否清晰。
-- Maturity judgment: 当前治理能力已经能发现 missing adapter、orphan adapter、wrong reference，以及“哪些项目适合进入 clean re-seed 流程”这一类 rollout 前问题；但仍属于本地脚本与测试辅助，不是 CI 级 enforcement。
+- Current shape: governance 已从“结构约定 + 人工观察”推进到“脚本辅助漂移检测 + 关键回归覆盖 + 文档层角色冻结”，能够对 `.codex/skills`、`.agents/skills`、`.github/skills` 三层关系做只读一致性检查，并锁定 DryRun 无副作用、adapter 引用正确性、re-seed 前目标分类，以及 `AI / Human / Bridge` 三层文档中的 active-source 与 mirror 关系；当前显式 `docs/bridge/*` 引用也已完成一次引用面审计，命中的均为文档导航用途，而不是运行时激活依赖。
+- Maturity judgment: 当前治理能力已经能发现 missing adapter、orphan adapter、wrong reference，以及“哪些项目适合进入 clean re-seed 流程”这一类 rollout 前问题；本轮还把 bridge mirror、AI 协议边界和 compatibility entry 的职责显式化，并确认现有 bridge 路径引用仍停留在只读导航层，降低了把镜像层误当成 active dependency 的风险；但仍属于本地脚本与文档约束辅助，不是 CI 级 enforcement。
 
 ### Tooling Layer (sync / tools)
 
@@ -56,6 +56,10 @@
 - Controlled rollout capability: 分发工具现在支持 target-scoped rollout，在保持默认行为不变的前提下控制 `codex / agents / github` 层级输出。
 - Preflight audit capability: 系统现在具备独立的 re-seed 预审计工具，可批量判断项目是 `already_seeded`、`ready_for_reseed`、`risky_manual_review`、`missing_config`、`no_skill_structure`、`inaccessible` 还是 `hub_repository`。
 - Hub boundary awareness: 工具层现在显式识别 `ai-skill-hub` 本体属于 hub repository，而不是普通 clean re-seed 目标，从而减少把系统仓库误送入 rollout 流程的风险。
+- Documentation layering capability: 系统现在具备显式的 `docs/ai`、`docs/human`、`docs/bridge` 三层文档架构，并通过总导航文档收口各层入口。
+- Bridge continuity capability: handoff、status、skill index 与任务交换模板现在已经显式区分 active source 与 bridge-facing mirror/copy，降低了后续维护时的语义歧义。
+- Bridge reference audit capability: 系统现在可以显式枚举 `docs/bridge/*` 的引用面，并确认当前命中的依赖均为文档导航或说明用途，而不是脚本、配置或运行时激活依赖。
+- Protocol boundary capability: `EXECUTION_PROTOCOL`、`INVOCATION_PROTOCOL`、`DISCOVERY_AND_INVOCATION` 的职责边界与 `AI_USAGE` 的 compatibility 定位已经显式冻结，减少了 AI 规则面与入口面混写的风险。
 
 ## Risks / Gaps
 
@@ -65,6 +69,9 @@
 - [docs/WORKSPACE_DIRECTORY_MAP.zh-CN.md](../WORKSPACE_DIRECTORY_MAP.zh-CN.md) 仍存在编码异常，影响系统文档面的一致性。
 - 在未提交阶段，working tree 对状态判断影响较大，意味着 status refresh 仍然部分依赖即时工作上下文，而不是纯 Git 历史。
 - hub self-detection 目前刻意保持保守，只在强信号足够明确时才判为 `hub_repository`；这降低了误伤普通项目的概率，但也意味着未来可能存在“应识别但未识别”的漏判空间。
+- bridge 层目前仍是“active source + mirror/copy”双份承载模型；虽然角色已经显式化，但尚无自动同步或仓库级一致性检查来防止后续漂移。
+- `AI_USAGE.md` 仍直接链接 `docs/bridge/SKILLS_INDEX.md` 作为 bridge-facing quick index；若后续要清理 bridge-facing copy 或切换入口路径，需要同步处理该兼容入口以避免断链。
+- `docs/ai` 三份协议文档目前已经冻结职责边界，但其中仍有来自历史镜像和模板资产的延续性内容，后续若要继续收口，应先做引用面审计而不是直接路径切换。
 
 ## DryRun Contract Fix (sync_skills_to_nongit_project.ps1)
 
@@ -101,8 +108,12 @@
 - 为 router 与 pipeline 补充更稳定的意图提示或别名层，降低启发式误选的系统风险。
 - 修复 [docs/WORKSPACE_DIRECTORY_MAP.zh-CN.md](../WORKSPACE_DIRECTORY_MAP.zh-CN.md) 的编码问题，避免文档层拖累系统治理成熟度。
 - 若后续进入更大规模 rollout，可继续迭代 re-seed 审计规则与报告格式，但应保持“先审计、再 DryRun、再分发”的只读前置模式，而不是把审计器扩展成执行器。
+- 在不替换当前活跃路径的前提下，为 bridge mirror/copy 增加轻量一致性检查或维护清单，进一步降低文档双份承载的长期漂移风险。
+- 若后续要清理 bridge 直接链接，优先从兼容入口中的 `AI_USAGE.md -> docs/bridge/SKILLS_INDEX.md` 这类纯导航引用开始，避免先动 bridge 总览页或镜像说明页。
+- 若后续进入下一阶段文档治理，应先审计引用面，再决定是否收缩 mirror 或切换路径所有权，而不是直接把 bridge 层升级为新的活跃源。
 
 ## Notes
 
 - 本次状态更新按 capability-system 视角组织，重点是 layer maturity 与 readiness，而不是普通项目的功能进度。
 - 当前判断反映的是“最近 commit + 当前 working tree”的综合系统状态，而不是仅基于已提交历史生成的业务型周报。
+- 本次刷新已吸收 bridge 引用面审计结果：当前显式 `docs/bridge/*` 引用仅出现在文档导航与角色说明中，未发现脚本或配置级激活依赖。

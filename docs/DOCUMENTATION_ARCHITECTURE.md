@@ -6,7 +6,7 @@ This file is the one-page navigation guide for the AI / Human / Bridge documenta
 
 - `docs/ai/` keeps execution-facing rules explicit so AI agents know where canonical protocol guidance lives.
 - `docs/human/` keeps explanation-oriented material explicit so maintainers can orient quickly without reading execution contracts first.
-- `docs/bridge/` keeps handoff, status, and structured exchange artifacts visible in one place without replacing the active source paths that already exist.
+- The bridge layer keeps handoff, status, and structured exchange artifacts visible in one place without replacing the active source paths that already exist.
 
 ## Where AI Should Look
 
@@ -25,7 +25,6 @@ This file is the one-page navigation guide for the AI / Human / Bridge documenta
 
 - Active handoff source: [docs/HANDOFF.md](HANDOFF.md)
 - Active status source: [docs/status/skill-hub-status.md](status/skill-hub-status.md)
-- Bridge-facing copies and mirrors: [docs/bridge/README.md](bridge/README.md)
 - Skill-local task package and execution report templates:
   [skills/chatgpt-handoff-pilot/templates/TASK_PACKAGE_TEMPLATE.md](../skills/chatgpt-handoff-pilot/templates/TASK_PACKAGE_TEMPLATE.md),
   [skills/chatgpt-handoff-pilot/templates/EXECUTION_REPORT_TEMPLATE.md](../skills/chatgpt-handoff-pilot/templates/EXECUTION_REPORT_TEMPLATE.md)

@@ -10,7 +10,7 @@ This directory holds handoff, status, and structured exchange artifacts that bri
 
 ## Asset Status
 
-| Asset | Active source | Role in `docs/bridge/` |
+| Asset | Active source | Role in bridge layer |
 | --- | --- | --- |
 | `HANDOFF.md` | `docs/HANDOFF.md` | semantic mirror |
 | `status/skill-hub-status.md` | `docs/status/skill-hub-status.md` | semantic mirror |

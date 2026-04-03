@@ -10,6 +10,7 @@ This file is the single source of truth for project handoff.
 - 2026-04-02: Merged a `system-takeover` pass into the handoff, capturing the explicit AI/Human/Bridge documentation split, the current system capability map, the router mismatch around `system-takeover`, and the hub-vs-consumer governance boundary.
 - 2026-04-02: Refreshed the system status and merged the latest bridge-reference audit into the handoff, confirming that current bridge-layer references remained documentation-facing and identifying the direct compatibility link in AI_USAGE.md before this cleanup.
 - 2026-04-02: Merged the repository-wide bridge audit result into the handoff, confirming that direct bridge-path dependency has now been cleared from active docs and that remaining bridge references are semantic, historical, or bridge-layer self-description rather than runtime dependency.
+- 2026-04-03: Merged the landed commit-governance capability into the handoff, capturing `docs/governance/` as the repository-governance documentation home, the moved commit convention, the `skill-governance` validator asset, the versioned `.githooks/commit-msg` plus `tools/install_git_hooks.ps1` local activation path, the `export_bundle.ps1` auto-commit reuse of the same validator, and the current choice to observe real usage before tightening body rules further.
 
 ## Current Status
 
@@ -21,9 +22,9 @@ The system has already moved beyond a simple skill repository and now operates a
 - Invocation Layer: `docs/ai/EXECUTION_PROTOCOL.md`, `docs/ai/INVOCATION_PROTOCOL.md`, and `docs/ai/DISCOVERY_AND_INVOCATION.md` now hold the explicit AI-facing execution, invocation, and discovery contracts instead of leaving those rules implicit in mixed docs.
 - Routing / Pipeline Layer: `tools/skill_router.py` and `tools/skill_pipeline.py` provide lightweight task-to-skill matching and ordered multi-skill sequencing, but they still behave as heuristic orchestration helpers rather than deterministic controllers.
 - Distribution Layer: the system supports hub-side discovery surfaces and project-side runtime distribution through `.codex`, `.agents`, and `.github`, and rollout can now be scoped by target layer while preserving default behavior.
-- Governance Layer: the system has a read-only adapter consistency check plus regression coverage for DryRun no-side-effect behavior, adapter reference correctness, and rollout-target audit classification.
-- Documentation Layer: `docs/ai`, `docs/human`, and the bridge documentation layer now split protocol, explanation, and exchange assets into explicit ownership layers while keeping `docs/HANDOFF.md` and `docs/status/skill-hub-status.md` as active sources; direct bridge-path dependency has been removed from active documentation, while bridge semantics remain explicit for navigation and continuity.
-- Tooling Layer: sync, metadata, routing, pipeline, local governance tooling, and a standalone re-seed preflight audit path are available as repeatable operational capabilities; system invocation also has explicit wrapper entrypoints for status and handoff.
+- Governance Layer: the system has a read-only adapter consistency check, a landed commit-message convention validator under `skill-governance`, and regression coverage for DryRun no-side-effect behavior, adapter reference correctness, rollout-target audit classification, and commit-message validation behavior.
+- Documentation Layer: `docs/ai`, `docs/human`, `docs/governance`, and the bridge documentation layer now split protocol, explanation, repository-governance, and exchange assets into explicit ownership layers while keeping `docs/HANDOFF.md` and `docs/status/skill-hub-status.md` as active sources; `docs/governance/` is now the canonical home for repository-governance docs, `docs/governance/COMMIT_CONVENTION.md` has replaced the old human-layer path as the active commit-policy source, direct bridge-path dependency has been removed from active documentation, and bridge semantics remain explicit for navigation and continuity.
+- Tooling Layer: sync, metadata, routing, pipeline, local governance tooling, a standalone re-seed preflight audit path, and a versioned local commit-hook installation path are available as repeatable operational capabilities; system invocation also has explicit wrapper entrypoints for status and handoff, and `export_bundle.ps1` now reuses the same commit-message validator as the local `commit-msg` hook.
 
 Overall system maturity is `evolving`: the canonical and invocation layers are stable, documentation ownership is clearer, distribution and governance are increasingly controlled, routing/orchestration remain intentionally lightweight and still somewhat heuristic, and the current bridge-reference surface has now been audited as documentation-facing rather than runtime-facing.
 
@@ -42,6 +43,8 @@ Overall system maturity is `evolving`: the canonical and invocation layers are s
 - Selective rollout control may narrow where distribution lands, but it must not redefine canonical ownership or promote adapter layers into authoring surfaces.
 - `ai-skill-hub` itself is not a normal clean re-seed target. Hub self-detection is allowed as a protective boundary so the system repository is not misclassified as a consumer project.
 - System evolution must preserve layer clarity: canonical definition, distribution surfaces, governance checks, and orchestration tooling cannot be collapsed into a single mutable layer.
+- Repository-governance docs now belong under `docs/governance/`; compatibility or historical paths must not be treated as the active commit-policy source.
+- Local commit governance is versioned through `.githooks/` plus `tools/install_git_hooks.ps1`, not through checked-in `.git/hooks/` content; each clone or worktree must opt in locally once.
 
 ## Key Design Decisions
 
@@ -59,6 +62,9 @@ Overall system maturity is `evolving`: the canonical and invocation layers are s
 - Repository-wide bridge auditing now distinguishes direct path dependency from bridge semantics, mirror ownership, and historical context so later cleanup can stay evidence-driven instead of trying to erase every bridge mention.
 - Adapter governance remains project-local by design because the distribution contract in consumer repositories is `.codex/skills` -> `.agents/.github`, while the hub itself still uses thin wrappers that point back to canonical `skills/`.
 - The system remains phase-based because capability maturity is uneven across layers; canonical definition is already stable, while governance enforcement and orchestration still need controlled progression.
+- Repository-governance docs were split into `docs/governance/` because commit policy and similar cross-repository rules now deserve an explicit canonical home instead of remaining mixed into the human explanation layer.
+- Local commit validation is installed via a versioned `.githooks/commit-msg` plus `tools/install_git_hooks.ps1` path because Git hook activation is clone-local by design; shipping the hook definition in-repo preserves consistency, while per-clone installation keeps the mechanism aligned with Git's local-hook model.
+- `export_bundle.ps1` reuses the same validator as the local `commit-msg` hook because auto-commit paths should obey the same commit convention instead of creating a second commit-policy surface.
 
 ## Intentional Gaps
 
@@ -75,6 +81,8 @@ Overall system maturity is `evolving`: the canonical and invocation layers are s
 - No explicit router bias that guarantees `system-takeover` wins over generic `project-takeover` when the task wording mixes system intent with broad takeover language.
 - No broader bridge-path migration plan beyond the compatibility-entry cleanup completed in this pass; any further bridge copy cleanup should still be deliberate rather than automatic.
 - No repository-level mirror consistency checker yet; bridge mirrors remain manually maintained even though current repo-wide auditing shows no runtime/config dependency on them.
+- No automatic hook enablement across fresh clones or worktrees; `tools/install_git_hooks.ps1` must still be run locally once per clone/worktree.
+- No decision yet to tighten commit body rules beyond the current lightweight descriptive check; that boundary should continue to follow real usage feedback rather than speculative policy growth.
 
 These gaps are intentional to keep the system legible while distribution and governance semantics are still being stabilized.
 
@@ -132,4 +140,5 @@ The current map is strong on takeover, status, documentation, structure, and dis
 - Strengthen router aliases, trigger weighting, or explicit-name matching so system wrappers win when the task explicitly names them.
 - Continue to switch or preserve bridge-facing compatibility links intentionally instead of treating bridge copy cleanup as a blind documentation move.
 - Promote the most important routing, governance, and documentation ownership checks into a standard repeatable validation path, ideally without turning the system into an auto-mutating controller.
+
 

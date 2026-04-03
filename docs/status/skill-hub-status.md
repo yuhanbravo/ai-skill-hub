@@ -1,6 +1,6 @@
 # Skill Hub Status
 
-- Updated at: `2026-04-02`
+- Updated at: `2026-04-03`
 - Scope: `ai-skill-hub`
 - Method: `system-status-update` wrapper over `update-project-status`
 - Config: `.codex/skill-config/update-project-status.json`
@@ -31,14 +31,14 @@
 ### Governance Layer (consistency checker)
 
 - Status: `evolving`
-- Current shape: governance 已从“结构约定 + 人工观察”推进到“脚本辅助漂移检测 + 关键回归覆盖 + 文档层角色冻结”，能够对 `.codex/skills`、`.agents/skills`、`.github/skills` 三层关系做只读一致性检查，并锁定 DryRun 无副作用、adapter 引用正确性、re-seed 前目标分类，以及 `AI / Human / Bridge` 三层文档中的 active-source 与 mirror 关系；当前 bridge-layer 路径引用已经完成从局部审计到全仓审计的收口，未发现 markdown、脚本或配置对 bridge mirror 路径的运行时消费。
-- Maturity judgment: 当前治理能力已经能发现 missing adapter、orphan adapter、wrong reference，以及“哪些项目适合进入 clean re-seed 流程”这一类 rollout 前问题；本轮进一步把 bridge mirror、AI 协议边界和 compatibility entry 的职责显式化，并确认剩余 bridge 命中主要属于角色说明、历史记录或 bridge 层自说明，而不是 active dependency；但仍属于本地脚本与文档约束辅助，不是 CI 级 enforcement。
+- Current shape: governance 已从“结构约定 + 人工观察”推进到“脚本辅助漂移检测 + 关键回归覆盖 + 文档层角色冻结”，能够对 `.codex/skills`、`.agents/skills`、`.github/skills` 三层关系做只读一致性检查，并锁定 DryRun 无副作用、adapter 引用正确性、re-seed 前目标分类，以及 `AI / Human / Bridge` 三层文档中的 active-source 与 mirror 关系；本轮进一步把 repository-governance 文档收口到 `docs/governance/`，完成 `COMMIT_CONVENTION.md` 的 canonical 路径迁移，并在 `skill-governance` 下落地同一套 commit message 校验规则资产；当前 bridge-layer 路径引用已经完成从局部审计到全仓审计的收口，未发现 markdown、脚本或配置对 bridge mirror 路径的运行时消费。
+- Maturity judgment: 当前治理能力已经能发现 missing adapter、orphan adapter、wrong reference，以及“哪些项目适合进入 clean re-seed 流程”这一类 rollout 前问题；当前还具备了 repository-local commit message 校验能力，并把 commit policy、validator 规则资产和 regression coverage 收口到同一治理面；但这部分能力仍属于本地脚本、hook 安装与文档约束辅助，不是 CI 级 enforcement。
 
 ### Tooling Layer (sync / tools)
 
 - Status: `evolving`
-- Current shape: tooling 已覆盖 canonical sync、project-local adapter emit、metadata build、router、pipeline、本地 governance check，以及 `sync_skills_to_nongit_project.ps1` 的 target-scoped rollout 与无副作用 DryRun contract；同时新增了 `audit_reseed_targets.ps1`，把 clean re-seed 前的批量预审计收口为独立只读工具，并能识别 hub repository 以避免把 `ai-skill-hub` 本体误当成普通消费项目。
-- Maturity judgment: 工具链已经能够把多 AI capability system 的维护工作从手工操作推进到可重复流程，并开始支持更可控的分发边界与 rollout 前分流判断；但调度、发布和治理仍是“可用但非完全受控”的状态。
+- Current shape: tooling 已覆盖 canonical sync、project-local adapter emit、metadata build、router、pipeline、本地 governance check，以及 `sync_skills_to_nongit_project.ps1` 的 target-scoped rollout 与无副作用 DryRun contract；同时新增了 `audit_reseed_targets.ps1`，把 clean re-seed 前的批量预审计收口为独立只读工具，并能识别 hub repository 以避免把 `ai-skill-hub` 本体误当成普通消费项目；本地 commit 自动校验则通过版本化 `.githooks/commit-msg` 加 `tools/install_git_hooks.ps1` 启用，`export_bundle.ps1` 的 auto-commit 也已复用同一套 commit validator。
+- Maturity judgment: 工具链已经能够把多 AI capability system 的维护工作从手工操作推进到可重复流程，并开始支持更可控的分发边界与 rollout 前分流判断；commit governance 这一层也已经具备统一校验入口，但新的 clone / worktree 仍需手动安装一次 hook，因此调度、发布和治理仍是“可用但非完全受控”的状态。
 
 ## Phase Assessment
 
@@ -61,6 +61,7 @@
 - Bridge reference audit capability: 系统现在可以显式枚举 bridge-layer 路径引用面，并确认全仓范围内未发现脚本、配置或运行时对 bridge mirror 路径的激活依赖。
 - Repository-wide bridge audit capability: 系统现在能够把 bridge 命中区分为直接路径引用、角色说明、mirror/ownership 声明和 compatibility/navigation 语句，并确认当前残留主要是语义层或自说明层，而不是需要立刻迁移的路径依赖。
 - Protocol boundary capability: `EXECUTION_PROTOCOL`、`INVOCATION_PROTOCOL`、`DISCOVERY_AND_INVOCATION` 的职责边界与 `AI_USAGE` 的 compatibility 定位已经显式冻结，减少了 AI 规则面与入口面混写的风险。
+- Commit governance capability: 系统现在已把 repository-governance 文档 canonical home 收口到 `docs/governance/`，并具备 `skill-governance` 规则资产、`.githooks/commit-msg` 本地自动校验入口，以及 `export_bundle.ps1` auto-commit 对同一 validator 的复用路径。
 
 ## Risks / Gaps
 
@@ -74,6 +75,8 @@
 - `AI_USAGE.md` 已切换到根目录 `SKILLS_INDEX.md` 作为 quick index；后续若继续收缩 bridge-facing copy，应保持兼容入口与 active source 一致，避免重新引入断链。
 - 当前剩余的 bridge 相关命中主要分布在 `docs/bridge/` 自说明、状态/交接历史记录，以及 active-source vs mirror 的架构说明中；若要继续收缩，应通过后续正常刷新逐步改写，而不是一次性“清零 bridge 痕迹”。
 - `docs/ai` 三份协议文档目前已经冻结职责边界，但其中仍有来自历史镜像和模板资产的延续性内容，后续若要继续收口，应先做引用面审计而不是直接路径切换。
+- commit hook 不是天然随 clone / worktree 自动启用；新的 clone / worktree 仍需手动运行一次 `tools/install_git_hooks.ps1`。
+- 当前 commit body 校验仍保持轻量描述性约束；是否继续收紧，应以后续真实使用反馈为准，而不是先行扩张规则面。
 
 ## DryRun Contract Fix (sync_skills_to_nongit_project.ps1)
 
@@ -119,3 +122,4 @@
 - 本次状态更新按 capability-system 视角组织，重点是 layer maturity 与 readiness，而不是普通项目的功能进度。
 - 当前判断反映的是“最近 commit + 当前 working tree”的综合系统状态，而不是仅基于已提交历史生成的业务型周报。
 - 本次刷新已吸收 bridge 引用面审计结果：当前活动文档中已不再保留对 bridge mirror 路径的直接依赖，且全仓范围内未发现脚本或配置级激活依赖。
+

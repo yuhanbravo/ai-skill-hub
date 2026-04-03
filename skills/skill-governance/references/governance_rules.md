@@ -27,3 +27,10 @@
 - 一次只处理一个 skill
 - 默认不改变项目
 - 禁止跨 skill 批量操作
+
+## Repository Commit Governance
+
+- `commit-convention-check` 负责校验仓库级 commit message
+- 提交主题只接受 `docs / feat / fix / refactor / test / chore` 六类 type
+- 支持 `<type>: <action>`、`<type>(<scope>): <action>`、`<type>: Phase <n>[.<m>] - <scope> - <action>`
+- 若存在 body，必须使用 subject 后空一行的标准多行格式

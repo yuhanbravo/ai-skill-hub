@@ -1,0 +1,3 @@
+#!/bin/sh
+
+python "skills/skill-governance/scripts/commit_convention_check.py" "$1"

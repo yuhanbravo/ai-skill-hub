@@ -82,6 +82,27 @@ function Get-CommitMessage {
     return $enteredMessage.Trim()
 }
 
+function Assert-CommitMessageValid {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$RepositoryPath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Message
+    )
+
+    $validatorPath = Join-Path $RepositoryPath 'skills\skill-governance\scripts\commit_convention_check.py'
+    if (-not (Test-Path -LiteralPath $validatorPath -PathType Leaf)) {
+        throw "Commit validator not found: $validatorPath"
+    }
+
+    & python $validatorPath --message $Message
+    $exitCode = $LASTEXITCODE
+    if ($exitCode -ne 0) {
+        throw 'Commit message does not satisfy docs/governance/COMMIT_CONVENTION.md.'
+    }
+}
+
 function Invoke-Git {
     param(
         [Parameter(Mandatory = $true)]
@@ -128,6 +149,7 @@ try {
     if ($statusLines.Count -gt 0) {
         Write-Info 'Detected uncommitted changes. A commit message is required before export.'
         $resolvedCommitMessage = Get-CommitMessage -ProvidedMessage $CommitMessage
+        Assert-CommitMessageValid -RepositoryPath $resolvedRepoPath -Message $resolvedCommitMessage
 
         Invoke-Git -Arguments @('-C', $resolvedRepoPath, 'add', '-A')
         Invoke-Git -Arguments @('-C', $resolvedRepoPath, 'commit', '-m', $resolvedCommitMessage)

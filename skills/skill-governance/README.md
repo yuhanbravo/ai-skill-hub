@@ -120,4 +120,6 @@ Requirements:
 - Reusable prompts: [prompts/reusable_prompts.md](prompts/reusable_prompts.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
 - References: [references/](references/)
+- Commit validation rule: [references/commit_convention_check.md](references/commit_convention_check.md)
+- Commit validation script: [scripts/commit_convention_check.py](scripts/commit_convention_check.py)
 

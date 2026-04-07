@@ -22,8 +22,12 @@ Thumbs.db
 
 # Temp
 .tmp/
+.tmp_test/
+.tmp_router_validation/
 tmp/
 temp/
+tmp_local_checks/
+tmp_test_workspace/
 
 # Env
 .env

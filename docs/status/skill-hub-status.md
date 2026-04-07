@@ -8,7 +8,7 @@
 
 ## Current Status
 
-`ai-skill-hub` 当前处于 `Phase 3 - Controlled System`：它已经不再只是 skill 集合，而是一个具备 canonical source、distribution surfaces、局部治理能力、显式文档分层、bridge 引用边界可见性和可重复工具链的 capability system。本轮进一步补齐了 explicit system takeover 路由、hub-vs-consumer adapter contract 显式区分，以及默认本地验证入口。
+`ai-skill-hub` 当前处于 `Phase 3 - Controlled System`：它已经不再只是 skill 集合，而是一个具备 canonical source、distribution surfaces、局部治理能力、显式文档分层、bridge 引用边界可见性和可重复工具链的 capability system。本轮新增的是 human docs quick-command surface：`docs/human/SYSTEM_TAKEOVER_QUICK_COMMANDS.md` 作为独立速查页落地，`SYSTEM_SKILL_QUICK_COMMANDS.md` 也补上了相关速查页导航入口；这提升的是维护者侧文档可发现性与复用性，而不是 protocol、routing、governance 或 enforcement 能力变化。
 
 - Overall maturity: `evolving`
 - Stable core: canonical skill layer 已形成稳定事实源
@@ -44,7 +44,7 @@
 
 - Current phase: `Phase 3 - Controlled System`
 - Phase meaning: 系统已经具备稳定 canonical layer、可用 distribution layer、脚本辅助 governance、可重复 tooling，以及面向系统操作的标准 wrapper 入口，但还没有进入 CI-backed governance 或更强 orchestration 的下一阶段。
-- Stability: `stable` for canonical definition, `evolving` for distribution and governance, `evolving` for system-level invocation surfaces, `evolving` for heuristic routing behavior.
+- Stability: `stable` for canonical definition, `evolving` for distribution and governance, `evolving` for system-level invocation surfaces, `evolving` for heuristic routing behavior, `evolving` for maintainer-facing human-doc discoverability.
 
 ## New Capabilities In This Phase
 
@@ -56,7 +56,7 @@
 - Controlled rollout capability: 分发工具现在支持 target-scoped rollout，在保持默认行为不变的前提下控制 `codex / agents / github` 层级输出。
 - Preflight audit capability: 系统现在具备独立的 re-seed 预审计工具，可批量判断项目是 `already_seeded`、`ready_for_reseed`、`risky_manual_review`、`missing_config`、`no_skill_structure`、`inaccessible` 还是 `hub_repository`。
 - Hub boundary awareness: 工具层现在显式识别 `ai-skill-hub` 本体属于 hub repository，而不是普通 clean re-seed 目标，从而减少把系统仓库误送入 rollout 流程的风险。
-- Documentation layering capability: 系统现在具备显式的 AI / Human / Bridge 三层文档架构，并通过总导航文档收口各层入口。
+- Documentation layering capability: 系统现在具备显式的 AI / Human / Bridge 三层文档架构，并通过总导航文档收口各层入口；本轮 `docs/human/` 进一步补齐了独立的 `SYSTEM_TAKEOVER_QUICK_COMMANDS.md` 页面以及从 `SYSTEM_SKILL_QUICK_COMMANDS.md` 过去的轻量导航，但这仍属于 human-oriented quick-command surface 补充，而不是核心系统层能力变更。
 - Bridge continuity capability: handoff、status、skill index 与任务交换模板现在已经显式区分 active source 与 bridge-facing mirror/copy，降低了后续维护时的语义歧义。
 - Bridge reference audit capability: 系统现在可以显式枚举 bridge-layer 路径引用面，并确认全仓范围内未发现脚本、配置或运行时对 bridge mirror 路径的激活依赖。
 - Repository-wide bridge audit capability: 系统现在能够把 bridge 命中区分为直接路径引用、角色说明、mirror/ownership 声明和 compatibility/navigation 语句，并确认当前残留主要是语义层或自说明层，而不是需要立刻迁移的路径依赖。

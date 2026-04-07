@@ -31,6 +31,11 @@
 - governance 仍是 read-only
 - local validation 仍不是 CI enforcement
 
+## 相关速查页
+
+- `system-takeover` quick commands 见 [SYSTEM_TAKEOVER_QUICK_COMMANDS.md](SYSTEM_TAKEOVER_QUICK_COMMANDS.md)
+- 若需接管整个 capability system，而不是刷新 status / handoff，请改用独立的 `system-takeover` 速查页。
+
 ## system-status-update：3 档调用模板
 
 ### 极短版

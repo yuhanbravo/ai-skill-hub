@@ -38,6 +38,22 @@ def main() -> int:
             "expected_skill": "system-takeover",
         },
         {
+            "task": "请使用system-takeover接管该项目",
+            "expected_skill": "system-takeover",
+        },
+        {
+            "task": "请用 system-takeover 接管这个 skill hub",
+            "expected_skill": "system-takeover",
+        },
+        {
+            "task": "use system-takeover to take over this repository",
+            "expected_skill": "system-takeover",
+        },
+        {
+            "task": "use system takeover to take over this repository",
+            "expected_skill": "system-takeover",
+        },
+        {
             "task": "refresh the ai-skill-hub system status by layer and phase",
             "expected_skill": "system-status-update",
         },
@@ -51,6 +67,14 @@ def main() -> int:
         },
         {
             "task": "接管仓库并更新状态",
+            "expected_skill": "project-takeover",
+        },
+        {
+            "task": "接管这个业务项目",
+            "expected_skill": "project-takeover",
+        },
+        {
+            "task": "take over this project",
             "expected_skill": "project-takeover",
         },
     ]
@@ -80,6 +104,13 @@ def main() -> int:
         status_pipeline["ordered_skills"],
         ["project-takeover", "update-project-status"],
         "status pipeline selected the wrong ordered skills",
+    )
+
+    system_pipeline = build_pipeline("请使用system-takeover接管该项目")
+    assert_equal(
+        system_pipeline["ordered_skills"],
+        ["system-takeover"],
+        "explicit system takeover should not be rerouted in pipeline mode",
     )
 
     print("All skill router tests passed.")

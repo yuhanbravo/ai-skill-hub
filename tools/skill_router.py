@@ -51,9 +51,13 @@ SKILL_ALIASES: dict[str, list[str]] = {
     ],
     "project-takeover": [
         "takeover",
+        "take over this project",
+        "take over this repository",
         "onboarding",
         "unfamiliar repository",
         "接管项目",
+        "接管这个项目",
+        "接管这个业务项目",
         "接管仓库",
         "仓库接管",
         "项目接手",
@@ -96,6 +100,15 @@ SKILL_ALIASES: dict[str, list[str]] = {
         "更新进度",
         "周报",
         "最近变更",
+    ],
+    "system-takeover": [
+        "system takeover",
+        "skill hub takeover",
+        "capability system takeover",
+        "接管 skill hub",
+        "接管这个 skill hub",
+        "接管系统工作空间",
+        "接管能力系统",
     ],
 }
 
@@ -154,6 +167,34 @@ def best_phrase_score(task_text: str, phrases: list[str]) -> tuple[float, list[s
     return best_score, deduped_matches, earliest_position
 
 
+def explicit_name_score(task_description: str, skill_name: str) -> tuple[float, list[str], int]:
+    normalized_task = normalize_text(task_description)
+    compact_task = normalized_task.replace(" ", "")
+    normalized_name = normalize_text(skill_name)
+    compact_name = normalized_name.replace(" ", "")
+    candidate_forms = [normalized_name, compact_name]
+
+    matched_forms: list[str] = []
+    earliest_position = len(normalized_task) + 1
+    score = 0.0
+
+    for form in candidate_forms:
+        if not form:
+            continue
+
+        if " " in form:
+            if form in normalized_task:
+                matched_forms.append(form)
+                earliest_position = min(earliest_position, normalized_task.index(form))
+                score = 1.0
+        elif form in compact_task:
+            matched_forms.append(form)
+            earliest_position = min(earliest_position, compact_task.index(form))
+            score = 1.0
+
+    return score, list(dict.fromkeys(matched_forms)), earliest_position
+
+
 def build_skill_keywords(entry: dict[str, object]) -> set[str]:
     parts: list[str] = [
         str(entry.get("name", "")),
@@ -173,22 +214,29 @@ def build_skill_keywords(entry: dict[str, object]) -> set[str]:
 def score_skill(task_description: str, entry: dict[str, object]) -> dict[str, object]:
     normalized_task = normalize_text(task_description)
     task_tokens = tokenize(task_description)
+    skill_name = str(entry.get("name", ""))
     triggers = [str(item) for item in entry.get("triggers", [])]
-    aliases = SKILL_ALIASES.get(str(entry.get("name", "")), [])
+    aliases = SKILL_ALIASES.get(skill_name, [])
     skill_tokens = build_skill_keywords(entry)
+    explicit_score, explicit_hits, explicit_position = explicit_name_score(task_description, skill_name)
 
     trigger_score, trigger_hits, trigger_position = best_phrase_score(normalized_task, triggers)
     alias_score, alias_hits, alias_position = best_phrase_score(normalized_task, aliases)
     keyword_score = jaccard_similarity(task_tokens, skill_tokens)
-    match_position = min(trigger_position, alias_position)
+    match_position = min(trigger_position, alias_position, explicit_position)
 
     confidence = round(
-        min(0.99, 0.62 * trigger_score + 0.23 * alias_score + 0.15 * keyword_score),
+        min(
+            0.99,
+            0.42 * explicit_score + 0.62 * trigger_score + 0.23 * alias_score + 0.15 * keyword_score,
+        ),
         3,
     )
 
     matched_keywords = sorted((task_tokens & skill_tokens))[:8]
     reasons: list[str] = []
+    if explicit_hits:
+        reasons.append("explicit skill name: " + ", ".join(explicit_hits[:2]))
     if trigger_hits:
         reasons.append("trigger hits: " + ", ".join(trigger_hits[:3]))
     if alias_hits:
@@ -203,6 +251,7 @@ def score_skill(task_description: str, entry: dict[str, object]) -> dict[str, ob
         "path": entry.get("path"),
         "confidence": confidence,
         "reason": "; ".join(reasons),
+        "explicit_name_hits": explicit_hits,
         "trigger_hits": trigger_hits,
         "alias_hits": alias_hits,
         "keyword_overlap": matched_keywords,
@@ -222,7 +271,7 @@ def route_task(
         key=lambda item: (
             -item["confidence"],
             item["match_position"],
-            -(len(item["trigger_hits"]) + len(item["alias_hits"])),
+            -(len(item["explicit_name_hits"]) + len(item["trigger_hits"]) + len(item["alias_hits"])),
             str(item["skill"]),
         ),
     )

@@ -30,7 +30,14 @@ def run_sync(project_path: Path, *extra_args: str) -> subprocess.CompletedProces
         str(project_path),
         *extra_args,
     ]
-    return subprocess.run(command, capture_output=True, text=True, check=True)
+    return subprocess.run(
+        command,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        check=True,
+    )
 
 
 def get_skill_names() -> list[str]:
@@ -57,6 +64,8 @@ def assert_adapter_consistency(project_path: Path) -> None:
         ["python", str(CHECK_ADAPTER_SCRIPT_PATH), str(project_path)],
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         check=False,
     )
     assert_true(result.returncode == 0, f"adapter consistency check failed:\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}")

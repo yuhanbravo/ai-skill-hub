@@ -52,6 +52,35 @@
 
 如果某个 AI 只能看到入口层，应继续读取入口文件中给出的 canonical path，再回到 `skills/` 目录读取完整 skill 定义。
 
+## Adapter Governance Modes
+
+`tools/check_adapter_consistency.py` 现在显式区分两种检查口径：
+
+- `--mode consumer`：用于普通消费项目，检查 `.codex/skills -> .agents/.github` contract
+- `--mode hub`：用于当前 hub 仓库，检查 `skills/ -> .agents/.github` contract
+
+这两个 mode 都保持 read-only，只报告 missing / orphan / wrong reference，不会自动修复或删除任何 adapter。
+
+## Local Validation
+
+`tools/run_local_checks.ps1` 现在是仓库默认的本地验证入口，适合在日常维护前后和提交前运行。
+
+- `router`：只检查 routing 相关验证
+- `governance`：检查 adapter / governance 相关验证
+- `smoke`：运行默认本地 smoke checks
+- `all`：运行更完整的本地验证集合
+
+建议调用示例：
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\run_local_checks.ps1 -Checks router
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\run_local_checks.ps1 -Checks governance
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\run_local_checks.ps1 -Checks smoke
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\run_local_checks.ps1 -Checks all
+```
+
+这个入口用于增强本地环境韧性，会按 `python -> py -3 -> conda run` 选择执行器；它仍然只是本地维护入口，不是 CI 或自动修复机制。若当前没有可用活动环境，仍可能需要显式传入 `-CondaEnvName`。
+
 ## SkillHub Status Template
 
 `ai-skill-hub` 本身就是一个 multi-agent skill platform 项目，它的主要演进对象不是业务功能，而是 skills、adapter layers、invocation contracts、indexes、tests 和 automation tools。

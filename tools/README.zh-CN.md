@@ -201,9 +201,43 @@ python .\tools\skill_router.py "整理技能索引并检查文档治理"
 python .\tools\skill_pipeline.py "接管仓库并更新状态"
 ```
 
+## run_local_checks.ps1
+
+用途：
+
+- 用一个统一入口运行本地仓库验证，不再靠记忆分散的测试命令。
+- 这是当前仓库默认的本地验证入口，建议在日常维护前后和提交前优先使用。
+
+最短调用：
+
+```powershell
+.\tools\run_local_checks.ps1
+```
+
+常用调用：
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\run_local_checks.ps1 -Checks router
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\run_local_checks.ps1 -Checks governance
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\run_local_checks.ps1 -Checks smoke
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\run_local_checks.ps1 -Checks all
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\run_local_checks.ps1 -Checks smoke -CondaEnvName prod-core-py312
+```
+
+说明：
+
+- 支持的检查分组是 `router`、`governance`、`smoke`、`all`
+- 默认优先使用 `python`
+- 若 `python` 不可用，则回退到 `py -3`
+- 若两者都不可用但 `conda` 可用，则使用 `conda run -n <env> python`
+- 若当前没有可用活动环境，仍可能需要显式传入 `-CondaEnvName`
+- 输出会显式区分 environment / permission / logic 三类失败
+- 这是本地维护入口，不是 CI、controller 或自动修复器
+
 ## 使用建议
 
 - 想“备份或打包整个 hub”，用 `export_bundle.ps1`。
 - 想“从 bundle 恢复或更新 hub”，用 `import_bundle.ps1`。
 - 想“把项目里改好的单个 skill 回收到 hub”，用 `sync_skill_from_project_to_hub.ps1`。
 - 想“把 hub 的 skill 下发到业务项目”，用 `sync_skills_to_nongit_project.ps1`。
+- 想“快速跑本地验证并看清是环境问题还是仓库问题”，用 `run_local_checks.ps1`。

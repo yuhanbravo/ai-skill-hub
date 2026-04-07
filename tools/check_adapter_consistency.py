@@ -5,16 +5,40 @@ import sys
 from pathlib import Path
 
 
-def list_codex_skills(project_root) -> set[str]:
+CONTRACTS: dict[str, dict[str, str]] = {
+    "consumer": {
+        "canonical_dir": ".codex/skills",
+        "canonical_label": "codex skills",
+        "agents_reference": "../../../.codex/skills/",
+        "github_reference": "../../.codex/skills/",
+        "contract_label": ".codex/skills -> .agents/.github",
+    },
+    "hub": {
+        "canonical_dir": "skills",
+        "canonical_label": "canonical skills",
+        "agents_reference": "../../../skills/",
+        "github_reference": "../../skills/",
+        "contract_label": "skills/ -> .agents/.github",
+    },
+}
+
+
+def get_contract(mode: str) -> dict[str, str]:
+    if mode not in CONTRACTS:
+        raise ValueError(f"Unsupported mode: {mode}")
+    return CONTRACTS[mode]
+
+
+def list_canonical_skills(project_root, mode: str) -> set[str]:
     root = Path(project_root)
-    codex_skills_dir = root / ".codex" / "skills"
-    if not codex_skills_dir.is_dir():
+    canonical_dir = root / Path(get_contract(mode)["canonical_dir"])
+    if not canonical_dir.is_dir():
         return set()
 
     return {
         entry.name
-        for entry in codex_skills_dir.iterdir()
-        if entry.is_dir() and entry.name != "_protocol" and (entry / "SKILL.md").is_file()
+        for entry in canonical_dir.iterdir()
+        if entry.is_dir() and not entry.name.startswith("_") and (entry / "SKILL.md").is_file()
     }
 
 
@@ -44,44 +68,51 @@ def list_github_entries(project_root) -> set[str]:
     }
 
 
-def check_agents_reference(file_path) -> bool:
+def check_agents_reference(file_path, expected_reference: str) -> bool:
     path = Path(file_path)
     if not path.is_file():
         return False
 
-    return "../../../.codex/skills/" in path.read_text(encoding="utf-8")
+    return expected_reference in path.read_text(encoding="utf-8")
 
 
-def check_github_reference(file_path) -> bool:
+def check_github_reference(file_path, expected_reference: str) -> bool:
     path = Path(file_path)
     if not path.is_file():
         return False
 
-    return "../../.codex/skills/" in path.read_text(encoding="utf-8")
+    return expected_reference in path.read_text(encoding="utf-8")
 
 
-def check_consistency(project_root) -> dict:
+def check_consistency(project_root, mode: str = "consumer") -> dict:
     root = Path(project_root)
-    codex_skills = list_codex_skills(root)
+    contract = get_contract(mode)
+    canonical_skills = list_canonical_skills(root, mode)
     agents_entries = list_agents_entries(root)
     github_entries = list_github_entries(root)
 
     wrong_reference_agents = sorted(
         skill_name
         for skill_name in agents_entries
-        if not check_agents_reference(root / ".agents" / "skills" / skill_name / "SKILL.md")
+        if not check_agents_reference(
+            root / ".agents" / "skills" / skill_name / "SKILL.md",
+            contract["agents_reference"],
+        )
     )
     wrong_reference_github = sorted(
         skill_name
         for skill_name in github_entries
-        if not check_github_reference(root / ".github" / "skills" / f"{skill_name}.md")
+        if not check_github_reference(
+            root / ".github" / "skills" / f"{skill_name}.md",
+            contract["github_reference"],
+        )
     )
 
     return {
-        "missing_agents": sorted(codex_skills - agents_entries),
-        "missing_github": sorted(codex_skills - github_entries),
-        "orphan_agents": sorted(agents_entries - codex_skills),
-        "orphan_github": sorted(github_entries - codex_skills),
+        "missing_agents": sorted(canonical_skills - agents_entries),
+        "missing_github": sorted(canonical_skills - github_entries),
+        "orphan_agents": sorted(agents_entries - canonical_skills),
+        "orphan_github": sorted(github_entries - canonical_skills),
         "wrong_reference_agents": wrong_reference_agents,
         "wrong_reference_github": wrong_reference_github,
     }
@@ -100,8 +131,9 @@ def get_status_marker(unicode_marker: str, ascii_marker: str) -> str:
     return unicode_marker
 
 
-def print_report(project_root: Path, result: dict) -> None:
-    codex_skills = list_codex_skills(project_root)
+def print_report(project_root: Path, result: dict, mode: str = "consumer") -> None:
+    contract = get_contract(mode)
+    canonical_skills = list_canonical_skills(project_root, mode)
     agents_entries = list_agents_entries(project_root)
     github_entries = list_github_entries(project_root)
     issue_count = sum(len(items) for items in result.values())
@@ -111,7 +143,11 @@ def print_report(project_root: Path, result: dict) -> None:
     print("[Adapter Governance Report]")
     print()
     print(f"Project root: {project_root.resolve()}")
-    print(f"{ok_marker} codex skills: {len(codex_skills)}")
+    print(f"Mode: {mode}")
+    print(f"Contract: {contract['contract_label']}")
+    print(f"Expected agents reference prefix: {contract['agents_reference']}")
+    print(f"Expected github reference prefix: {contract['github_reference']}")
+    print(f"{ok_marker} {contract['canonical_label']}: {len(canonical_skills)}")
     print(f"{ok_marker} agents entries: {len(agents_entries)}")
     print(f"{ok_marker} github entries: {len(github_entries)}")
     print()
@@ -136,7 +172,7 @@ def print_report(project_root: Path, result: dict) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Check adapter consistency between .codex/skills and project-local .agents/.github adapters."
+        description="Check adapter consistency for consumer-project adapters or hub-local wrappers."
     )
     parser.add_argument(
         "project_root",
@@ -144,11 +180,17 @@ def main() -> int:
         default=".",
         help="Project root to inspect. Defaults to the current working directory.",
     )
+    parser.add_argument(
+        "--mode",
+        choices=sorted(CONTRACTS),
+        default="consumer",
+        help="Select the adapter contract to validate. Defaults to consumer.",
+    )
     args = parser.parse_args()
 
     project_root = Path(args.project_root)
-    result = check_consistency(project_root)
-    print_report(project_root, result)
+    result = check_consistency(project_root, mode=args.mode)
+    print_report(project_root, result, mode=args.mode)
 
     if any(result.values()):
         return 1

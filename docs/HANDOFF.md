@@ -11,6 +11,7 @@ This file is the single source of truth for project handoff.
 - 2026-04-02: Refreshed the system status and merged the latest bridge-reference audit into the handoff, confirming that current bridge-layer references remained documentation-facing and identifying the direct compatibility link in AI_USAGE.md before this cleanup.
 - 2026-04-02: Merged the repository-wide bridge audit result into the handoff, confirming that direct bridge-path dependency has now been cleared from active docs and that remaining bridge references are semantic, historical, or bridge-layer self-description rather than runtime dependency.
 - 2026-04-03: Merged the landed commit-governance capability into the handoff, capturing `docs/governance/` as the repository-governance documentation home, the moved commit convention, the `skill-governance` validator asset, the versioned `.githooks/commit-msg` plus `tools/install_git_hooks.ps1` local activation path, the `export_bundle.ps1` auto-commit reuse of the same validator, and the current choice to observe real usage before tightening body rules further.
+- 2026-04-07: Merged the explicit `system-takeover` routing fix, the new `hub|consumer` adapter-governance mode split, and the default local validation entrypoint `tools/run_local_checks.ps1` into the handoff without changing phase or hard boundaries.
 
 ## Current Status
 
@@ -26,7 +27,7 @@ The system has already moved beyond a simple skill repository and now operates a
 - Documentation Layer: `docs/ai`, `docs/human`, `docs/governance`, and the bridge documentation layer now split protocol, explanation, repository-governance, and exchange assets into explicit ownership layers while keeping `docs/HANDOFF.md` and `docs/status/skill-hub-status.md` as active sources; `docs/governance/` is now the canonical home for repository-governance docs, `docs/governance/COMMIT_CONVENTION.md` has replaced the old human-layer path as the active commit-policy source, direct bridge-path dependency has been removed from active documentation, and bridge semantics remain explicit for navigation and continuity.
 - Tooling Layer: sync, metadata, routing, pipeline, local governance tooling, a standalone re-seed preflight audit path, and a versioned local commit-hook installation path are available as repeatable operational capabilities; system invocation also has explicit wrapper entrypoints for status and handoff, and `export_bundle.ps1` now reuses the same commit-message validator as the local `commit-msg` hook.
 
-Overall system maturity is `evolving`: the canonical and invocation layers are stable, documentation ownership is clearer, distribution and governance are increasingly controlled, routing/orchestration remain intentionally lightweight and still somewhat heuristic, and the current bridge-reference surface has now been audited as documentation-facing rather than runtime-facing.
+Overall system maturity is `evolving`: the canonical and invocation layers are stable, documentation ownership is clearer, distribution and governance are increasingly controlled, routing/orchestration remain intentionally lightweight and still somewhat heuristic, and the current bridge-reference surface has now been audited as documentation-facing rather than runtime-facing. This round improves system trust without changing phase: explicit `system-takeover` requests now route correctly, adapter validation now distinguishes hub and consumer contracts explicitly, and local repository validation now has a default entrypoint through `tools/run_local_checks.ps1`.
 
 ## Hard Boundaries
 
@@ -77,12 +78,13 @@ Overall system maturity is `evolving`: the canonical and invocation layers are s
 - No redesign of metadata generation or adapter schema in this phase.
 - No promotion of project-local adapters into upstream authoring surfaces.
 - No attempt to turn heuristic routing and sequencing into a fully deterministic orchestration stack in the current phase.
-- No hub-aware mode in `check_adapter_consistency.py`; running it at the hub root still produces consumer-project mismatch findings by design rather than a hub-health report.
-- No explicit router bias that guarantees `system-takeover` wins over generic `project-takeover` when the task wording mixes system intent with broad takeover language.
+- No automatic mode detection in `check_adapter_consistency.py`; hub and consumer validation are now explicitly separated, but the operator still has to choose the correct mode.
+- No attempt to make routing deterministic beyond the explicit-name/system-intent fix; `system-takeover` misrouting is corrected, but the router is still intentionally heuristic rather than controller-like.
 - No broader bridge-path migration plan beyond the compatibility-entry cleanup completed in this pass; any further bridge copy cleanup should still be deliberate rather than automatic.
 - No repository-level mirror consistency checker yet; bridge mirrors remain manually maintained even though current repo-wide auditing shows no runtime/config dependency on them.
 - No automatic hook enablement across fresh clones or worktrees; `tools/install_git_hooks.ps1` must still be run locally once per clone/worktree.
 - No decision yet to tighten commit body rules beyond the current lightweight descriptive check; that boundary should continue to follow real usage feedback rather than speculative policy growth.
+- No CI-backed default validation flow yet; `tools/run_local_checks.ps1` is now the default local entrypoint, but it remains a local wrapper rather than repository-level enforcement.
 
 These gaps are intentional to keep the system legible while distribution and governance semantics are still being stabilized.
 
@@ -90,9 +92,9 @@ These gaps are intentional to keep the system legible while distribution and gov
 
 The next phase should move the system from `controlled local governance` toward `controlled enforcement`, while preserving the current single-source layering model, the thin-wrapper system invocation model, the explicit documentation ownership split, and the new preflight-before-rollout boundary.
 
-Directionally, this means strengthening confidence in cross-layer consistency, separating hub-health validation from consumer-project adapter validation, making orchestration behavior less heuristic, and increasing repeatability without giving up the current hard boundaries around canonical ownership, read-only governance transitions, preflight-only audit semantics, bridge-as-mirror documentation semantics, navigation-only bridge references, wrapper-only system invocation surfaces, and the current evidence that remaining bridge mentions are semantic rather than runtime-coupled.
+Directionally, this means strengthening confidence in cross-layer consistency, continuing to keep hub-health validation separate from consumer-project adapter validation, making orchestration behavior less heuristic without turning it into a controller framework, and increasing repeatability around the new default local validation entrypoint without giving up the current hard boundaries around canonical ownership, read-only governance transitions, preflight-only audit semantics, bridge-as-mirror documentation semantics, navigation-only bridge references, wrapper-only system invocation surfaces, and the current evidence that remaining bridge mentions are semantic rather than runtime-coupled.
 
-The objective is not to add more surfaces or a controller framework, but to make the existing layers more trustworthy, more enforceable, and easier for future maintainers or AI agents to operate without ambiguity.
+The objective is not to add more surfaces or a controller framework, but to make the existing layers more trustworthy, more enforceable, and easier for future maintainers or AI agents to operate without ambiguity. In practical terms, the current direction is to keep the explicit routing fix, the dual governance contract, and the local validation entrypoint stable and well-understood before attempting any stronger enforcement layer.
 
 ## System Takeover Snapshot (2026-04-02)
 
@@ -140,5 +142,6 @@ The current map is strong on takeover, status, documentation, structure, and dis
 - Strengthen router aliases, trigger weighting, or explicit-name matching so system wrappers win when the task explicitly names them.
 - Continue to switch or preserve bridge-facing compatibility links intentionally instead of treating bridge copy cleanup as a blind documentation move.
 - Promote the most important routing, governance, and documentation ownership checks into a standard repeatable validation path, ideally without turning the system into an auto-mutating controller.
+
 
 

@@ -29,6 +29,20 @@ Use the `chatgpt-handoff-pilot` skill to generate a task package, execute within
 
 详细模板见 [SKILL.md](SKILL.md)。
 
+## Review Packet（审阅包）
+
+当本轮已经有实施结果，需要把“值得给 ChatGPT 或上游审阅侧快速查看的增量”收敛成一个小文档时，可以补一份 `review packet`。
+
+- `task package`：给实施前使用，负责说明目标、范围、约束、验收
+- `execution report`：给实施后回传，负责说明实际改动、验证、阻塞、边界遵守情况
+- `review packet`：给审阅侧使用，负责收敛“本轮值得审什么”，减少在 ChatGPT 网页端反复粘贴长聊天记录
+
+它不是新的治理机制，也不替代前两者；更适合与 `execution report`、changed files summary 或必要日志片段一起使用。
+
+- 模板：[`templates/REVIEW_PACKET_TEMPLATE.md`](templates/REVIEW_PACKET_TEMPLATE.md)
+- Prompt：[`prompts/review_packet_prompts.md`](prompts/review_packet_prompts.md)
+- 示例：[`examples/example_review_packet.md`](examples/example_review_packet.md)
+
 ## Detailed Guidance Moved From SKILL.md
 
 The sections below were moved out of `SKILL.md` during the semantic split so the README can carry explanation-oriented material while `SKILL.md` stays execution-focused.
@@ -180,6 +194,8 @@ The sections below were moved out of `SKILL.md` during the semantic split so the
 ## Supporting Assets
 
 - Reusable prompts: [prompts/reusable_prompts.md](prompts/reusable_prompts.md)
+- Review-packet prompts: [prompts/review_packet_prompts.md](prompts/review_packet_prompts.md)
 - Templates: [templates/](templates/)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
+
 

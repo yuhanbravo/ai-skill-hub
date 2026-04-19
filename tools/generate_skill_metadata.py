@@ -9,6 +9,12 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILLS_DIR = ROOT / "skills"
 AGENTS_DIR = ROOT / ".agents" / "skills"
 OUTPUT_JSON = ROOT / "skills_index.json"
+EXAMPLE_FILE_PATH = Path("examples") / "invocation_examples.md"
+INPUT_EXAMPLE_PATTERN = re.compile(r"### Input Example\s+```text\r?\n(.*?)```", re.DOTALL)
+INLINE_INVOCATION_EXAMPLE_PATTERN = re.compile(
+    r"## Invocation\s+.*?### Input Example\s+```text\r?\n(.*?)```",
+    re.DOTALL,
+)
 
 
 def read_frontmatter(path: Path) -> dict:
@@ -72,15 +78,28 @@ def suggest_triggers(skill_name: str, description: str) -> list[str]:
     ]
 
 
-def extract_invocation_example(text: str) -> str:
-    match = re.search(
-        r"## Invocation\s+.*?### Input Example\s+```text\n(.*?)```",
-        text,
-        re.DOTALL,
-    )
+def normalize_example_text(text: str) -> str:
+    return " ".join(line.strip() for line in text.strip().splitlines() if line.strip())
+
+
+def extract_example_block(text: str, pattern: re.Pattern[str]) -> str:
+    match = pattern.search(text)
     if not match:
         return ""
-    return " ".join(line.strip() for line in match.group(1).strip().splitlines() if line.strip())
+    return normalize_example_text(match.group(1))
+
+
+def extract_invocation_example(skill_dir: Path, skill_text: str) -> str:
+    example_file = skill_dir / EXAMPLE_FILE_PATH
+    if example_file.exists():
+        example_text = extract_example_block(
+            example_file.read_text(encoding="utf-8"),
+            INPUT_EXAMPLE_PATTERN,
+        )
+        if example_text:
+            return example_text
+
+    return extract_example_block(skill_text, INLINE_INVOCATION_EXAMPLE_PATTERN)
 
 
 def detect_category(skill_name: str) -> str:
@@ -122,7 +141,7 @@ def main() -> int:
                 "category": detect_category(skill_dir.name),
                 "triggers": triggers,
                 "side_effects": side_effects,
-                "invocation_example": extract_invocation_example(text),
+                "invocation_example": extract_invocation_example(skill_dir, text),
             }
         )
 

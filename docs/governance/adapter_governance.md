@@ -4,7 +4,10 @@
 
 Adapter Governance 是 distribution 的补充层，用来检查项目内 adapter drift，而不是参与 skill 生成或同步。
 
-检查的基准层是项目内的 `.codex/skills/`，adapter 层是项目内的 `.agents/skills/` 与 `.github/skills/`。
+检查器支持两种 contract：
+
+- `consumer`：用于普通消费项目，基准层是项目内 `.codex/skills/`
+- `hub`：用于 `ai-skill-hub` 本仓库，基准层是仓库内 `skills/`
 
 目标只有一件事：发现不一致并报告，不自动修复。
 
@@ -14,6 +17,15 @@ Adapter Governance 是 distribution 的补充层，用来检查项目内 adapter
 
 ```powershell
 python tools/check_adapter_consistency.py
+```
+
+默认 mode 是 `consumer`（面向普通消费项目）。
+
+显式指定 mode：
+
+```powershell
+python tools/check_adapter_consistency.py --mode consumer
+python tools/check_adapter_consistency.py --mode hub
 ```
 
 也可以显式传入要扫描的项目路径：
@@ -28,10 +40,19 @@ python tools/check_adapter_consistency.py D:\dev\some-project
 - orphan adapter
 - wrong reference
 
-wrong reference 的判断规则是：
+wrong reference 的判断规则按 mode 区分：
 
-- `.agents/skills/<skill>/SKILL.md` 必须引用 `../../../.codex/skills/`
-- `.github/skills/<skill>.md` 必须引用 `../../.codex/skills/`
+- `consumer` mode：
+  - `.agents/skills/<skill>/SKILL.md` 必须引用 `../../../.codex/skills/`
+  - `.github/skills/<skill>.md` 必须引用 `../../.codex/skills/`
+- `hub` mode：
+  - `.agents/skills/<skill>/SKILL.md` 必须引用 `../../../skills/`
+  - `.github/skills/<skill>.md` 必须引用 `../../skills/`
+
+建议：
+
+- 检查普通业务项目时使用 `consumer`
+- 检查 `ai-skill-hub` 仓库本体时使用 `hub`
 
 ## 不做什么
 

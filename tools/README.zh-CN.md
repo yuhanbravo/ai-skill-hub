@@ -234,10 +234,41 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\run_local_checks.p
 - 输出会显式区分 environment / permission / logic 三类失败
 - 这是本地维护入口，不是 CI、controller 或自动修复器
 
+## audit_derivative_surfaces.py
+
+用途：
+
+- 以只读方式审计两类 derivative-surface 风险：
+  - `docs/HANDOFF.md` 与 `docs/bridge/HANDOFF.md`
+  - `docs/status/skill-hub-status.md` 与 `docs/bridge/status/skill-hub-status.md`
+- 检查 canonical invocation examples 是否已经转移到 `skills/*/examples/invocation_examples.md`
+- 报告 `tools/generate_skill_metadata.py` 是否仍依赖旧的 inline `SKILL.md` / `### Input Example` 假设
+
+最短调用：
+
+```powershell
+python .\tools\audit_derivative_surfaces.py
+```
+
+常用调用：
+
+```powershell
+python .\tools\audit_derivative_surfaces.py --root .
+python .\tools\audit_derivative_surfaces.py --preview-lines 20
+```
+
+说明：
+
+- 这是 read-only / non-gating audit，只做 compare / report，不做 refresh、sync 或 rewrite
+- bridge semantic mirror comparison 会先剥离 bridge copy 允许存在的 preamble/header
+- `docs/bridge/SKILLS_INDEX.md` 与 bridge template copies 会按 intentional bridge copy 处理并显式 `SKIP`
+- 即使发现 drift，脚本也保持 report-only，不把当前仓库默认验证入口变成阻断流程
+
 ## 使用建议
 
 - 想“备份或打包整个 hub”，用 `export_bundle.ps1`。
 - 想“从 bundle 恢复或更新 hub”，用 `import_bundle.ps1`。
 - 想“把项目里改好的单个 skill 回收到 hub”，用 `sync_skill_from_project_to_hub.ps1`。
 - 想“把 hub 的 skill 下发到业务项目”，用 `sync_skills_to_nongit_project.ps1`。
+- 想“显式暴露 bridge mirror drift 和 invocation-example source drift，但不做修复”，用 `audit_derivative_surfaces.py`。
 - 想“快速跑本地验证并看清是环境问题还是仓库问题”，用 `run_local_checks.ps1`。

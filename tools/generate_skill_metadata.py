@@ -134,13 +134,7 @@ def main() -> int:
     AGENTS_DIR.mkdir(parents=True, exist_ok=True)
     for entry in skill_entries:
         summary_path = AGENTS_DIR / f"{entry['name']}.md"
-        lines = [
-            f"# {entry['name']}",
-            "",
-            f"- name: `{entry['name']}`",
-            f"- description: `{next((item for item in read_frontmatter(ROOT / entry['path'] / 'SKILL.md').values() if isinstance(item, str) and item != entry['name']), '')}``",
-        ]
-        # Rebuild using known values instead of re-parsing in output order.
+        # Rebuild using known values instead of relying on dict iteration order.
         frontmatter = read_frontmatter(ROOT / entry["path"] / "SKILL.md")
         description = frontmatter.get("description", "")
         trigger_text = ", ".join(entry["triggers"])

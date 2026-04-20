@@ -12,6 +12,7 @@ This directory holds repository-governance documents that define or explain cros
 
 - `COMMIT_CONVENTION.md`: canonical commit-message convention for this repository
 - `adapter_governance.md`: adapter drift-check scope, usage, and boundaries
+- `documentation_status_coordination.md`: minimum coordination note between `documentation-governance` and `update-project-status`
 
 ## Quick Start
 

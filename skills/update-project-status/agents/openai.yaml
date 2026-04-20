@@ -1,4 +1,4 @@
 interface:
   display_name: "Update Project Status"
-  short_description: "Build status reports from Git and external task sources."
-  default_prompt: "Generate a project status update from Git history and configured task sources, preview side effects when needed, and sync the result only through approved targets."
+  short_description: "Build status reports from Git-first, workspace, and task-source signals."
+  default_prompt: "Generate a project status update in git/workspace/hybrid mode, apply SSOT-lite checks (primary status doc + workspace signals), preview side effects when needed, and sync only through approved targets."

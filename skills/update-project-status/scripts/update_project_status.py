@@ -29,6 +29,8 @@ DEFAULT_SKILLHUB_SECTIONS = [
     "Next Recommended Moves",
 ]
 
+VALID_SOURCE_MODES = {"git", "workspace", "hybrid"}
+
 
 @dataclass
 class CommitEntry:
@@ -243,6 +245,56 @@ def resolve_task_sources(config: dict[str, Any]) -> list[dict[str, Any]]:
     return sources
 
 
+def normalize_source_mode(config: dict[str, Any]) -> str:
+    mode = str(config.get("source_mode", "git")).strip().lower()
+    return mode if mode in VALID_SOURCE_MODES else "git"
+
+
+def resolve_workspace_signal_paths(config: dict[str, Any]) -> list[str]:
+    paths = config.get("workspace_signal_paths", [])
+    if not isinstance(paths, list):
+        return []
+    return [str(item) for item in paths if str(item).strip()]
+
+
+def collect_workspace_signals(root: Path, config: dict[str, Any]) -> list[str]:
+    results: list[str] = []
+    seen: set[str] = set()
+    for pattern in resolve_workspace_signal_paths(config):
+        for path in sorted(root.glob(pattern)):
+            if not path.is_file():
+                continue
+            relative = path.relative_to(root).as_posix()
+            if relative in seen:
+                continue
+            seen.add(relative)
+            results.append(relative)
+    return results
+
+
+def resolve_ssot_info(root: Path, config: dict[str, Any], status_file: Path) -> dict[str, Any]:
+    ssot_config = config.get("ssot", {}) if isinstance(config.get("ssot", {}), dict) else {}
+    primary_value = str(
+        ssot_config.get("primary_status_doc")
+        or config.get("primary_status_doc")
+        or ""
+    ).strip()
+    snapshot_value = str(
+        ssot_config.get("snapshot_status_doc")
+        or config.get("snapshot_status_doc")
+        or status_file.relative_to(root).as_posix()
+    ).strip()
+    precedence = ssot_config.get("truth_precedence") or config.get("truth_precedence") or []
+    precedence_items = [str(item) for item in precedence] if isinstance(precedence, list) else []
+    primary_path = root / primary_value if primary_value and not Path(primary_value).is_absolute() else Path(primary_value) if primary_value else None
+    return {
+        "primary_status_doc": primary_value,
+        "primary_exists": bool(primary_path and primary_path.exists()),
+        "snapshot_status_doc": snapshot_value,
+        "truth_precedence": precedence_items,
+    }
+
+
 def collect_external_tasks(root: Path, config: dict[str, Any]) -> list[str]:
     max_items = int(config.get("max_extra_tasks", 5))
     tasks: list[str] = []
@@ -304,12 +356,15 @@ def load_skillhub_sections(path: Path = SKILLHUB_TEMPLATE_PATH) -> list[str]:
 
 def build_skillhub_status_content(
     git_available: bool,
+    source_mode: str,
     config_path: Path,
     commits: list[CommitEntry],
     features: list[CommitEntry],
     bugfixes: list[CommitEntry],
     next_task_items: list[str],
     extra_tasks: list[str],
+    workspace_signals: list[str],
+    ssot_info: dict[str, Any],
     sync_targets: list[dict[str, Any]],
     config: dict[str, Any],
 ) -> str:
@@ -324,9 +379,17 @@ def build_skillhub_status_content(
         "Current SkillHub Status": [
             "- Repository mode: `skill-hub`.",
             f"- Template type: `{config.get('template_type', 'default')}`.",
+            f"- Source mode: `{source_mode}`.",
             f"- Git data available: `{'yes' if git_available else 'no'}`.",
             f"- Config source: `{config_path}`.",
             f"- Recent commits inspected: `{len(commits)}`.",
+            (
+                f"- Primary status doc: `{ssot_info.get('primary_status_doc')}` "
+                f"(exists: `{'yes' if ssot_info.get('primary_exists') else 'no'}`)."
+                if ssot_info.get("primary_status_doc")
+                else "- Primary status doc: not configured."
+            ),
+            f"- Workspace signals detected: `{len(workspace_signals)}`.",
             (
                 "- Tracked status dimensions: "
                 + ", ".join(f"`{item}`" for item in tracked_dimensions)
@@ -361,6 +424,10 @@ def build_skillhub_status_content(
     open_gaps = section_content["Open Gaps"]
     if not extra_tasks:
         open_gaps.append("- No extra task sources contributed items to enrich the status update.")
+    if resolve_workspace_signal_paths(config) and not workspace_signals:
+        open_gaps.append("- Workspace signal paths are configured, but no workspace signal files were detected.")
+    if ssot_info.get("primary_status_doc") and not ssot_info.get("primary_exists"):
+        open_gaps.append("- The configured primary status document is missing and should be restored or updated.")
     if not sync_targets:
         open_gaps.append("- No configured sync targets are present for downstream publishing.")
     if not invocation_commits:
@@ -374,6 +441,7 @@ def build_skillhub_status_content(
         "# SkillHub Status",
         "",
         f"- Updated at: `{now}`",
+        f"- Source mode: `{source_mode}`",
         f"- Git data available: `{'yes' if git_available else 'no'}`",
         f"- Config: `{config_path}`",
         f"- Template: `{SKILLHUB_TEMPLATE_PATH}`",
@@ -386,12 +454,26 @@ def build_skillhub_status_content(
     return "\n".join(lines).rstrip() + "\n"
 
 
-def build_status_content(git_available: bool, config_path: Path, commits: list[CommitEntry], features: list[CommitEntry], bugfixes: list[CommitEntry], next_task_items: list[str], extra_tasks: list[str], sync_targets: list[dict[str, Any]]) -> str:
+def build_status_content(
+    git_available: bool,
+    source_mode: str,
+    config_path: Path,
+    commits: list[CommitEntry],
+    features: list[CommitEntry],
+    bugfixes: list[CommitEntry],
+    next_task_items: list[str],
+    extra_tasks: list[str],
+    workspace_signal_paths: list[str],
+    workspace_signals: list[str],
+    ssot_info: dict[str, Any],
+    sync_targets: list[dict[str, Any]],
+) -> str:
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     lines = [
         "# Project Status",
         "",
         f"- Updated at: `{now}`",
+        f"- Source mode: `{source_mode}`",
         f"- Git data available: `{'yes' if git_available else 'no'}`",
         f"- Config: `{config_path}`",
         f"- Recent commits inspected: `{len(commits)}`",
@@ -415,42 +497,91 @@ def build_status_content(git_available: bool, config_path: Path, commits: list[C
         lines.extend(f"- {item}" for item in extra_tasks)
     else:
         lines.append("- No extra task sources contributed items")
+    lines.extend(["", "## Workspace Signals", ""])
+    if workspace_signals:
+        lines.extend(f"- {path}" for path in workspace_signals[:10])
+    elif workspace_signal_paths:
+        lines.append("- Workspace signal paths were configured, but no files were detected")
+    else:
+        lines.append("- Workspace signal paths are not configured")
+    lines.extend(["", "## SSOT-lite", ""])
+    if ssot_info.get("primary_status_doc"):
+        lines.append(
+            f"- Primary status doc: `{ssot_info['primary_status_doc']}` "
+            f"(exists: `{'yes' if ssot_info.get('primary_exists') else 'no'}`)."
+        )
+    else:
+        lines.append("- Primary status doc: not configured")
+    lines.append(f"- Snapshot status doc: `{ssot_info.get('snapshot_status_doc', '')}`")
+    precedence = ssot_info.get("truth_precedence", [])
+    if precedence:
+        lines.append("- Truth precedence: " + " > ".join(f"`{item}`" for item in precedence))
+    else:
+        lines.append("- Truth precedence: not configured")
     lines.extend(["", "## Sync Targets", ""])
     if sync_targets:
         lines.extend(f"- {target.get('type', 'unknown')}" for target in sync_targets)
     else:
         lines.append("- No configured sync targets")
     lines.extend(["", "## Notes", ""])
-    lines.append("- Status generation combines Git commit subjects with optional configured task sources.")
+    lines.append("- Status generation combines Git, workspace, task-source, and inferred signals when available.")
+    if extra_tasks:
+        lines.append("- Task-source-derived signals were included from configured task sources.")
+    if workspace_signals:
+        lines.append("- Workspace-derived signals were included from configured workspace signal paths.")
+    if commits:
+        lines.append("- Git-derived signals were included from recent commits.")
+    if next_task_items:
+        lines.append("- Some upcoming tasks are inferred from the available signals.")
     if not git_available:
-        lines.append("- Git repository metadata was not available in the target root, so the status relies on fallback task sources.")
+        lines.append("- Git repository metadata was not available in the target root, so the refresh is workspace/task-source based.")
     return "\n".join(lines) + "\n"
 
 
 def render_status_content(
     git_available: bool,
+    source_mode: str,
     config_path: Path,
     commits: list[CommitEntry],
     features: list[CommitEntry],
     bugfixes: list[CommitEntry],
     next_task_items: list[str],
     extra_tasks: list[str],
+    workspace_signal_paths: list[str],
+    workspace_signals: list[str],
+    ssot_info: dict[str, Any],
     sync_targets: list[dict[str, Any]],
     config: dict[str, Any],
 ) -> str:
     if str(config.get("template_type", "default")).lower() == "skillhub":
         return build_skillhub_status_content(
             git_available,
+            source_mode,
             config_path,
             commits,
             features,
             bugfixes,
             next_task_items,
             extra_tasks,
+            workspace_signals,
+            ssot_info,
             sync_targets,
             config,
         )
-    return build_status_content(git_available, config_path, commits, features, bugfixes, next_task_items, extra_tasks, sync_targets)
+    return build_status_content(
+        git_available,
+        source_mode,
+        config_path,
+        commits,
+        features,
+        bugfixes,
+        next_task_items,
+        extra_tasks,
+        workspace_signal_paths,
+        workspace_signals,
+        ssot_info,
+        sync_targets,
+    )
 
 
 def append_log_line(git_available: bool, commits: list[CommitEntry], status_file: Path, sync_targets: list[dict[str, Any]]) -> str:
@@ -603,20 +734,28 @@ def main() -> int:
     log_file = log_file if log_file.is_absolute() else root / log_file
     shared_doc = None if args.shared_doc is None else (args.shared_doc if args.shared_doc.is_absolute() else root / args.shared_doc)
 
+    source_mode = normalize_source_mode(config)
     git_available = detect_git_repository(root)
     commits = load_commits(root, args.limit) if git_available else []
     features, bugfixes, explicit_next_tasks, others = classify_commits(commits, config)
     extra_tasks = collect_external_tasks(root, config)
+    workspace_signal_paths = resolve_workspace_signal_paths(config)
+    workspace_signals = collect_workspace_signals(root, config)
     next_task_items = [commit.subject for commit in explicit_next_tasks] or infer_next_tasks(features, bugfixes, others, extra_tasks)
+    ssot_info = resolve_ssot_info(root, config, status_file)
     sync_target_config = build_sync_targets(config, shared_doc)
     status_content = render_status_content(
         git_available,
+        source_mode,
         config_path,
         commits,
         features,
         bugfixes,
         next_task_items,
         extra_tasks,
+        workspace_signal_paths,
+        workspace_signals,
+        ssot_info,
         sync_target_config,
         config,
     )
@@ -641,7 +780,7 @@ def main() -> int:
     for message in sync_messages:
         print(message)
     if not git_available:
-        print("Warning: Git repository metadata was not available; fallback task sources were used when possible.")
+        print("Warning: Git repository metadata was not available; workspace/task-source refresh mode was used when possible.")
     return 0
 
 

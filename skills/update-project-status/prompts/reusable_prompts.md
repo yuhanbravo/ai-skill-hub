@@ -10,13 +10,14 @@ This file preserves the prompt templates split out of `SKILL.md` during the AI/H
 请使用 `update-project-status` 处理以下任务。
 
 背景：
-- 需要根据近期 Git 提交和可用任务来源刷新项目状态
+- 需要根据 Git-first 信号，或在 no-git 场景下根据 workspace/task signals 刷新项目状态
 
 目标：
 - 生成或更新状态文档，并整理关键进展、风险和待办
 
 范围：
 - 读取最近提交
+- 读取 workspace status signals（如 README/docs/TASKBOARD）
 - 合并可用任务源
 - 生成状态 markdown 与状态日志
 - 如已授权，再执行同步

@@ -1,6 +1,23 @@
 {
+  "source_mode": "git",
   "status_file": "docs/status.md",
   "log_file": "docs/status_updates.log",
+  "workspace_signal_paths": [
+    "README.md",
+    "docs/**/*.md",
+    "TASKBOARD.md",
+    "docs/tasks/**/*.md"
+  ],
+  "ssot": {
+    "primary_status_doc": "docs/HANDOFF.md",
+    "snapshot_status_doc": "docs/status.md",
+    "truth_precedence": [
+      "primary_status_doc",
+      "task_sources",
+      "workspace_signals",
+      "git_history"
+    ]
+  },
   "shared_mode": "local_copy",
   "feature_keywords": ["feat", "feature", "add", "implement", "support", "新增", "功能"],
   "bugfix_keywords": ["fix", "bug", "hotfix", "repair", "修复", "问题"],

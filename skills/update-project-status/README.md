@@ -2,13 +2,21 @@
 
 ## What is this
 
-`update-project-status` 是一个项目状态更新型 skill，用来把近期 Git 历史与可用任务来源整理为状态文档、状态日志和可选同步结果。
+`update-project-status` 是一个项目状态更新型 skill，用来把 **Git-first 信号**、workspace 信号与可用任务来源整理为状态文档、状态日志和可选同步结果。
 
 它默认面向普通项目状态更新，但也支持 `skill-hub` 这种“以 skills、adapters、indexes、tests 和 automation 为主要产物”的仓库形态。
 
 ## When to use
 
 适合在需要刷新项目状态、整理近期变更、准备阶段汇报或 handoff 状态摘要时使用；如果目标是首次接管项目，应优先考虑 `project-takeover`。
+
+支持三种最小模式（兼容 Git-first 默认行为）：
+
+- `git`：优先使用 Git 历史（默认）
+- `workspace`：在无 Git 或 Git 不可用时，基于 workspace/task signals 刷新当前状态
+- `hybrid`：同时吸收 Git + workspace/task signals
+
+> 本 skill 当前仅提供 **SSOT-lite**（如 `primary_status_doc`、`workspace_signal_paths`、`truth_precedence`），不是 full SSOT governance engine。
 
 当目标仓库本身是一个 `skill-hub project`，并且你更关心 `skill coverage`、`invocation readiness`、`adapter/discovery coverage`、`governance readiness` 和 `automation readiness` 时，应使用 `template_type=skillhub`。
 
@@ -55,7 +63,8 @@ The sections below were moved out of `SKILL.md` during the semantic split so the
 
 适合在以下场景使用：
 
-- 需要基于近期 Git 提交生成或刷新项目状态报告
+- 需要基于近期 Git 提交生成或刷新项目状态报告（Git-first）
+- 需要在无 Git 项目中基于 workspace/task signals 刷新“当前状态”
 - 希望把仓库提交与任务来源信息合并成统一状态文档
 - 需要准备阶段总结、handoff 状态说明或对外同步的项目更新
 - 需要按配置把状态输出同步到本地副本、命令目标或远程文档目标
@@ -66,7 +75,7 @@ The sections below were moved out of `SKILL.md` during the semantic split so the
 以下情况不适合使用这个 skill：
 
 - 当前目标是首次接管仓库，而不是更新持续状态，那更接近 `project-takeover`
-- 项目没有可用的 Git 历史，也没有任何替代任务来源，无法形成有效状态摘要
+- 项目没有可用的 Git 历史，且没有任何 workspace/task signals，无法形成有效状态摘要
 - 任务只需要解释某个提交或某个文件变化，而不是输出完整状态文档
 - 当前不允许写入状态文件、日志文件或执行同步动作
 - 团队已有强制的本地状态发布流程，且不需要额外的共享 skill 封装
@@ -145,4 +154,3 @@ The sections below were moved out of `SKILL.md` during the semantic split so the
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
 - Templates: [templates/](templates/)
 - References: [references/](references/)
-

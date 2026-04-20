@@ -8,7 +8,7 @@ These examples were split out of `SKILL.md` to keep the execution contract focus
 Use update-project-status for this task.
 
 task_description:
-- Refresh the project status report from recent Git history and current task sources.
+- Refresh the project status report from Git-first signals plus current workspace/task sources.
 
 constraints:
 - Do not install hooks unless explicitly requested.
@@ -16,6 +16,7 @@ constraints:
 
 expected_output:
 - Updated status summary
+- Source mode and signal-source breakdown (Git / workspace / task / inferred)
 - Risk and next-step summary
 - Optional sync decision
 
@@ -23,13 +24,14 @@ context_files:
 - .git/
 - README.md
 - status config files
+- docs/**/*
 ```
 
 ### Output Example
 
 ```text
 execution_plan:
-- Load recent Git history and configured task sources.
+- Detect source_mode (git/workspace/hybrid) and load available signals.
 - Build the status summary and log entry.
 - Decide whether any sync action is authorized.
 

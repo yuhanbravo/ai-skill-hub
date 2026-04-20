@@ -1,0 +1,25 @@
+{
+  "source_mode": "workspace",
+  "status_file": "reports/no_git_status.md",
+  "log_file": "reports/no_git_status.log",
+  "workspace_signal_paths": [
+    "README.md",
+    "docs/**/*.md"
+  ],
+  "ssot": {
+    "primary_status_doc": "docs/HANDOFF.md",
+    "truth_precedence": [
+      "primary_status_doc",
+      "task_sources",
+      "workspace_signals"
+    ]
+  },
+  "task_sources": [
+    {
+      "type": "file_glob",
+      "pattern": "docs/TASKBOARD.md",
+      "prefix": "docs/TASKBOARD.md"
+    }
+  ],
+  "sync_targets": []
+}

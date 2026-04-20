@@ -1,0 +1,16 @@
+{
+  "stdout_contains": [
+    "Status file preview:",
+    "- Source mode: `workspace`",
+    "- Git data available: `no`",
+    "## Workspace Signals",
+    "- README.md",
+    "- docs/TASKBOARD.md",
+    "## SSOT-lite",
+    "Primary status doc: `docs/HANDOFF.md` (exists: `no`).",
+    "workspace/task-source based",
+    "Dry run status file target:",
+    "reports/no_git_status.md",
+    "Warning: Git repository metadata was not available"
+  ]
+}

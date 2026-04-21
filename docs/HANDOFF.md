@@ -13,11 +13,8 @@ This file is the single source of truth for project handoff.
 - 2026-04-03: Merged the landed commit-governance capability into the handoff, capturing `docs/governance/` as the repository-governance documentation home, the moved commit convention, the `skill-governance` validator asset, the versioned `.githooks/commit-msg` plus `tools/install_git_hooks.ps1` local activation path, the `export_bundle.ps1` auto-commit reuse of the same validator, and the current choice to observe real usage before tightening body rules further.
 - 2026-04-07: Merged the explicit `system-takeover` routing fix, the new `hub|consumer` adapter-governance mode split, and the default local validation entrypoint `tools/run_local_checks.ps1` into the handoff without changing phase or hard boundaries.
 - 2026-04-07: Merged the new human-oriented quick commands docs for `system-takeover` plus the lightweight cross-link from `SYSTEM_SKILL_QUICK_COMMANDS.md`, treating them as maintainer-facing documentation-surface additions rather than protocol, governance, or boundary changes.
-<<<<<<< ours
 - 2026-04-20: Merged the workspace-aware status refresh upgrade, the new derivative-surface drift audit, invocation-metadata extraction hardening, bridge semantic mirror refresh, and the minimum coordination note between `documentation-governance` and `update-project-status` into the handoff while preserving `Phase 3 - Controlled System` and read-only governance boundaries.
-=======
 - 2026-04-20: Applied minimal wrapper-coordination hardening for `system-status-update` and `system-handoff`; refreshed status first (`docs/status/skill-hub-status.md`, Updated at `2026-04-20`), then completed handoff merge with phase consistency check (`Phase 3 - Controlled System`) and recorded this status baseline.
->>>>>>> theirs
 
 ## Current Status
 
@@ -33,21 +30,14 @@ The system has already moved beyond a simple skill repository and now operates a
 - Documentation Layer: `docs/ai`, `docs/human`, `docs/governance`, and the bridge documentation layer continue to split protocol, explanation, repository-governance, and exchange assets into explicit ownership layers while keeping `docs/HANDOFF.md` and `docs/status/skill-hub-status.md` as active sources; the governance layer now also explicitly documents how status snapshots, status logs, governance reports, and mirror copies should coexist.
 - Tooling Layer: sync, metadata, routing, pipeline, local governance tooling, re-seed audit, derivative-surface audit, and a versioned local commit-hook installation path are available as repeatable operational capabilities; system invocation still uses wrapper entrypoints for status and handoff, and `export_bundle.ps1` continues to reuse the same commit-message validator as the local `commit-msg` hook.
 
-<<<<<<< ours
-Overall system maturity is `evolving`: canonical ownership and invocation contracts remain stable, documentation ownership is clearer, distribution and governance are more controlled, and tooling is more resilient across status, metadata, and derivative surfaces without changing phase. This round improves system trust without changing phase: status refresh now degrades more gracefully when Git is unavailable, derivative/mirror drift is visible through a read-only audit surface, invocation metadata is less layout-sensitive, and the documentation-governance/status-refresh relationship is now spelled out as a minimal governance lane rather than left implicit.
-=======
-Overall system maturity is `evolving`: the canonical and invocation layers are stable, documentation ownership is clearer, distribution and governance are increasingly controlled, routing/orchestration remain intentionally lightweight and still somewhat heuristic, and the current bridge-reference surface has now been audited as documentation-facing rather than runtime-facing. This round improves system trust without changing phase: explicit `system-takeover` requests now route correctly, adapter validation now distinguishes hub and consumer contracts explicitly, and local repository validation now has a default entrypoint through `tools/run_local_checks.ps1`. The latest update additionally hardens wrapper coordination by adding a status freshness gate and a status->handoff phase-consistency rule without introducing controller-style orchestration.
->>>>>>> theirs
+Overall system maturity is `evolving`: canonical ownership and invocation contracts remain stable, documentation ownership is clearer, distribution and governance are more controlled, and tooling is more resilient across status, metadata, and derivative surfaces without changing phase. This round improves system trust without changing phase: status refresh now degrades more gracefully when Git is unavailable, derivative/mirror drift is visible through a read-only audit surface, invocation metadata is less layout-sensitive, and the documentation-governance/status-refresh relationship is now spelled out as a minimal governance lane rather than left implicit. The latest update additionally hardens wrapper coordination by adding a status freshness gate and a status->handoff phase-consistency rule without introducing controller-style orchestration.
 
 ## Hard Boundaries
 
 - `skills/<skill>/` remains the only canonical source of truth inside the hub. No adapter layer may become a second authoritative source.
 - `system-status-update` and `system-handoff` must remain wrapper skills. They may reuse canonical skills and add system-level output constraints, but they must not fork canonical logic.
-<<<<<<< ours
 - Workspace-aware or no-git status refresh extends evidence collection only. It must not promote workspace signals, bridge copies, readable derivatives, or other convenience surfaces into new authoritative system sources.
-=======
 - `system-status-update` and `system-handoff` coordination must remain minimal: refresh status first, then merge handoff; keep a `14`-day freshness gate and phase consistency check, but do not introduce auto-trigger orchestration.
->>>>>>> theirs
 - In distributed business-project contexts, `.codex/skills/` is the runtime SSOT for local skill content. Project-local adapters must point to `.codex/skills/`, not back to hub `skills/` paths.
 - Governance at the current stage is read-only. Consistency checks may detect drift, but they must not auto-fix, auto-delete, or silently rewrite adapters.
 - Derivative-surface auditing and documentation-status coordination remain advisory/read-only. They may clarify drift, ownership, or operating order, but they must not auto-remediate, auto-sync, or redefine canonical skill contracts.

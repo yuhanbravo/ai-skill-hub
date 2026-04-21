@@ -41,9 +41,11 @@ This file preserves the prompt templates split out of `SKILL.md` during the AI/H
 
 要求：
 - 先读取 `docs/HANDOFF.md`
+- 若存在 `docs/status/skill-hub-status.md`，先读取其 `Updated at` 作为 status baseline
 - 复用 `chatgpt-handoff-pilot` 的 section-aware merge 思路
 - 只增量更新 `Current Status`、`Hard Boundaries`、`Key Design Decisions`、`Intentional Gaps`、`Next Phase Direction`
 - 不全文重写
+- 若本轮刚刷新 status，落盘前必须检查 phase consistency
 - `Next Phase Direction` 只写方向级演进
 
 任务内容：

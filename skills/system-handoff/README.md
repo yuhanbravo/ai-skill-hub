@@ -39,6 +39,11 @@ Required sections:
 
 详细执行约束见 [SKILL.md](SKILL.md)。
 
+## Minimal Coordination Rules
+
+- 若可用，读取 `docs/status/skill-hub-status.md` 的 `Updated at` 作为 handoff 本轮 status baseline，并在更新日志中保留该日期。
+- 与 `system-status-update` 联动时，handoff 落盘前必须完成 phase consistency 检查，确保两份系统文档阶段口径一致。
+
 ## Detailed Guidance Moved From SKILL.md
 
 The sections below were moved out of `SKILL.md` during the semantic split so the README can carry explanation-oriented material while `SKILL.md` stays execution-focused.
@@ -138,4 +143,3 @@ The sections below were moved out of `SKILL.md` during the semantic split so the
 
 - Reusable prompts: [prompts/reusable_prompts.md](prompts/reusable_prompts.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
-

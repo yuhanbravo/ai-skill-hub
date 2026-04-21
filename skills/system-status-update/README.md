@@ -38,6 +38,11 @@ Expected output:
 
 详细执行约束见 [SKILL.md](SKILL.md)。
 
+## Minimal Coordination Rules
+
+- Freshness gate: 以 `14` 天为默认时效门槛；若 `Updated at` 超过门槛，输出必须显式给出 `Staleness` 风险提示。
+- 与 `system-handoff` 联动时，必须先刷新 status，再交由 handoff 合并；handoff 落盘前要做 phase consistency 检查。
+
 ## Detailed Guidance Moved From SKILL.md
 
 The sections below were moved out of `SKILL.md` during the semantic split so the README can carry explanation-oriented material while `SKILL.md` stays execution-focused.
@@ -137,4 +142,3 @@ The sections below were moved out of `SKILL.md` during the semantic split so the
 
 - Reusable prompts: [prompts/reusable_prompts.md](prompts/reusable_prompts.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
-

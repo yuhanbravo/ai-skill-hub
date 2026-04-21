@@ -69,7 +69,7 @@ Output:
 ## 6. 执行流程（Execution Steps）
 
 1. 读取 system handoff context。  
-   先读取 `docs/HANDOFF.md`、当前 system status、phase 和相关 system docs，确认本轮更新对象是 `ai-skill-hub` 自身。
+   先读取 `docs/HANDOFF.md`、当前 system status、phase 和相关 system docs，确认本轮更新对象是 `ai-skill-hub` 自身；若存在 `docs/status/skill-hub-status.md`，同步记录其 `Updated at` 作为本次 handoff 的 status baseline。
 
 2. 对齐 canonical handoff method。  
    复用 `chatgpt-handoff-pilot` 的 `read input -> restate boundaries -> bounded execution -> execution report` 方法，不新增第二套 handoff 机制。
@@ -83,6 +83,9 @@ Output:
 5. 输出简短回执。  
    回执应说明哪些 system sections 被更新、哪些 hard boundaries 保持不变、哪些 intentional gaps 继续保留，以及当前 next-phase direction。`Next Phase Direction` 必须保持方向级表达，不得写成任务清单、逐项施工 next steps 或 implementation backlog。
 
+6. 执行 phase consistency check。  
+   若本轮同时刷新了 `docs/status/skill-hub-status.md`，则 `docs/HANDOFF.md` 中的 phase 表达必须与最新 status 一致；若不一致，应先修正再落盘。
+
 ## 7. 约束（Constraints）
 
 - 必须复用 `chatgpt-handoff-pilot` 作为 canonical dependency，不得分叉 handoff flow
@@ -93,6 +96,8 @@ Output:
 - 主输出不得列代码 diff、逐文件说明或 implementation walkthrough
 - `Current Status` 必须按 system phase 和 capabilities 表达，而不是施工进度表达
 - `Next Phase Direction` 只能写方向级演进，不得退化成任务清单、逐项施工 next steps 或实现待办列表
+- 若读取到 `docs/status/skill-hub-status.md`，本轮 handoff 更新日志应记录 status baseline 日期
+- 若与 `system-status-update` 联动执行，handoff 落盘前必须完成 phase consistency 检查
 
 ## Invocation
 
@@ -105,4 +110,3 @@ Output:
 - Human-oriented context: [README.md](README.md)
 - Reusable prompts: [prompts/reusable_prompts.md](prompts/reusable_prompts.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
-

@@ -44,6 +44,7 @@ This file preserves the prompt templates split out of `SKILL.md` during the AI/H
 - 复用 `update-project-status` 的状态刷新过程
 - 输出必须包含 `Canonical Skill Layer`、`Distribution Layer`、`Governance Layer`、`Tooling Layer`
 - 明确当前 `Phase`、`Capabilities`、`Stability`
+- 若状态文档距今超过 14 天，必须显式输出 `Staleness` 风险提示
 - 不输出文件级改动摘要
 
 任务内容：

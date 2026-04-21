@@ -83,8 +83,14 @@ Output:
 4. 组织 system-oriented output。  
    输出必须至少包含 `Layer Status`、`Current Phase`、`Capabilities`、`Stability`；若需要写入状态文档，也应按这个结构落盘。
 
-5. 回传风险与未确认项。  
+5. 执行 freshness gate（时效门槛检查）。  
+   读取状态文档中的 `Updated at` 时间；若距离当前日期超过 `14` 天，必须在输出中显式增加 `Staleness` 提示，并把该项写入 `Risks / Gaps`。若在门槛内，也应说明本次刷新已满足时效门槛。
+
+6. 回传风险与未确认项。  
    若证据不足，应明确说明哪些判断来自代码与文档证据，哪些仍需后续验证，避免把推断写成确定事实。
+
+7. 处理与 system-handoff 的联动。  
+   若本轮还要更新 `docs/HANDOFF.md`，应先完成 status 刷新，再把 `Current Phase` 和关键边界提供给 `system-handoff`；handoff 落盘前必须通过 phase consistency 检查。
 
 ## 7. 约束（Constraints）
 
@@ -96,6 +102,8 @@ Output:
 - 不得发明新的 phase 体系，必须沿用仓库已有 system-phase 语义
 - 不得把 layer status 退化为代码清单或提交列表
 - 除状态文档本身外，不应顺带修改其他系统资产
+- 若检测到状态文档超过 `14` 天未刷新，主输出必须显式包含 `Staleness` 提示
+- 若与 `system-handoff` 联动执行，必须先更新 status，再校验 handoff phase 一致性
 
 ## Invocation
 
@@ -108,4 +116,3 @@ Output:
 - Human-oriented context: [README.md](README.md)
 - Reusable prompts: [prompts/reusable_prompts.md](prompts/reusable_prompts.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
-

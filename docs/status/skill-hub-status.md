@@ -47,6 +47,7 @@
 - Invocation metadata resilience: invocation example extraction 已经适配 example-file layout，降低了 metadata build 与 discovery surface 因布局差异产生的抽取漂移。
 - Bridge continuity: handoff/status 的 bridge-facing mirror 现在可以按语义刷新，并保持 active source 与 continuity copy 的边界明确。
 - Local-first validation: 系统仍以本地入口和脚本化检查为主，但这些入口已经足够支持 status、metadata、adapter、mirror 等关键维护面上的重复执行。
+- Wrapper coordination baseline: `system-status-update` 与 `system-handoff` 现在具备最小联动规则（14 天 freshness gate、status 先于 handoff、handoff phase consistency 检查），用于降低双文档口径漂移。
 
 ## Stability
 
@@ -55,3 +56,4 @@
 - Evolving: distribution freshness、derivative-surface governance、workspace-aware status refresh ergonomics，以及 metadata/discovery robustness。
 - Not yet stable: CI-backed enforcement、automatic mirror consistency、automatic governance-mode detection，以及 deterministic orchestration。
 - Evidence boundary: 本次刷新先复用了 `update-project-status` 的 dry-run signal collection，再结合当前 working tree 判断系统状态；未提交的治理约定被当作 live signal 记录，但没有被表述成已落地保证。
+- Freshness gate: `Updated at` 已通过 14 天时效门槛检查（当前年龄 0 天），本次无需新增 `Staleness` 风险项。

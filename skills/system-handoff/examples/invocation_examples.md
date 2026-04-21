@@ -13,6 +13,7 @@ task_description:
 constraints:
 - Reuse chatgpt-handoff-pilot as the canonical handoff flow.
 - Keep docs/HANDOFF.md section-aware and system-oriented.
+- Read `docs/status/skill-hub-status.md` first and keep phase consistent with the latest status baseline.
 
 expected_output:
 - Current Status

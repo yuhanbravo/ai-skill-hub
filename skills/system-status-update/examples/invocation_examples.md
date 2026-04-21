@@ -13,6 +13,7 @@ task_description:
 constraints:
 - Reuse update-project-status as the canonical status engine.
 - Do not output file-level change lists.
+- If `Updated at` is older than 14 days, add a `Staleness` risk item.
 
 expected_output:
 - Layer Status

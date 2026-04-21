@@ -29,6 +29,7 @@ This file is the cross-AI, repository-level skill index for tools that cannot au
 | system | system-layer status refresh / phase summary | `system-status-update` | `skills/system-status-update/` | `.agents/skills/system-status-update/SKILL.md` | `.agents/skills/system-status-update.md` | `.github/skills/system-status-update.md` |
 | system | capability-system takeover / architecture assessment | `system-takeover` | `skills/system-takeover/` | `.agents/skills/system-takeover/SKILL.md` | `.agents/skills/system-takeover.md` | `.github/skills/system-takeover.md` |
 | project | Git-based status refresh / weekly summary | `update-project-status` | `skills/update-project-status/` | `.agents/skills/update-project-status/SKILL.md` | `.agents/skills/update-project-status.md` | `.github/skills/update-project-status.md` |
+| project | workflow bootstrap / role split / runtime-pack mapping | `workflow-bootstrap` | `skills/workflow-bootstrap/` | `.agents/skills/workflow-bootstrap/SKILL.md` | `.agents/skills/workflow-bootstrap.md` | `.github/skills/workflow-bootstrap.md` |
 
 ## Per-Skill Invocation Overview
 
@@ -124,6 +125,16 @@ This file is the cross-AI, repository-level skill index for tools that cannot au
 - Invocation example: `Use update-project-status for this task. task_description: Refresh the project status report from recent Git history and current task sources.`
 - Inputs: project root, recent Git history, optional task sources, config, output overrides
 - Outputs: status markdown, status log, optional sync result, handoff-ready status summary
+
+### workflow-bootstrap
+
+- Use scenario classification: `workflow bootstrap`, `role split`, `runtime-pack mapping`
+- Triggers: `bootstrap a Copilot-led Codex-implemented workflow`; `define planner implementer reviewer boundaries`; `map canonical guidance to a future runtime pack`; `explain thin entry versus full canonical guidance`; `document workflow shell boundaries without replacing handoff protocols`
+- Side effects: `read_only`, `write_files`
+- Invocation example: `Use workflow-bootstrap for this task. task_description: Define the default Copilot-led / Codex-implemented workflow shell for this repository and map it to a future runtime pack without implementing the project-side files yet.`
+- Inputs: repository workflow goal, task boundaries, local collaboration rules, related canonical skills
+- Outputs: workflow-shell guidance, role split, canonical-to-runtime-pack mapping, thin-entry usage guidance
+- Boundary: reuse `chatgpt-handoff-pilot` for task packages and execution reports; do not implement the future runtime pack inside the hub
 
 ## Interpretation Rules For Other AI Tools
 

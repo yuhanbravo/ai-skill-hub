@@ -31,3 +31,11 @@
 3. 最后由 reviewer 检查边界、文档、索引和验证结果是否闭环。
 
 更细的角色衔接见 [role_split_and_integration.md](role_split_and_integration.md)，future runtime pack 的项目侧目标见 [runtime_pack_minimal_manifest.md](runtime_pack_minimal_manifest.md)。
+
+## Phase 2 Draft Assets (Canonical Only)
+
+- [canonical_backreference_rules_draft.md](canonical_backreference_rules_draft.md)
+- [agents_md_thin_entrypoint_draft.md](agents_md_thin_entrypoint_draft.md)
+- [copilot_instructions_thin_adapter_draft.md](copilot_instructions_thin_adapter_draft.md)
+
+这些文件用于 future project-side runtime pack 设计；它们是 canonical drafts，不代表当前仓库已实现 project-side runtime files。

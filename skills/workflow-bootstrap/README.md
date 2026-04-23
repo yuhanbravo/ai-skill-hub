@@ -47,3 +47,10 @@
 - [project_side_copilot_instructions_template_sketch.md](project_side_copilot_instructions_template_sketch.md)
 
 这些文件用于 future project-side runtime pack 的 template sketch；它们仍然只是 canonical sketch assets，不代表当前仓库已实现 project-side runtime files。
+
+## Phase 3B Validation Assets (Canonical Only)
+
+- [pilot_repo_validation_sketch.md](pilot_repo_validation_sketch.md)
+- [single_consumer_repo_file_layout_sketch.md](single_consumer_repo_file_layout_sketch.md)
+
+这些文件仅用于 future single consumer repo pilot validation；它们是 canonical validation sketches，不代表当前仓库已进入 single consumer repo implementation。

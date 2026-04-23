@@ -39,3 +39,11 @@
 - [copilot_instructions_thin_adapter_draft.md](copilot_instructions_thin_adapter_draft.md)
 
 这些文件用于 future project-side runtime pack 设计；它们是 canonical drafts，不代表当前仓库已实现 project-side runtime files。
+
+## Phase 3A Sketch Assets (Canonical Only)
+
+- [project_side_runtime_pack_template_sketch.md](project_side_runtime_pack_template_sketch.md)
+- [project_side_agents_md_template_sketch.md](project_side_agents_md_template_sketch.md)
+- [project_side_copilot_instructions_template_sketch.md](project_side_copilot_instructions_template_sketch.md)
+
+这些文件用于 future project-side runtime pack 的 template sketch；它们仍然只是 canonical sketch assets，不代表当前仓库已实现 project-side runtime files。

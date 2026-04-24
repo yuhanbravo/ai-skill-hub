@@ -3,19 +3,19 @@
 ## Purpose
 This file is the **project-side runtime master entrypoint** for this repository implementation pilot. It is dispatch-oriented and reference-first. It is **not** the canonical source of truth.
 
-Pilot repo: `ai-skill-hub` (single consumer repo implementation pilot only).
+Pilot repo: `ai-skill-hub` (single consumer repo implementation pilot with Phase 3D calibration only).
 
 ## Required Canonical Reading
 Before implementation, read canonical guidance from concrete file paths:
 
 1. `skills/workflow-bootstrap/SKILL.md`
 2. `skills/chatgpt-handoff-pilot/SKILL.md`
-3. `tasks/copilot-codex-workflow_phase3c_single_consumer_repo_implementation_pilot_task_package.md`
+3. `tasks/copilot-codex-workflow_phase3d_canonical_path_calibration_task_package.md`
 
-Optional project-local canonical payload path (placeholder kept intentionally for repo-specific follow-up):
+Conditional project-local canonical payload path (maintainer-filled only if this repo later defines a distinct project-local canonical payload artifact):
 - `<project-local-canonical-skill-path>`
 
-## Field Mapping (Phase 3C pilot validation)
+## Field Mapping (Phase 3D calibration over Phase 3C pilot validation)
 ### Fixed fields (canonical contract)
 - This file is the project-side master entrypoint.
 - This file is thin, dispatch-oriented, and reference-first.
@@ -27,11 +27,14 @@ Optional project-local canonical payload path (placeholder kept intentionally fo
 - Project identity: `ai-skill-hub`
 - Canonical workflow path: `skills/workflow-bootstrap/SKILL.md`
 - Canonical bounded-execution path: `skills/chatgpt-handoff-pilot/SKILL.md`
-- Active implementation package path: `tasks/copilot-codex-workflow_phase3c_single_consumer_repo_implementation_pilot_task_package.md`
+- Active calibration package path: `tasks/copilot-codex-workflow_phase3d_canonical_path_calibration_task_package.md`
 
 ### Placeholder fields (kept intentionally)
 - `<project-local-canonical-skill-path>`
-  - Status: not filled in this pilot because this repo does not define a separate project-local canonical payload path beyond the canonical entries listed above.
+  - Status: intentionally unresolved in this pilot because this repo does not define a separate project-local canonical payload artifact beyond the concrete canonical entries listed above.
+  - Filled by: project maintainer only.
+  - Fill when: only after a distinct repo-local canonical payload file exists and is intended to remain thinner than a second rulebook.
+  - Keep unresolved only while no such distinct project-local canonical payload path exists.
 
 ## High-Level Working Rules
 1. Read required canonical guidance before implementation.

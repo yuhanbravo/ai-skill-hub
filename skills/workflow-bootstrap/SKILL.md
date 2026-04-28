@@ -21,6 +21,8 @@ This execution-focused skill definition keeps the workflow-shell behavior, invoc
 - Human-oriented context: [README.md](README.md)
 - Future project-side target mapping: [runtime_pack_minimal_manifest.md](runtime_pack_minimal_manifest.md)
 - Role split and protocol integration: [role_split_and_integration.md](role_split_and_integration.md)
+- Non-git / low-git runtime profile: [non_git_runtime_profile.md](non_git_runtime_profile.md)
+- Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
 
 ## 4. 核心模式（Pattern）
 
@@ -67,6 +69,12 @@ Output:
 - handoff 协议继续复用 `chatgpt-handoff-pilot`。  
   Reuse `chatgpt-handoff-pilot` for task packages, bounded execution, and execution reports.
 
+- 在 non-git / low-git 项目侧试跑里，`tasks/` 可作为 task package / execution report 的主证据目录。  
+   In non-git / low-git project-side trials, `tasks/` may serve as the primary trace path for task packages and execution reports.
+
+- `docs/HANDOFF.md`、status surface 与 `archive/` 只承接最小闭环或历史参考，不应取代 active workflow line。  
+   Keep `docs/HANDOFF.md`, status surfaces, and `archive/` limited to minimal closure or historical reference rather than the active workflow line.
+
 - 薄入口只负责发现与回指，不复制 canonical 细节。  
   Use thin entries for discoverability and redirection, not full duplication.
 
@@ -87,13 +95,16 @@ Output:
 4. 衔接 handoff 协议。  
    当实施工作需要 task package、bounded execution 和 execution report 时，显式复用 `chatgpt-handoff-pilot`。本 skill 只定义 workflow 壳层，不重新定义 handoff 协议。
 
-5. 映射 future runtime pack。  
+5. 对齐 non-git / low-git 证据约定。  
+   当项目侧试跑缺少稳定 Git 证据时，可把 `tasks/` 作为 task package / execution report 的主 trace path，并把 execution report 作为每轮实施的主证据。`docs/HANDOFF.md` 与 status surface 只保留最小闭环事实，`archive/` 只作为历史参考，不恢复为 active workflow line。
+
+6. 映射 future runtime pack。  
    当需要为项目侧协作入口做准备时，只描述 `AGENTS.md`、`.github/copilot-instructions.md`、`.github/instructions/*.instructions.md`、`.github/agents/*.agent.md` 等候选文件族与 canonical guidance 的关系，不在 hub 内创建这些项目侧文件。
 
-6. 保持 discoverability 薄层。  
+7. 保持 discoverability 薄层。  
    若新增或维护 adapter 入口，应保持 `.agents/skills/` 与 `.github/skills/` 为薄封装或兼容入口，并回指 canonical `skills/workflow-bootstrap/`，不要复制大段 canonical 内容。
 
-7. 输出简洁实施结果。  
+8. 输出简洁实施结果。  
    最终结果应说明：workflow 壳层是否已对齐、与现有相关 skills 的边界是否清楚、discoverability 是否补齐、以及哪些内容被明确保留到 future runtime pack 阶段。
 
 ## 7. 约束（Constraints）
@@ -103,6 +114,7 @@ Output:
 - 不替代 `update-project-status` 的状态刷新职责
 - 不替代 `documentation-governance` 的文档治理职责
 - 不替代 `file-structure-check` 的结构审计职责
+- 不把 `docs/HANDOFF.md`、status surface 或 `archive/` 写成 per-task 主证据线
 - 不在 hub 仓库内把 future runtime pack 文件族实现成当前正式层
 - 不把 `.agents/skills/` 或 `.github/skills/` 升级为第二事实源
 
@@ -117,3 +129,6 @@ Output:
 - Human-oriented context: [README.md](README.md)
 - Future project-side target mapping: [runtime_pack_minimal_manifest.md](runtime_pack_minimal_manifest.md)
 - Role split and protocol integration: [role_split_and_integration.md](role_split_and_integration.md)
+- Non-git / low-git runtime profile: [non_git_runtime_profile.md](non_git_runtime_profile.md)
+- Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
+

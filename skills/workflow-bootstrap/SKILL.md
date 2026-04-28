@@ -1,10 +1,10 @@
 ---
 name: workflow-bootstrap
-description: "Use when defining the default Copilot-led / Codex-implemented workflow shell, minimal role split, and future runtime-pack mapping for a repository."
+description: "Use when defining a tool-agnostic workflow shell, role split, and future runtime-pack mapping for a repository."
 metadata:
    triggers:
-      - bootstrap a Copilot-led Codex-implemented workflow
-      - define planner implementer reviewer boundaries
+      - bootstrap a role-based workflow
+      - define drafter reviewer implementer reporter final reviewer boundaries
       - map canonical guidance to a future runtime pack
       - explain thin entry versus full canonical guidance
       - document workflow shell boundaries without replacing handoff protocols
@@ -30,8 +30,8 @@ This execution-focused skill definition keeps the workflow-shell behavior, invoc
 
 这个 pattern 的核心是先把默认协作链路和角色边界说清，再把后续执行交给更专门的协议或治理 skill。
 
-- 默认链路是 `Copilot 主控 / Codex 施工`
-- 最小角色分工是 `planner -> implementer -> reviewer`
+- 默认链路是工具无关的 `Drafter -> Reviewer -> Implementer -> Reporter -> Final Reviewer`
+- Copilot / Codex 等工具名只作为 adapter examples，不是 canonical requirements
 - canonical layer 负责定义 workflow 壳层与 guidance
 - future runtime pack 只作为项目侧目标映射，不在当前 hub 内实现
 
@@ -49,7 +49,7 @@ Process:
 
 Output:
 - 默认 workflow 壳层说明
-- planner / implementer / reviewer 分工
+- role-chain 分工
 - canonical guidance 与 future runtime pack 的对应关系
 - 薄入口回指 canonical guidance 的使用方式
 
@@ -60,10 +60,10 @@ Output:
 - `skills/` 始终是唯一 canonical source of truth。  
   Keep `skills/` as the only canonical source.
 
-- 默认由 Copilot 收敛方案，由 Codex 执行受边界约束的施工。  
-  Let Copilot drive planning and Codex perform bounded implementation by default.
+- 默认使用工具无关的 role chain；具体工具只作为可替换 adapter examples。
+  Use the role chain as canonical guidance; treat concrete tools as replaceable adapter examples.
 
-- planner、implementer、reviewer 只做最小职责拆分，不额外发明控制层。  
+- Drafter、Reviewer、Implementer、Reporter、Final Reviewer 只做职责拆分，不额外发明控制层。
   Keep role split minimal instead of introducing a new control framework.
 
 - handoff 协议继续复用 `chatgpt-handoff-pilot`。  
@@ -87,10 +87,10 @@ Output:
    当目标是定义默认链路、角色分工、runtime-pack 映射，或为后续项目侧入口做 canonical 对齐时，优先使用本 skill；如果目标其实是 handoff、takeover、status update、documentation governance 或 structure audit，则转向对应 skill。
 
 2. 对齐默认链路。  
-   明确默认路径为 `planner -> implementer -> reviewer`，并把 `Copilot 主控 / Codex 施工` 作为首选协作形态；只有项目本地规则明确要求其他主控关系时，才偏离这个默认值。
+   明确默认路径为 `Drafter -> Reviewer -> Implementer -> Reporter -> Final Reviewer`。具体工具名只作为 adapter examples；role-based handoff 详见 `role_split_and_integration.md`。
 
 3. 明确最小职责边界。  
-   `planner` 负责收敛方案与任务边界；`implementer` 负责按任务包做 bounded execution；`reviewer` 负责检查边界、文档、索引与验证是否闭环。不要让本 skill 取代具体实现技能或治理技能。
+   Drafter 负责收敛方案与任务边界；Reviewer 负责 implementation 前的 safety gate；Implementer 负责按任务包做 bounded execution；Reporter 负责 execution report；Final Reviewer 负责边界、验证与闭环检查。不要让本 skill 取代具体实现技能或治理技能。
 
 4. 衔接 handoff 协议。  
    当实施工作需要 task package、bounded execution 和 execution report 时，显式复用 `chatgpt-handoff-pilot`。本 skill 只定义 workflow 壳层，不重新定义 handoff 协议。
@@ -122,7 +122,7 @@ Output:
 
 ### When to use
 
-- 当你需要为仓库补齐默认的 `Copilot 主控 / Codex 施工` workflow 壳层，并把 planner / implementer / reviewer 的最小分工、canonical guidance、future runtime pack 映射说清楚时使用。
+- 当你需要为仓库补齐 role-based workflow 壳层，并把 Drafter / Reviewer / Implementer / Reporter / Final Reviewer 的最小分工、canonical guidance、future runtime pack 映射说清楚时使用。
 
 ### Supporting assets
 
@@ -131,4 +131,3 @@ Output:
 - Role split and protocol integration: [role_split_and_integration.md](role_split_and_integration.md)
 - Non-git / low-git runtime profile: [non_git_runtime_profile.md](non_git_runtime_profile.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
-

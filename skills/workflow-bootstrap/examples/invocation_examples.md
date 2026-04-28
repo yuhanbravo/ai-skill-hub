@@ -45,7 +45,7 @@ Use `workflow-bootstrap` first to align the shell, then switch to `chatgpt-hando
 Example prompt:
 
 ```text
-First use workflow-bootstrap to align the default Copilot planner / Codex implementer workflow shell for a low-git project-side task.
+First use workflow-bootstrap to align a role-based workflow shell for a low-git project-side task, using Copilot-as-Drafter and Codex-as-Implementer only as adapter examples if useful.
 Then prepare the actual task package through chatgpt-handoff-pilot, keeping tasks/ as the artifact path and execution reports as the main evidence line.
 Do not move per-task detail into docs/HANDOFF.md or reactivate archive/ as the active workflow line.
 ```
@@ -55,3 +55,21 @@ Expected framing:
 - `workflow-bootstrap` defines the shell, boundaries, and artifact placement guidance
 - `chatgpt-handoff-pilot` owns the task package, bounded execution, and execution report protocol
 - the active workflow line remains in current task artifacts rather than historical surfaces
+
+## Example 4: Move from tool-name workflow to role-based handoff
+
+Use `workflow-bootstrap` to convert a tool-name workflow into explicit role phases before handing execution protocol details to `chatgpt-handoff-pilot`.
+
+Example prompt:
+
+```text
+Use workflow-bootstrap to restate this workflow as Drafter -> Reviewer -> Implementer -> Reporter -> Final Reviewer.
+Treat Copilot, Codex, ChatGPT, Cline, and DeepSeek only as adapter examples, not canonical requirements.
+Keep task package, bounded execution, and execution report protocol ownership with chatgpt-handoff-pilot.
+```
+
+Expected framing:
+
+- role boundaries and stage switches are explicit
+- task package review is the safety gate before implementation
+- tool names remain examples rather than requirements

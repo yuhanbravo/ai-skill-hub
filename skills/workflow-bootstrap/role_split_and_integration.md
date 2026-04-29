@@ -183,3 +183,5 @@ Future project-side entries such as `AGENTS.md`, `.github/copilot-instructions.m
 - Keep tool-specific wording as adapter examples, not requirements.
 - Avoid turning project-side entries into a second rulebook.
 - Keep task package / bounded execution / execution report protocol details pointed to `chatgpt-handoff-pilot`.
+
+For the minimal project-side runtime surface set and deferred future surfaces, see `runtime_pack_minimal_manifest.md`.

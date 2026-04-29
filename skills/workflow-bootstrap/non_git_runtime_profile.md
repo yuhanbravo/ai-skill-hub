@@ -24,7 +24,7 @@ Recommended minimum convention:
 - one execution report per bounded task
 - shared date or task-name prefix when pairing task package and execution report
 
-An optional `tasks/README.md` or similar index may help navigation once artifacts accumulate, but it should stay lightweight and should not replace the task artifacts themselves.
+An optional `tasks/README.md` or similar index may help navigation once artifacts accumulate, but it should stay lightweight, remain project-local, and should not replace the task artifacts themselves.
 
 ### Execution report as the main evidence trail
 
@@ -63,6 +63,7 @@ If a project later adopts thin project-side entries, keep the split conservative
 - `.github/copilot-instructions.md` remains a Copilot-specific thin adapter
 - both may point to `tasks/` as the evidence directory in non-git / low-git contexts
 - neither should become a duplicated repository rulebook
+- `tasks/README.md` may be listed as an optional runtime-pack candidate, but only as a lightweight index for projects that need it
 
 ## Out Of Scope
 

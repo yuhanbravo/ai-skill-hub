@@ -90,3 +90,21 @@ Expected framing:
 - review tier selection supports Reviewer judgment
 - `chatgpt-handoff-pilot` remains protocol owner
 - runtime pack and automation mentions stay classification examples only
+
+## Example 6: Review runtime pack minimal surfaces
+
+Use `workflow-bootstrap` to check whether project-side runtime surfaces stay thin and optional.
+
+Example prompt:
+
+```text
+Use workflow-bootstrap to review runtime pack minimal surface guidance.
+Confirm that AGENTS.md, Copilot instructions, and task artifacts are treated as project-side thin entries or evidence indexes, not canonical copies or mandatory global files.
+Keep task package and execution report protocol ownership with chatgpt-handoff-pilot.
+```
+
+Expected framing:
+
+- runtime pack guidance stays project-aware and optional
+- `skills/` remains the canonical source
+- deferred surfaces such as .github/instructions, .github/agents, tool adapters, validators, and automation are not implementation targets

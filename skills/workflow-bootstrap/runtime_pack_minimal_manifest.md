@@ -1,40 +1,103 @@
-# Future Runtime Pack Minimal Manifest
+# Runtime Pack Minimal Manifest
 
-Status: this document describes a future project-side target, not a currently implemented hub layer.
+Status: project-side thin runtime surface guidance. This document describes a minimal, optional, project-aware runtime-pack shape; it does not implement project-side files in this hub.
 
-`workflow-bootstrap` 在 hub 内只维护 canonical guidance。下面这些文件或文件族属于未来项目仓库可下发的最小 runtime pack 候选，不应被写成当前 `ai-skill-hub` 已经实现的事实。
+`workflow-bootstrap` uses this manifest to explain how a project may expose thin runtime surfaces that route humans and agents back to canonical guidance. It is not a second rulebook, not a copy layer for canonical skills, not a new execution protocol, and not a CI / validator / automation mechanism.
 
-## `AGENTS.md`
+## Canonical Ownership
 
-- Role: 仓库级协作规则入口，说明工作方式、结构边界、维护约束和默认协作链路。
-- Why it exists: 给项目内的 AI 和维护者一个薄而稳定的仓库级工作约束入口。
-- Relation to canonical guidance: 应引用或概括 `workflow-bootstrap` 与相关 canonical skills 的关键边界，而不是成为新的事实源。
-- Why not implemented in the hub now: 它属于项目侧 runtime 入口，内容会依赖具体项目结构和本地约束，当前 hub 只负责 canonical 壳层说明。
+- `skills/` remains the canonical source of truth.
+- `workflow-bootstrap` defines the workflow shell, role split, runtime profile, review tier guidance, and runtime pack manifest guidance.
+- `chatgpt-handoff-pilot` owns task package, bounded execution, and execution report protocols.
+- Project-side runtime surfaces only help readers find and apply canonical guidance in a local repository context.
 
-## `.github/copilot-instructions.md`
+## Thin Entry Principles
 
-- Role: Copilot 的仓库级薄入口，承接最高频、最高约束的协作规则。
-- Why it exists: 让 Copilot 在项目内有一个轻量入口，而不必把完整 canonical guidance 全量复制进 compatibility 文件。
-- Relation to canonical guidance: 应保持精简，并回指 `AGENTS.md`、canonical skills 或项目本地更细的 instructions。
-- Why not implemented in the hub now: 这是 future project-side target；当前阶段只需要在 canonical 中说明“薄入口 -> 指向更完整 guidance”的思路。
+Project-side runtime surfaces should stay thin:
 
-## `.github/instructions/*.instructions.md`
+- Discover: make the relevant entry point easy to find.
+- Route: point to the right canonical skill, task artifact, or project-local evidence path.
+- Reference: summarize only the smallest boundary needed to avoid misrouting.
 
-- Role: 按主题、路径或文件模式拆分的项目级专用规范。
-- Why it exists: 当仓库需要按代码区域、工作流主题或文件类型细化规则时，避免把所有细节堆进单一入口。
-- Relation to canonical guidance: 应从 canonical workflow guidance 和项目本地事实中派生，不应反向覆盖 `skills/` 中的 canonical 定义。
-- Why not implemented in the hub now: 这些文件高度依赖项目上下文，本轮只需保留最小文件族设计，不在 hub 内预创建模板集合。
+They should not:
 
-## `.github/agents/*.agent.md`
+- copy canonical skill bodies;
+- create a parallel rule set;
+- turn one project's local facts into global workflow rules;
+- redefine task package, bounded execution, or execution report protocols;
+- imply that this hub has created the project-side files listed below.
 
-- Role: 项目内可显式切换的专用 agent 入口，用于 planner、implementer、reviewer 或其他角色专精。
-- Why it exists: 在项目侧把角色入口做成可发现的显式切换点，但不把角色系统硬编码进 canonical hub。
-- Relation to canonical guidance: 应遵守 `workflow-bootstrap` 定义的最小角色分工，并在需要 handoff 时回接 `chatgpt-handoff-pilot`。
-- Why not implemented in the hub now: 这些 agent files 属于项目侧 runtime surface；当前 hub 只负责说明推荐分工，不负责为所有项目预置 agent 模板。
+## Minimal Candidate Surfaces
 
-## Optional Project-Local Skill Payload And Adapters
+The following surfaces are project-side runtime pack candidates only. Listing them here does not authorize creating these files in the current `ai-skill-hub` repository.
 
-- Role: 在项目仓库承接项目本地 skill payload，以及面向不同消费者的 discoverability 入口。
-- Why it exists: 让项目在不修改 hub canonical 的前提下，承接项目专用约束和分发入口。
-- Relation to canonical guidance: 应继续遵守 `skills/` canonical source、`.agents/.github` discoverability、以及现有 consumer adapter contract。
-- Why not implemented in the hub now: 本轮目标是 canonical documentation / mapping，不是 project-local runtime-pack 下发或 consumer-side 全量实现。
+### `AGENTS.md`
+
+- 中文定位：仓库级薄入口和项目侧 runtime master entry。
+- 主要用途：说明本项目的 local constraints, authorized workflow entry points, and where canonical guidance lives.
+- 应回指哪些 canonical guidance：`skills/workflow-bootstrap/SKILL.md`, `skills/workflow-bootstrap/role_split_and_integration.md`, and any project-relevant canonical skills; when bounded execution is involved, point to `skills/chatgpt-handoff-pilot/SKILL.md`.
+- 不应包含什么：不复制 full skill text，不重定义 role chain，不重写 task package / execution report protocol，不把 project-local preferences 写成 global rules.
+- Git-first / non-git / low-git 适用边界：Git-first projects may pair this thin entry with branch / commit / PR review conventions; non-git / low-git projects may also point to project-local task artifacts as the main evidence line.
+
+### `.github/copilot-instructions.md`
+
+- 中文定位：Copilot-specific thin adapter。
+- 主要用途：给 Copilot 提供高频、短格式的 local routing hints while preserving canonical ownership elsewhere.
+- 应回指哪些 canonical guidance：`AGENTS.md` when present, `skills/workflow-bootstrap/SKILL.md`, and `skills/chatgpt-handoff-pilot/SKILL.md` for handoff protocol ownership.
+- 不应包含什么：不复制 `AGENTS.md` 或 canonical skill 正文，不把 Copilot-specific behavior 写成 tool-agnostic canonical rule，不创建独立执行协议。
+- Git-first / non-git / low-git 适用边界：Git-first projects can mention PR-style review expectations if local policy requires it; non-git / low-git projects can point to the preferred project-local evidence path without making it universal.
+
+### `.github/copilot-instructions.zh-CN.md`
+
+- 中文定位：中文 Copilot thin adapter。
+- 主要用途：为中文协作环境提供同等薄入口，降低语言切换造成的 routing loss.
+- 应回指哪些 canonical guidance：same canonical guidance as `.github/copilot-instructions.md`, plus any local language-specific routing note maintained by the project.
+- 不应包含什么：不成为英文 adapter 的扩写规则库，不复制 canonical skill 正文，不引入和英文入口不一致的 protocol ownership.
+- Git-first / non-git / low-git 适用边界：适用性取决于项目语言需求；Git evidence and non-git evidence rules remain project-aware, not mandatory for all repositories.
+
+### `tasks/README.md`
+
+- 中文定位：project-local task artifact index。
+- 主要用途：在 task artifacts 累积后帮助读者找到 active task packages, execution reports, and naming conventions.
+- 应回指哪些 canonical guidance：`skills/chatgpt-handoff-pilot/SKILL.md` for task package / execution report protocol and `skills/workflow-bootstrap/non_git_runtime_profile.md` for non-git / low-git evidence placement.
+- 不应包含什么：不替代 task package 或 execution report，不定义新的 report schema，不把 `tasks/` 写成所有项目 mandatory global path.
+- Git-first / non-git / low-git 适用边界：Optional in Git-first projects when Git and PR history are sufficient; more useful in non-git / low-git projects where task artifacts are the preferred project-local evidence path.
+
+### `tasks/<task-package>.md`
+
+- 中文定位：单轮 bounded work 的 task package artifact。
+- 主要用途：记录 scope, authorized files, out-of-scope items, acceptance criteria, and validation expectations before implementation.
+- 应回指哪些 canonical guidance：`skills/chatgpt-handoff-pilot/SKILL.md` for protocol shape and `skills/workflow-bootstrap/role_split_and_integration.md` for role-stage ownership.
+- 不应包含什么：不作为 canonical skill source，不授权未列入范围的 project-side runtime file creation，不把 draft intent 写成 implementation permission before review.
+- Git-first / non-git / low-git 适用边界：Git-first projects may pair task packages with issue / branch / PR context; non-git / low-git projects may rely on the task package as the main pre-execution boundary.
+
+### `tasks/<execution-report>.md`
+
+- 中文定位：单轮 bounded execution 的 evidence report。
+- 主要用途：记录 changed files, skipped work, validation performed, risks, assumptions, and follow-up recommendations after implementation.
+- 应回指哪些 canonical guidance：`skills/chatgpt-handoff-pilot/SKILL.md` for execution report protocol and the reviewed task package for scope.
+- 不应包含什么：不补写新的 rules to justify out-of-scope changes，不替代 final review，不成为 canonical source of truth.
+- Git-first / non-git / low-git 适用边界：Git-first projects may use reports alongside commits and PR review; non-git / low-git projects may treat reports as the primary per-task evidence trail.
+
+## Git-First And Non-Git Boundaries
+
+Runtime pack guidance is project-aware, not one-size-fits-all.
+
+- Git-first projects can combine thin runtime surfaces with branch names, commits, diffs, and PR-style review.
+- Non-git / low-git projects may depend more heavily on task package / execution report pairing.
+- `tasks/` may serve as the preferred project-local evidence path in non-git / low-git work, but it is not a mandatory global path for all projects.
+- The runtime pack should describe the smallest useful local surface combination instead of forcing every repository to adopt the same files.
+
+## Deferred Future Surfaces
+
+The following are deferred or out-of-scope candidates for future work. They are not part of the Phase 3 minimal manifest and should not be treated as implementation targets here:
+
+- `.github/instructions/`
+- `.github/agents/`
+- tool adapters
+- validators / automation / CI
+- Phase 4 multi-project pilot
+- Phase 5 tool adapter candidates
+- optional project-local skill payloads and adapters
+
+If future work revisits these surfaces, it should use a separately reviewed task package and preserve the same ownership boundary: `skills/` remains canonical, `workflow-bootstrap` explains the workflow shell and runtime-pack guidance, and `chatgpt-handoff-pilot` owns bounded execution protocols.

@@ -10,7 +10,7 @@ This supporting asset helps a Reviewer choose the review strength for a task pac
 
 Use the lowest tier that still gives the task package enough scrutiny for its risk. Escalate when the task touches canonical guidance, cross-project rules, project-side runtime surfaces, or any wording that could be mistaken for protocol ownership or automation authorization.
 
-Runtime pack design and automation / validator candidates are listed below only as classification examples for `Heavy Review`. They do not authorize this Phase 2 work to design or implement runtime packs, automation, validators, scripts, tests, or CI.
+Runtime pack guidance and automation / validator candidates are listed below only as classification examples for `Heavy Review`. A reviewed runtime-pack guidance task may update its authorized documentation, but this tier guidance does not authorize project-side file creation, automation, validators, scripts, tests, or CI.
 
 ## Light Review
 
@@ -89,7 +89,7 @@ Second role / second tool review 建议：建议在范围较宽、涉及多个 s
 
 核心检查项：
 
-- Scope 是否明确排除 Phase 3 runtime pack work、tool adapters、automation、validators、scripts、tests、CI 和 hooks。
+- Scope 是否明确排除未授权 runtime pack work、tool adapters、automation、validators、scripts、tests、CI 和 hooks。
 - Authorized files 是否足够窄，是否没有开放未授权目录。
 - Out of scope 是否能约束 Implementer，不会让 examples 变成 implementation permission。
 - Acceptance criteria 是否可执行、可验证，且不会鼓励跳过必要 review。

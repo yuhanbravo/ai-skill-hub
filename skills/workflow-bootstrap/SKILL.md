@@ -19,7 +19,7 @@ This execution-focused skill definition keeps the workflow-shell behavior, invoc
 ## Supporting Assets
 
 - Human-oriented context: [README.md](README.md)
-- Future project-side target mapping: [runtime_pack_minimal_manifest.md](runtime_pack_minimal_manifest.md)
+- Project-side thin runtime surface guidance: [runtime_pack_minimal_manifest.md](runtime_pack_minimal_manifest.md)
 - Role split and protocol integration: [role_split_and_integration.md](role_split_and_integration.md)
 - Non-git / low-git runtime profile: [non_git_runtime_profile.md](non_git_runtime_profile.md)
 - Review tier guidance: [review_tiers.md](review_tiers.md)
@@ -34,7 +34,7 @@ This execution-focused skill definition keeps the workflow-shell behavior, invoc
 - 默认链路是工具无关的 `Drafter -> Reviewer -> Implementer -> Reporter -> Final Reviewer`
 - Copilot / Codex 等工具名只作为 adapter examples，不是 canonical requirements
 - canonical layer 负责定义 workflow 壳层与 guidance
-- future runtime pack 只作为项目侧目标映射，不在当前 hub 内实现
+- runtime pack guidance 只描述项目侧 thin runtime surfaces，不在当前 hub 内创建 project-side files
 
 Input:
 - 仓库级协作目标
@@ -46,12 +46,12 @@ Process:
 - 对齐 workflow 壳层
 - 收敛最小角色分工
 - 把实施协议衔接到 `chatgpt-handoff-pilot`
-- 把项目侧入口映射到 future runtime pack
+- 把项目侧 thin runtime surfaces 映射到 runtime pack guidance
 
 Output:
 - 默认 workflow 壳层说明
 - role-chain 分工
-- canonical guidance 与 future runtime pack 的对应关系
+- canonical guidance 与 project-side thin runtime surfaces 的对应关系
 - 薄入口回指 canonical guidance 的使用方式
 
 这样组织的原因是，很多多 agent 协作问题并不是缺一个新工具，而是缺一个清晰的默认链路。`workflow-bootstrap` 负责补齐这层壳，但不接管已有协议层、接管层、状态层或治理层的职责。
@@ -79,8 +79,8 @@ Output:
 - 薄入口只负责发现与回指，不复制 canonical 细节。  
   Use thin entries for discoverability and redirection, not full duplication.
 
-- future runtime pack 只能写成项目侧目标，不能写成当前 hub 已落地事实。  
-  Describe future runtime-pack assets as project-side targets only.
+- runtime pack guidance 只能写成项目侧 thin surface guidance，不能写成当前 hub 已落地事实或第二规则库。
+  Describe runtime-pack assets as project-side thin surface guidance only.
 
 ## 6. 执行流程（Execution Steps）
 
@@ -99,8 +99,8 @@ Output:
 5. 对齐 non-git / low-git 证据约定。  
    当项目侧试跑缺少稳定 Git 证据时，可把 `tasks/` 作为 task package / execution report 的主 trace path，并把 execution report 作为每轮实施的主证据。`docs/HANDOFF.md` 与 status surface 只保留最小闭环事实，`archive/` 只作为历史参考，不恢复为 active workflow line。
 
-6. 映射 future runtime pack。  
-   当需要为项目侧协作入口做准备时，只描述 `AGENTS.md`、`.github/copilot-instructions.md`、`.github/instructions/*.instructions.md`、`.github/agents/*.agent.md` 等候选文件族与 canonical guidance 的关系，不在 hub 内创建这些项目侧文件。
+6. 映射 runtime pack guidance。
+   当需要为项目侧协作入口做准备时，只描述 `AGENTS.md`、`.github/copilot-instructions.md`、`.github/copilot-instructions.zh-CN.md`、`tasks/README.md`、task package 和 execution report 等最小候选 surface 与 canonical guidance 的关系，不在 hub 内创建这些项目侧文件。
 
 7. 保持 discoverability 薄层。  
    若新增或维护 adapter 入口，应保持 `.agents/skills/` 与 `.github/skills/` 为薄封装或兼容入口，并回指 canonical `skills/workflow-bootstrap/`，不要复制大段 canonical 内容。
@@ -116,7 +116,7 @@ Output:
 - 不替代 `documentation-governance` 的文档治理职责
 - 不替代 `file-structure-check` 的结构审计职责
 - 不把 `docs/HANDOFF.md`、status surface 或 `archive/` 写成 per-task 主证据线
-- 不在 hub 仓库内把 future runtime pack 文件族实现成当前正式层
+- 不在 hub 仓库内把 project-side runtime pack 文件族实现成当前正式层
 - 不把 `.agents/skills/` 或 `.github/skills/` 升级为第二事实源
 
 ## Invocation
@@ -128,7 +128,7 @@ Output:
 ### Supporting assets
 
 - Human-oriented context: [README.md](README.md)
-- Future project-side target mapping: [runtime_pack_minimal_manifest.md](runtime_pack_minimal_manifest.md)
+- Project-side thin runtime surface guidance: [runtime_pack_minimal_manifest.md](runtime_pack_minimal_manifest.md)
 - Role split and protocol integration: [role_split_and_integration.md](role_split_and_integration.md)
 - Non-git / low-git runtime profile: [non_git_runtime_profile.md](non_git_runtime_profile.md)
 - Review tier guidance: [review_tiers.md](review_tiers.md)

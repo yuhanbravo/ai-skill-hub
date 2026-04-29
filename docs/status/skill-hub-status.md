@@ -1,90 +1,77 @@
 # Skill Hub Status
 
-- Updated at: `2026-04-24`
+- Updated at: `2026-04-29`
 - Scope: `ai-skill-hub`
 - Method: `system-status-update` wrapper over `update-project-status`
 - Config: `.codex/skill-config/update-project-status.json`
-- Data sources: Git history, working tree, `skills/`, `.agents/`, `.github/`, `tools/`, `docs/status/`
+- Data sources: Git history, working tree, `skills/`, `.agents/`, `.github/`, `tools/`, `docs/status/`, workflow-bootstrap task packages and execution reports
 
 ## Layer Status
 
 ### Canonical Skill Layer (`skills/`)
 
 - Status: `stable`
-- `skills/` remains the sole canonical source, and that ownership did not change when the repository completed one bounded real-repo implementation pilot.
-- The `workflow-bootstrap` line now has evidence across a bounded `Phase 1 -> Phase 2 -> Phase 3A -> Phase 3B -> Phase 3C -> Phase 3D` track: Phase 1 established the workflow shell, Phase 2 added thin-entry drafts, Phase 3A added template sketches, Phase 3B validated one abstract consumer-repo profile, Phase 3C completed a real single consumer repo implementation pilot in the current repository, and Phase 3D added canonical path calibration over that same single-repo pilot outcome.
-- The Phase 3C result confirms that the v1 entrypoint pair can move from canonical sketching into minimal real-repo implementation: `AGENTS.md` can act as the thin project-side master entrypoint, `.github/copilot-instructions.md` can remain a Copilot-specific thin adapter, and concrete canonical backreference paths can be expressed without host-specific assumptions.
-- The new Phase 3D calibration assets then narrow one previously open question: in the current repo, `<project-local-canonical-skill-path>` should not be hard-materialized because no distinct project-local canonical payload artifact exists yet, and a controlled placeholder is therefore more stable than a pseudo-real path.
-- The same calibration pass also tightens `AGENTS.md` and `.github/copilot-instructions.md` onto that controlled-placeholder route, making the path / backreference model clearer without adding a larger local runtime surface.
-- This implementation-plus-calibration evidence strengthens the canonical model without changing canonical ownership: the project-side files remain thin entrypoints, the calibration assets remain single-repo follow-up material, and none of this authorizes rollout, distribution, or multi-repo adoption.
+- `skills/` remains the sole canonical source of truth.
+- The current `workflow-bootstrap` baseline is complete through Phase 3:
+  - Phase 0 absorbed non-git / low-git runtime profile guidance.
+  - Phase 1 completed role split canonicalization around `Drafter -> Reviewer -> Implementer -> Reporter -> Final Reviewer`.
+  - Phase 2 completed advisory review tier guidance.
+  - Phase 3 completed runtime pack minimal manifest guidance.
+- `workflow-bootstrap` now defines workflow shell, role split, runtime profile, review tier, and runtime pack manifest guidance only.
+- `chatgpt-handoff-pilot` remains the owner of task package, bounded execution, and execution report protocols.
 
-### Distribution Layer (`.agents/` / `.github/` / bridge-facing continuity)
+### Distribution Layer (`.agents/` / `.github` / bridge-facing continuity)
 
 - Status: `evolving`
-- `.agents/skills/` and `.github/skills/` continue to act as discoverability-only derivative surfaces; the Phase 3D calibration did not change their contract, did not refresh flat summaries, and did not promote them into authoring surfaces.
-- One bounded project-side entrypoint pair still exists in the current repository as real implementation evidence, and the new calibration only narrows its path-expression behavior; it does not expand the distribution layer.
-- `SKILLS_INDEX.md` and `skills_index.json` remain intentionally untouched in this pass, so the distribution surface did not widen just because `workflow-bootstrap` advanced from sketch validation to single-repo implementation validation.
-- No `.github/instructions/*.instructions.md` or `.github/agents/*.agent.md` files were added in this pass, so the project-side surface area remains intentionally constrained to the existing entrypoint pair.
-- Bridge-facing continuity for status / handoff remains maintained through active-source documents rather than by promoting mirrors into ownership surfaces.
-- The distribution boundary therefore stays unchanged: canonical assets can mature, one real pilot can land locally, and that pilot can receive bounded calibration, while rollout / distribution / adoption remains outside the scope of this phase.
+- `.agents/skills/` and `.github/skills/` remain derivative discoverability surfaces; they are not authoring or canonical layers.
+- Project-side runtime surfaces are still treated as thin entries, adapters, or evidence indexes that route back to canonical guidance.
+- `tasks/` may be a preferred project-local evidence path for non-git / low-git work, but it is not a mandatory global path for every project type.
+- This refresh does not add project-side runtime files, distribution assets, adapters, or broader rollout surfaces.
 
 ### Governance Layer
 
 - Status: `evolving`
-- Governance remains read-only and boundary-oriented: adapter consistency, derivative-surface drift auditing, commit-convention validation, and document-role coordination continue to provide visibility without auto-fix or auto-sync behavior.
-- The new Phase 3D evidence strengthens governance clarity at the path-policy level rather than governance power. Its execution report explicitly records that the round did not materialize `<project-local-canonical-skill-path>`, chose a controlled-placeholder strategy because no distinct project-local canonical payload artifact exists, and still did not enter rollout or distribution.
-- This preserves a useful governance distinction: the repository can now say not only that the thin-entrypoint / thin-adapter split works in one real repo, but also that pseudo-real path filling is not automatically preferable to a controlled unresolved slot.
-- No governance scripts, sync/export/import behavior, or adapter-check contracts changed in this pass.
+- Governance remains read-only and boundary-oriented: checks may expose drift, but they do not auto-fix, auto-sync, or rewrite adapters.
+- Current status and handoff surfaces are minimal closure documents, not per-task trace logs and not execution report mirrors.
+- The canonical boundary is unchanged: local or project-side runtime entries may point to canonical guidance, but they must not become a second rulebook.
 
 ### Tooling Layer (`tools/`)
 
 - Status: `evolving`
-- The tooling layer still covers status refresh, routing, sequencing, metadata generation, sync/import/export, local checks, adapter consistency, re-seed audit, and derivative-surface audit; these remain the repeatable operational surfaces for the hub.
-- Phase 3D did not expand tooling responsibilities. No runtime-pack generator was introduced, no controller/orchestration framework was added, and no sync/export/import/check tool logic was changed in order to support this calibration.
-- `update-project-status` remains the canonical status engine, and `system-status-update` still acts only as the system-oriented framing layer over that engine.
-- Tooling therefore remains strong enough to support documentation refresh and local maintenance, but it still stops short of enforced distribution, rollout readiness, or generalized runtime-pack implementation.
+- The tooling layer remains local-first support for status refresh, routing, metadata, sync/import/export, adapter checks, re-seed audit, and derivative-surface audit.
+- No validators, automation, CI, hooks, scripts, runtime-pack generators, or tool adapters were added by this baseline refresh.
+- Phase 5 tool adapter candidates and Phase 6 validator / automation preflight remain deferred.
 
 ## Current Phase
 
 - Current phase: `Phase 3 - Controlled System`
-- Workflow-bootstrap track position: `Phase 3D` canonical path calibration over a single consumer repo pilot
-- Phase judgment: the system phase remains unchanged because the latest progress narrows path expression inside the same bounded real-repo pilot rather than adding broader distribution, rollout, adoption, or toolchain maturity. The repository now has stronger evidence that the v1 entrypoint pair, forced canonical-backreference model, and controlled-placeholder path strategy hold in one real consumer repo context, but that evidence is still intentionally narrow.
-- Why unchanged: recent commits added only path-calibration documents plus minimal wording calibration in the existing entrypoint pair; they did not start multi-repo rollout, distribution, adoption, or tooling/governance enforcement upgrades.
-- Main direction: do not jump directly to rollout-readiness. Re-evaluate later only if the repo gains a distinct maintainer-confirmed project-local canonical payload artifact or if the system decides to validate a second consumer-repo type.
+- Workflow-bootstrap track position: Phase 3 runtime pack minimal manifest baseline complete; Phase 4 multi-project pilot pending.
+- Phase judgment: the system phase remains unchanged because this is a baseline curation refresh after completed Phase 0-3 guidance work, not a new rollout, distribution, enforcement, or automation phase.
+- Why unchanged: the latest workflow-bootstrap work clarified canonical guidance and candidate runtime surfaces without creating Phase 4 assets, tool adapters, validators, CI, or additional project-side runtime files.
+- Main direction: return to Phase 4 task package generation for a bounded multi-project pilot.
 
 ## Capabilities
 
-- Layered capability system: canonical skills, derivative discovery surfaces, governance checks, tooling, and active-source docs remain clearly separated instead of collapsing into one mutable layer.
-- Minimal canonical workflow expression: the hub still provides a stable canonical `Copilot 主控 / Codex 施工` workflow shell and keeps role-split guidance at the workflow layer rather than scattering it across adapters.
-- Workflow-shell coordination: `workflow-bootstrap` continues to clarify the workflow shell while `chatgpt-handoff-pilot` remains the protocol layer for task package, bounded execution, and execution report.
-- Canonical-to-runtime-pack mapping: the repository now holds a six-step progression from workflow shell to thin-entry drafts to template sketches to pilot-validation sketches to one bounded single consumer repo implementation pilot to a bounded canonical path calibration pass over that pilot.
-- Thin-entry draft set (Phase 2): `AGENTS.md` as thin master entrypoint, `.github/copilot-instructions.md` as Copilot-specific thin adapter, and canonical backreference rules remain the baseline entrypoint design.
-- Template sketch set (Phase 3A): `workflow-bootstrap` still carries the v1 `required / optional / not recommended` template logic, fixed-vs-project-fill split for `AGENTS.md`, and thin-adapter boundary for `.github/copilot-instructions.md`.
-- Pilot validation sketch set (Phase 3B): the hub can validate one abstract single-consumer-repo profile, confirm the v1 entrypoint pair is sufficient for that profile, keep field / placeholder mapping contained without unnecessary document split, and express a future file layout without claiming implementation.
-- Single consumer repo implementation pilot (Phase 3C): the hub can now demonstrate in one real repository that `AGENTS.md` can serve as the thin master entrypoint, `.github/copilot-instructions.md` can remain a thin Copilot-specific adapter, concrete canonical guidance paths can be enforced, and the fixed / project-fill / placeholder model can survive contact with an actual repo layout.
-- Canonical path calibration (Phase 3D): the hub can now compare placeholder strategies against real repo state, conclude that controlled placeholder is more stable than a pseudo-real path when no distinct project-local canonical payload artifact exists, and minimally tighten backreference wording without expanding the runtime surface.
-- Anti-second-rulebook execution evidence: the repository now has implementation-level evidence that forced canonical backreferences and anti-expansion constraints can remain intact in a real repo rather than only in drafts or sketches.
-- Controlled-placeholder execution evidence: the repository now has implementation-level evidence that unresolved project-local path slots can be made more precise and less drift-prone through maintainer-gated wording rather than premature materialization.
-- Workspace-aware status refresh: `update-project-status` still supports `git`, `workspace`, and `hybrid` evidence collection while preserving a single canonical status engine.
-- Derivative-surface auditing: the system can continue to inspect bridge / metadata drift without promoting those derivative surfaces into active-source ownership.
-- Invocation metadata resilience: metadata extraction and discovery surfaces remain robust to current example-file layouts and wrapper discovery needs.
-- Bridge continuity: handoff/status continuity copies remain conceptually supported while active ownership stays in `docs/HANDOFF.md` and `docs/status/skill-hub-status.md`.
-- Local-first validation: local scripts remain the main maintenance and validation entrypoints, even though CI-backed enforcement is still absent.
-- Wrapper coordination baseline: `system-status-update` and `system-handoff` still coordinate through freshness checking, status-first ordering, and phase-consistency validation without becoming an orchestration layer.
+- Layered capability system: canonical skills, derivative discovery surfaces, governance checks, tooling, and active-source docs remain clearly separated.
+- Workflow shell: `workflow-bootstrap` defines the tool-agnostic role chain and role boundaries.
+- Runtime profile: non-git / low-git projects may use `tasks/` as a preferred evidence path while Git-first projects can continue to rely on Git / PR evidence.
+- Review tiers: Reviewer-side `Light Review`, `Standard Review`, and `Heavy Review` guidance is advisory, not enforcement.
+- Runtime pack manifest: minimal candidate surfaces are project-aware thin entries or evidence indexes, not mandatory files and not canonical copies.
+- Handoff protocol: `chatgpt-handoff-pilot` still owns task packages, bounded execution, and execution reports.
+- Wrapper coordination: `system-status-update` and `system-handoff` still coordinate through status-first refresh, freshness checking, and phase consistency without becoming an orchestration layer.
 
 ## Stability
 
 - Overall maturity: `evolving`
-- Stable: canonical ownership, wrapper-only system skills, active-source documentation ownership, thin-entry / thin-adapter boundary discipline, and the explicit distinction between completed single-repo pilot work plus calibration and still-unstarted rollout / distribution / adoption.
-- Evolving: distribution freshness, derivative-surface governance, workspace-aware status-refresh ergonomics, metadata/discovery robustness, and the question of whether any future move beyond the current controlled-placeholder strategy is warranted.
-- Not yet stable: CI-backed enforcement, automatic mirror consistency, automatic governance-mode detection, deterministic orchestration, multi-repo rollout readiness, distribution readiness, adoption readiness, broader consumer-repo-type fit, a distinct project-local canonical payload model across repo types, and unvalidated project-side file families such as `.github/instructions/*.instructions.md` and `.github/agents/*.agent.md`.
-- Evidence boundary: this refresh is based on the current working tree, recent Git history, `skills/workflow-bootstrap/SKILL.md`, `AGENTS.md`, `.github/copilot-instructions.md`, `skills/workflow-bootstrap/project_side_canonical_path_calibration_memo.md`, `skills/workflow-bootstrap/project_side_canonical_path_option_comparison_sketch.md`, and `tasks/copilot-codex-workflow_phase3d_canonical_path_calibration_execution_report.md`; no adapter/index/tooling changes were observed in the same pass.
+- Stable: canonical ownership, workflow-bootstrap boundary, chatgpt-handoff-pilot protocol ownership, thin-entry discipline, and the completed Phase 0-3 workflow-bootstrap baseline.
+- Evolving: multi-project fit, distribution readiness, derivative-surface governance, local-first validation, and cross-repo runtime-pack portability.
+- Not yet stable: Phase 4 multi-project pilot evidence, tool adapters, validators / automation / CI, `.github/instructions/`, `.github/agents/`, and generalized rollout guidance across Git-first and non-git / low-git project types.
+- Evidence boundary: this refresh is based on the current working tree, recent Git history, `workflow-bootstrap` canonical assets, `chatgpt-handoff-pilot`, and recent workflow-bootstrap task packages / execution reports; it intentionally does not copy per-task report detail into status.
 - Freshness gate: `Updated at` satisfies the `14`-day freshness gate with current age `0` days, so no `Staleness` risk is added in this refresh.
 
 ## Recommended Next Steps
 
-- Do not move directly into rollout-readiness or distribution-readiness from Phase 3D calibration.
-- Re-evaluate only if the repository later gains a distinct maintainer-confirmed project-local canonical payload artifact, or if the system decides to validate a second consumer-repo type under bounded conditions.
-- If one of those triggers occurs, define narrow gates first: what repo types are in scope, what still counts as thin `AGENTS.md` plus thin `.github/copilot-instructions.md`, and what would disqualify broader rollout.
-- Keep `.github/instructions/*.instructions.md` and `.github/agents/*.agent.md` outside default scope unless a later bounded phase proves they are necessary.
-- Continue to preserve forced canonical backreferences, `AGENTS.md`-first entry, controlled-placeholder discipline, and anti-second-rulebook checks while rollout, distribution, and multi-repo adoption remain explicitly out of scope.
+- Generate the Phase 4 multi-project pilot task package before any Phase 4 implementation.
+- Include both Git-first and non-git / low-git project types in the pilot design.
+- Feed back only generalized guidance into canonical assets; do not feed back project paths, business facts, secrets, or environment-specific commands.
+- Keep `tool_adapters/`, validators / automation / CI, `.github/instructions/`, `.github/agents/`, Phase 5 tool adapter candidates, and Phase 6 validator / automation preflight deferred.

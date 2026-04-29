@@ -22,6 +22,7 @@ This execution-focused skill definition keeps the workflow-shell behavior, invoc
 - Future project-side target mapping: [runtime_pack_minimal_manifest.md](runtime_pack_minimal_manifest.md)
 - Role split and protocol integration: [role_split_and_integration.md](role_split_and_integration.md)
 - Non-git / low-git runtime profile: [non_git_runtime_profile.md](non_git_runtime_profile.md)
+- Review tier guidance: [review_tiers.md](review_tiers.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
 
 ## 4. 核心模式（Pattern）
@@ -130,4 +131,5 @@ Output:
 - Future project-side target mapping: [runtime_pack_minimal_manifest.md](runtime_pack_minimal_manifest.md)
 - Role split and protocol integration: [role_split_and_integration.md](role_split_and_integration.md)
 - Non-git / low-git runtime profile: [non_git_runtime_profile.md](non_git_runtime_profile.md)
+- Review tier guidance: [review_tiers.md](review_tiers.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)

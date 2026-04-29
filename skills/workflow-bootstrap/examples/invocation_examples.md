@@ -73,3 +73,20 @@ Expected framing:
 - role boundaries and stage switches are explicit
 - task package review is the safety gate before implementation
 - tool names remain examples rather than requirements
+
+## Example 5: Select review tier before bounded execution
+
+Use `workflow-bootstrap` review tier guidance to choose an advisory review strength before implementation.
+
+Example prompt:
+
+```text
+Use workflow-bootstrap as Reviewer to classify this task package as Light Review, Standard Review, or Heavy Review.
+Keep the tier advisory, preserve chatgpt-handoff-pilot protocol ownership, and do not treat runtime pack or automation examples as implementation authorization.
+```
+
+Expected framing:
+
+- review tier selection supports Reviewer judgment
+- `chatgpt-handoff-pilot` remains protocol owner
+- runtime pack and automation mentions stay classification examples only

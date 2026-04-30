@@ -1,10 +1,10 @@
 # Skill Hub Status
 
-- Updated at: `2026-04-29`
+- Updated at: `2026-04-30`
 - Scope: `ai-skill-hub`
 - Method: `system-status-update` wrapper over `update-project-status`
 - Config: `.codex/skill-config/update-project-status.json`
-- Data sources: Git history, working tree, `skills/`, `.agents/`, `.github/`, `tools/`, `docs/status/`, workflow-bootstrap task packages and execution reports
+- Data sources: Git history, working tree, `skills/`, `.agents/`, `.github/`, `tools/`, `docs/status/`, workflow-bootstrap task packages, execution reports, and Phase 4 Round 1 review memo
 
 ## Layer Status
 
@@ -45,10 +45,10 @@
 ## Current Phase
 
 - Current phase: `Phase 3 - Controlled System`
-- Workflow-bootstrap track position: Phase 3 runtime pack minimal manifest baseline complete; Phase 4 multi-project pilot pending.
-- Phase judgment: the system phase remains unchanged because this is a baseline curation refresh after completed Phase 0-3 guidance work, not a new rollout, distribution, enforcement, or automation phase.
-- Why unchanged: the latest workflow-bootstrap work clarified canonical guidance and candidate runtime surfaces without creating Phase 4 assets, tool adapters, validators, CI, or additional project-side runtime files.
-- Main direction: return to Phase 4 task package generation for a bounded multi-project pilot.
+- Workflow-bootstrap track position: Phase 4 Round 1 read-only multi-project pilot review complete; Git-first evidence gap remains.
+- Phase judgment: the system phase remains unchanged because Round 1 is validation evidence only, not rollout, distribution, enforcement, or automation.
+- Why unchanged: the latest workflow-bootstrap work produced a review memo and execution report for a read-only multi-project pilot review without modifying canonical guidance or creating tool adapters, validators, CI, automation, or additional project-side runtime files.
+- Main direction: plan Phase 4 Round 2 around the Git-first evidence gap before any canonical guidance change.
 
 ## Capabilities
 
@@ -65,13 +65,13 @@
 - Overall maturity: `evolving`
 - Stable: canonical ownership, workflow-bootstrap boundary, chatgpt-handoff-pilot protocol ownership, thin-entry discipline, and the completed Phase 0-3 workflow-bootstrap baseline.
 - Evolving: multi-project fit, distribution readiness, derivative-surface governance, local-first validation, and cross-repo runtime-pack portability.
-- Not yet stable: Phase 4 multi-project pilot evidence, tool adapters, validators / automation / CI, `.github/instructions/`, `.github/agents/`, and generalized rollout guidance across Git-first and non-git / low-git project types.
-- Evidence boundary: this refresh is based on the current working tree, recent Git history, `workflow-bootstrap` canonical assets, `chatgpt-handoff-pilot`, and recent workflow-bootstrap task packages / execution reports; it intentionally does not copy per-task report detail into status.
+- Not yet stable: complete Git-first validation evidence, tool adapters, validators / automation / CI, `.github/instructions/`, `.github/agents/`, and generalized rollout guidance across Git-first and non-git / low-git project types.
+- Evidence boundary: this refresh is based on the current working tree, recent Git history, `workflow-bootstrap` canonical assets, `chatgpt-handoff-pilot`, recent workflow-bootstrap task packages / execution reports, and `docs/reviews/workflow-bootstrap_phase4_multi_project_pilot_review.md`; it intentionally does not copy per-task report detail into status.
 - Freshness gate: `Updated at` satisfies the `14`-day freshness gate with current age `0` days, so no `Staleness` risk is added in this refresh.
 
 ## Recommended Next Steps
 
-- Generate the Phase 4 multi-project pilot task package before any Phase 4 implementation.
-- Include both Git-first and non-git / low-git project types in the pilot design.
-- Feed back only generalized guidance into canonical assets; do not feed back project paths, business facts, secrets, or environment-specific commands.
+- Treat Phase 4 Round 1 as closed read-only validation evidence, not as completed full multi-project validation.
+- Plan Phase 4 Round 2 specifically around the Git-first evidence gap from external candidate dubious ownership.
+- Feed back only generalized guidance into canonical assets after a separately reviewed follow-up; do not feed back project paths, business facts, secrets, or environment-specific commands.
 - Keep `tool_adapters/`, validators / automation / CI, `.github/instructions/`, `.github/agents/`, Phase 5 tool adapter candidates, and Phase 6 validator / automation preflight deferred.

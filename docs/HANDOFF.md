@@ -22,6 +22,7 @@ This file is the single source of truth for project handoff.
 - 2026-04-24: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-04-24`) and then merged the completed Phase 3C single consumer repo implementation pilot into handoff context. This update records that `ai-skill-hub` moved from Phase 3B pilot-validation sketching to a real single consumer repo implementation pilot in the current repository, landed the minimal `AGENTS.md` plus `.github/copilot-instructions.md` entrypoint pair, validated concrete canonical backreference paths plus anti-second-rulebook behavior, and still did not start rollout, distribution, adoption, or toolchain expansion.
 - 2026-04-24: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-04-24`) and then merged the completed Phase 3D canonical path calibration into handoff context. This update records that the repository kept the existing single-repo entrypoint pair but added bounded calibration assets, concluded that `<project-local-canonical-skill-path>` should remain a controlled placeholder rather than be hard-materialized in the current repo, applied only minimal backreference wording tightening to `AGENTS.md` and `.github/copilot-instructions.md`, and still did not start rollout, distribution, adoption, tooling changes, or project-side surface expansion.
 - 2026-04-29: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-04-29`) and then merged the current `workflow-bootstrap` Phase 0-3 baseline into handoff context. This records non-git / low-git runtime profile absorption, role split canonicalization, review tier guidance, and runtime pack minimal manifest guidance as complete while preserving `Phase 3 - Controlled System`; Phase 4 multi-project pilot remains pending and must start with a separate task package.
+- 2026-04-30: Merged the completed `workflow-bootstrap` Phase 4 Round 1 read-only multi-project pilot review into handoff context after confirming the review memo and execution report were committed. This records `docs/reviews/workflow-bootstrap_phase4_multi_project_pilot_review.md` and `tasks/workflow-bootstrap_phase4_multi_project_pilot_execution_report.md` as Round 1 evidence, preserves `Phase 3 - Controlled System`, and keeps Git-first validation explicitly limited by a dubious-ownership evidence gap.
 
 ## Current Status
 
@@ -33,7 +34,9 @@ The `workflow-bootstrap` line has now reached its Phase 0-3 baseline without cha
 
 `chatgpt-handoff-pilot` remains the protocol layer for task packages, bounded execution, and execution reports. `workflow-bootstrap` explains how roles and thin project-side surfaces should coordinate, but it does not replace the handoff protocol or authorize a second local rulebook. `tasks/` may be a preferred project-local evidence path for non-git / low-git work, but it is not a mandatory global path for every project.
 
-The next workflow-bootstrap move is Phase 4: Multi-project Pilot. That phase has not started in this baseline refresh. It should first be expressed as a reviewed task package, cover both Git-first and non-git / low-git project types, and feed back only generalized guidance rather than project-specific paths, business facts, or environment commands.
+The `workflow-bootstrap` line has completed Phase 4 Round 1 as a read-only multi-project pilot review. The evidence lives in `docs/reviews/workflow-bootstrap_phase4_multi_project_pilot_review.md` and `tasks/workflow-bootstrap_phase4_multi_project_pilot_execution_report.md`. Round 1 observed a Git-first candidate, a non-git / low-git candidate, and the `ai-skill-hub` self case; however, Git-first validation remains incomplete because external candidate Git commands were blocked by dubious ownership.
+
+Round 1 supports only limited generalized findings: `task package + execution report` pairing is useful when Git evidence is weak or unavailable; `docs/HANDOFF.md` and status surfaces should remain minimal closure rather than per-task trace logs; and no single project layout should be promoted into canonical guidance. It does not authorize canonical guidance changes, rollout, distribution, validators, CI, automation, tool adapters, `.github/instructions`, or `.github/agents`.
 
 ## Hard Boundaries
 
@@ -109,10 +112,10 @@ The next workflow-bootstrap move is Phase 4: Multi-project Pilot. That phase has
 - No automatic hook enablement across fresh clones or worktrees; `tools/install_git_hooks.ps1` must still be run locally once per clone/worktree.
 - No decision yet to tighten commit body rules beyond the current lightweight descriptive check; that boundary should continue to follow real usage feedback rather than speculative policy growth.
 - No CI-backed default validation flow yet; `tools/run_local_checks.ps1` is now the default local entrypoint, but it remains a local wrapper rather than repository-level enforcement.
-- No Phase 4 multi-project pilot has started yet, and no Phase 4 task package is created by this baseline refresh.
+- Phase 4 Round 1 read-only multi-project pilot review has completed, but full Git-first validation remains incomplete because the external Git-first candidate's Git metadata was blocked by dubious ownership.
 - No broader project-side runtime-pack family rollout beyond thin-entry guidance; `.github/instructions/*.instructions.md` and `.github/agents/*.agent.md` remain unimplemented and out of default scope.
 - No distinct project-local canonical payload artifact exists yet in the current repo; the controlled placeholder remains intentionally unresolved until a maintainer-confirmed artifact actually appears.
-- No validation yet across multiple project types; Phase 4 should cover Git-first and non-git / low-git projects before any broader portability claim.
+- No complete validation yet across multiple project types; Round 1 covered Git-first and non-git / low-git candidates as read-only evidence, but a follow-up should specifically close the Git-first evidence gap before any broader portability claim.
 - No rollout-readiness, distribution-readiness, or adoption gate has been defined from the Phase 0-3 baseline; that decision remains future governance work rather than an automatic consequence of the baseline.
 - No refresh of `skills_index.json` in this workflow-bootstrap pass; that deferral is intentional because the current generation chain would also rewrite `.agents/skills/*.md` flat summaries and widen the bounded-execution scope.
 - No expansion of local validation and check tooling into an automated distribution, rollout, or execution framework; the repository still treats those tools as repeatable local support surfaces rather than a stronger controller layer.
@@ -123,11 +126,11 @@ These gaps are intentional to keep the system legible while distribution and gov
 
 ## Next Phase Direction
 
-The next workflow-bootstrap direction is Phase 4: Multi-project Pilot. It should begin with a reviewed Phase 4 task package, not direct implementation.
+The next workflow-bootstrap direction is Phase 4 Round 2 planning focused on the Git-first evidence gap from Round 1. It should use a separately reviewed task package or explicit maintainer-provided Git evidence, not direct implementation.
 
-The Phase 4 pilot should include both Git-first and non-git / low-git project types. Its feedback loop should return only generalized guidance to canonical assets and must not import project-specific paths, business facts, secrets, or environment commands into the hub.
+Round 1 findings should remain validation evidence only. Any future feedback loop must return only generalized guidance to canonical assets and must not import project-specific paths, business facts, secrets, or environment commands into the hub.
 
-Tool adapters, validators / automation / CI, `.github/instructions/`, `.github/agents/`, Phase 5 tool adapter candidates, and Phase 6 validator / automation preflight remain deferred. Phase 4 remains pending until its task package is generated and reviewed.
+Tool adapters, validators / automation / CI, `.github/instructions/`, `.github/agents/`, Phase 5 tool adapter candidates, and Phase 6 validator / automation preflight remain deferred. Phase 4 Round 2 remains pending until it has a separately reviewed task package or explicit maintainer-provided Git evidence.
 
 ## System Takeover Snapshot (2026-04-02)
 

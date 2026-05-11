@@ -32,6 +32,8 @@
 
 更细的角色衔接见 [role_split_and_integration.md](role_split_and_integration.md)，future runtime pack 的项目侧目标见 [runtime_pack_minimal_manifest.md](runtime_pack_minimal_manifest.md)。
 
+首轮可复用的五角色编排胶水见 [orchestration_snippets.md](orchestration_snippets.md)（薄封装，不重写 handoff 协议）。
+
 ## Phase 2 Draft Assets (Canonical Only)
 
 - [canonical_backreference_rules_draft.md](canonical_backreference_rules_draft.md)

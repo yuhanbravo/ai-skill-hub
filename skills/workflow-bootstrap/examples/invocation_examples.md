@@ -108,3 +108,18 @@ Expected framing:
 - runtime pack guidance stays project-aware and optional
 - `skills/` remains the canonical source
 - deferred surfaces such as .github/instructions, .github/agents, tool adapters, validators, and automation are not implementation targets
+
+
+## Transition: from invocation example to orchestration instance
+
+When an invocation example has already aligned workflow-shell boundaries, switch to the minimal orchestration instance in `../orchestration_snippets.md` with this bridge prompt:
+
+```text
+Workflow shell is aligned. Now switch to the minimal orchestration instance:
+1) Apply Boundary lock (Step 0).
+2) Run Drafter -> Reviewer (Safety Gate) -> Implementer -> Reporter -> Final Reviewer (Closure Gate).
+3) If Reviewer is not Pass, rollback to Drafter (max 2 rounds).
+4) If Final Reviewer is No-Go, rollback to Implementer or Reporter with minimum backfill.
+5) Use explicit [PHASE-SWITCH] statements whenever one tool continues across role transitions.
+Keep chatgpt-handoff-pilot as protocol owner and avoid duplicating protocol body text.
+```

@@ -24,6 +24,7 @@ This execution-focused skill definition keeps the workflow-shell behavior, invoc
 - Non-git / low-git runtime profile: [non_git_runtime_profile.md](non_git_runtime_profile.md)
 - Review tier guidance: [review_tiers.md](review_tiers.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
+- Orchestration minimal instance snippets: [orchestration_snippets.md](orchestration_snippets.md)
 
 ## 4. 核心模式（Pattern）
 
@@ -133,3 +134,4 @@ Output:
 - Non-git / low-git runtime profile: [non_git_runtime_profile.md](non_git_runtime_profile.md)
 - Review tier guidance: [review_tiers.md](review_tiers.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
+- Orchestration minimal instance snippets: [orchestration_snippets.md](orchestration_snippets.md)

@@ -2,7 +2,7 @@
 
 ## What is this
 
-`workflow-bootstrap` 是一个 canonical workflow skill，用来为仓库定义默认的 `Copilot 主控 / Codex 施工` 协作壳层，并把最小角色分工、canonical guidance 与 future runtime pack 的映射写清楚。
+`workflow-bootstrap` 是一个 canonical workflow skill，用来为仓库定义默认的角色链协作壳层（`Drafter -> Reviewer -> Implementer -> Reporter -> Final Reviewer`），并把最小角色分工、canonical guidance 与 future runtime pack 的映射写清楚；`Copilot/Codex` 仅作为可替换 adapter 示例。
 
 ## Why this exists
 

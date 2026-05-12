@@ -15,6 +15,10 @@ The P0 task priority for this implementation round is not the same layer as `ris
 - Task priority `P0` describes why this repository change is urgent in the current work plan.
 - `risk_priority` `P0` / `P1` / `P2` classifies risk inside an assessment output.
 - A P0 task can create or update guidance for P1/P2 risks, and a P1/P2 task can still report a `risk_priority: P0` finding if safe use or auditability is affected.
+- `risk_priority` belongs to the assessment output layer.
+- `risk_priority` is not the same as a project phase gate.
+- `risk_priority` is not the same as a freshness or staleness label.
+- `phase_risk` and `freshness_risk` may appear in status / handoff outputs as scenario vocabulary, but they do not replace `risk_priority`.
 
 ## Fields
 
@@ -97,3 +101,44 @@ State the next concrete action. Prefer bounded actions such as:
 - Status and handoff skills should favor `evidence`, `open_questions`, `risk_priority`, `phase_risk`, and `freshness_risk`; do not force `maturity_score`.
 - `workflow-bootstrap` may reference this protocol only for assessment output and handoff/status linkage awareness. It does not own task package, bounded execution, or execution report protocol.
 - `chatgpt-handoff-pilot` may reference this protocol for execution report risk and evidence awareness. It remains the owner of task package, bounded execution, and execution report protocol.
+
+## Mini Examples
+
+### Example A: takeover / governance assessment
+
+```yaml
+capability_fit: fit
+maturity_score: 4
+evidence:
+  confirmed:
+    - The skill defines a system-level assessment scope and explicit non-ownership boundaries.
+    - The output contract already includes capability mapping, maturity review, bottlenecks, and next steps.
+  inferred:
+    - The skill can use this shared protocol without replacing its domain-specific takeover guidance.
+  pending:
+    - Cross-run consistency still depends on executor discipline because no validator is in scope.
+inference: The skill is mature enough for structured governance-style assessment, with light example alignment needed to reduce output drift.
+open_questions: not applicable
+risk_priority: P1
+impact_scope: layer
+next_action: revise
+```
+
+### Example B: status / handoff assessment
+
+```yaml
+capability_fit: partial
+maturity_score: not applicable
+evidence:
+  confirmed:
+    - The handoff/status output identifies freshness and phase consistency concerns.
+    - The task package limits the work to documentation-only follow-up.
+  inferred:
+    - A maturity score would add little value because the output is checking current state continuity, not capability maturity.
+open_questions: not applicable
+risk_priority: P1
+impact_scope: local
+next_action: verify
+```
+
+`maturity_score` is not applicable in this status / handoff example because the scenario primarily evaluates freshness, phase consistency, and unresolved gaps. Status / handoff outputs should not be forced into maturity scoring.

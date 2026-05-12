@@ -54,3 +54,27 @@ risks:
 - Some maturity judgments may remain provisional if enforcement evidence is incomplete.
 - Adapter coverage can drift if canonical and compatibility layers are not continuously checked.
 ```
+
+### Shared Assessment Protocol Example
+
+```text
+Use system-takeover for a system-level assessment.
+Align the assessment output with the shared assessment output protocol.
+
+expected_output:
+- capability_fit
+- evidence:
+  - confirmed
+  - inferred
+  - pending
+- inference
+- risk_priority
+- impact_scope
+- next_action
+- maturity_score only when applicable
+
+constraints:
+- Do not force maturity_score for status / handoff-style outputs.
+- Do not replace system-status-update or system-handoff.
+- Do not modify files unless separately authorized by the user.
+```

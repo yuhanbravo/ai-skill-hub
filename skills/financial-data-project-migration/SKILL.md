@@ -22,6 +22,7 @@ This execution-focused skill definition keeps the behavior, invocation shape, an
 - Reusable prompts: [prompts/reusable_prompts.md](prompts/reusable_prompts.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
 - References: [references/](references/)
+- Shared assessment output protocol: [../_protocol/skill_assessment_output.md](../_protocol/skill_assessment_output.md)
 
 ## 4. 核心模式（Pattern）
 
@@ -51,6 +52,7 @@ Output:
 - 项目类型
 - 迁移阶段
 - 固定风险
+- evidence / risk / scope / next-action fields from `skill_assessment_output`, trimmed to the migration-advisory scenario
 - 目标结构建议
 - 映射候选与最小 TODO
 
@@ -98,7 +100,7 @@ Output:
    在理解当前阶段后，整理目标结构建议、文件角色分类、示例映射候选和最小迁移 TODO；强调生成产物、缓存、本地数据和运行时资产不应直接混入 `src/` 包结构。
 
 6. `output`：输出下一阶段建议。  
-   形成迁移 advisory 结果，说明当前项目类型、迁移阶段、固定风险、目标结构方向、保守建议和后续协同 skill；如果项目尚未具备安全迁移条件，应把结论明确写成 inventory-first 或 boundary-first，而不是伪装成准备就绪。
+   形成迁移 advisory 结果，说明当前项目类型、迁移阶段、固定风险、目标结构方向、保守建议和后续协同 skill；如果项目尚未具备安全迁移条件，应把结论明确写成 inventory-first 或 boundary-first，而不是伪装成准备就绪。需要 assessment 口径时，引用 shared assessment output protocol，并按迁移 advisory 场景裁剪字段，不强制所有字段满配。
 
 ## 7. 约束（Constraints）
 

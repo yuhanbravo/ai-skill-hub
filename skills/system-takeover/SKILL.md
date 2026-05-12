@@ -22,6 +22,7 @@ This execution-focused skill definition keeps the behavior, invocation shape, an
 - Human-oriented context: [README.md](README.md)
 - Reusable prompts: [prompts/reusable_prompts.md](prompts/reusable_prompts.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
+- Shared assessment output protocol: [../_protocol/skill_assessment_output.md](../_protocol/skill_assessment_output.md)
 
 ## 4. 核心模式（Pattern）
 
@@ -54,6 +55,7 @@ Output:
 - system structure
 - capability map
 - maturity assessment by layer
+- assessment fields from `skill_assessment_output` where applicable: `maturity_score`, `evidence`, `inference`, `open_questions`, `risk_priority`, `impact_scope`, `next_action`
 - top bottlenecks
 - evolution plan
 
@@ -91,7 +93,7 @@ Output:
    将分层发现组织成系统结构图、成熟度评估、Top 3 bottlenecks 和下一阶段演进建议；显式区分“已确认事实”“基于代码和文档的推断”“需要后续验证的点”。
 
 5. `output`：输出 system takeover 结果。  
-   使用结构化格式回传 `System Structure`、`Capability Map`、`Maturity Assessment`、`Top Bottlenecks` 和 `Evolution Plan`；如果用户允许写文件，再把分析结果写入 takeover 文档或 status 文档。
+   使用结构化格式回传 `System Structure`、`Capability Map`、`Maturity Assessment`、`Top Bottlenecks` 和 `Evolution Plan`；在 assessment / takeover 输出中按 shared assessment output protocol 标注 `maturity_score`、`evidence`、`inference`、`open_questions`、`risk_priority`、`impact_scope` 和 `next_action`；如果用户允许写文件，再把分析结果写入 takeover 文档或 status 文档。
 
 ## 9. 约束（Constraints）
 

@@ -23,6 +23,7 @@ This execution-focused skill definition keeps the behavior, invocation shape, an
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
 - Templates: [templates/](templates/)
 - References: [references/](references/)
+- Shared assessment output protocol: [../_protocol/skill_assessment_output.md](../_protocol/skill_assessment_output.md)
 
 ## 4. 核心模式（Pattern）
 
@@ -50,6 +51,7 @@ Process:
 Output:
 - 状态 markdown
 - 状态更新日志
+- status evidence / open_questions / risk_priority / phase_risk / freshness_risk awareness; do not force `maturity_score`
 - 可选同步或 hook 安装结果
 
 这样组织的原因是，状态更新不只是“跑一个脚本”，而是一个从事实采集到内容整理再到发布的项目过程。把它按阶段建模后，AI 更容易稳定执行，并在每一步维持边界感和结果可解释性。
@@ -99,7 +101,7 @@ Output:
    只有在用户明确要求时，才运行 `install_post_commit_hook.py` 安装 `.git/hooks/post-commit`。该动作属于显式修改项目行为的附加步骤，不应与默认状态生成混为一体。
 
 7. 输出执行回顾。  
-   在最终结果中说明本次使用的配置与参数、提交与任务源覆盖范围、实际写入的状态文件和日志文件、是否执行了同步、是否安装了 hook，以及当前主要风险与待确认项。
+   在最终结果中说明本次使用的配置与参数、提交与任务源覆盖范围、实际写入的状态文件和日志文件、是否执行了同步、是否安装了 hook，以及当前主要风险与待确认项。状态输出可引用 shared assessment output protocol 的 `evidence`、`open_questions`、`risk_priority` 口径，并按项目语义保留 phase / freshness risk awareness；不要强制使用 `maturity_score`。
 
 ## 7. 约束（Constraints）
 

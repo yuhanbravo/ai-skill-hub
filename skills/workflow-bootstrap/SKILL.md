@@ -25,6 +25,7 @@ This execution-focused skill definition keeps the workflow-shell behavior, invoc
 - Review tier guidance: [review_tiers.md](review_tiers.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
 - Orchestration minimal instance snippets: [orchestration_snippets.md](orchestration_snippets.md)
+- Shared assessment output protocol: [../_protocol/skill_assessment_output.md](../_protocol/skill_assessment_output.md)
 
 ## 4. 核心模式（Pattern）
 
@@ -54,6 +55,7 @@ Output:
 - role-chain 分工
 - canonical guidance 与 project-side thin runtime surfaces 的对应关系
 - 薄入口回指 canonical guidance 的使用方式
+- assessment output 与 handoff/status 衔接意识；不接管 `chatgpt-handoff-pilot` 的 protocol ownership
 
 这样组织的原因是，很多多 agent 协作问题并不是缺一个新工具，而是缺一个清晰的默认链路。`workflow-bootstrap` 负责补齐这层壳，但不接管已有协议层、接管层、状态层或治理层的职责。
 
@@ -98,7 +100,7 @@ Output:
    当实施工作需要 task package、bounded execution 和 execution report 时，显式复用 `chatgpt-handoff-pilot`。本 skill 只定义 workflow 壳层，不重新定义 handoff 协议。
 
 5. 对齐 non-git / low-git 证据约定。  
-   当项目侧试跑缺少稳定 Git 证据时，可把 `tasks/` 作为 task package / execution report 的主 trace path，并把 execution report 作为每轮实施的主证据。`docs/HANDOFF.md` 与 status surface 只保留最小闭环事实，`archive/` 只作为历史参考，不恢复为 active workflow line。
+   当项目侧试跑缺少稳定 Git 证据时，可把 `tasks/` 作为 task package / execution report 的主 trace path，并把 execution report 作为每轮实施的主证据。若 workflow 输出需要 assessment / status / handoff 衔接意识，可引用 shared assessment output protocol 的字段口径；`docs/HANDOFF.md` 与 status surface 只保留最小闭环事实，`archive/` 只作为历史参考，不恢复为 active workflow line。
 
 6. 映射 runtime pack guidance。
    当需要为项目侧协作入口做准备时，只描述 `AGENTS.md`、`.github/copilot-instructions.md`、`.github/copilot-instructions.zh-CN.md`、`tasks/README.md`、task package 和 execution report 等最小候选 surface 与 canonical guidance 的关系，不在 hub 内创建这些项目侧文件。
@@ -112,6 +114,7 @@ Output:
 ## 7. 约束（Constraints）
 
 - 不替代 `chatgpt-handoff-pilot` 的 task package / bounded execution / execution report 协议
+- 不接管 shared assessment output protocol；只在 workflow shell 与 handoff/status 衔接处引用其口径
 - 不替代 `project-takeover` 的接管与 onboarding 输出
 - 不替代 `update-project-status` 的状态刷新职责
 - 不替代 `documentation-governance` 的文档治理职责

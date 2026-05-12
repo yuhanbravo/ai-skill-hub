@@ -22,6 +22,7 @@ This execution-focused skill definition keeps the behavior, invocation shape, an
 - Reusable prompts: [prompts/reusable_prompts.md](prompts/reusable_prompts.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
 - References: [references/](references/)
+- Shared assessment output protocol: [../_protocol/skill_assessment_output.md](../_protocol/skill_assessment_output.md)
 
 ## 4. 核心模式（Pattern）
 
@@ -50,6 +51,7 @@ Output:
 - 结构化 `report`
 - 高优先级问题
 - 建议动作、可生成目标和冲突清单
+- evidence / risk / scope / next-action fields from `skill_assessment_output`, trimmed to the audit scenario
 
 这样组织的原因是，文档治理首先需要稳定判断“哪里失控、哪里重复、哪里越权”，而不是立刻改动文件。先 `audit`，再 `report`，最后才进入 `fix`，可以避免把治理规则误用成粗暴重写命令。
 
@@ -79,7 +81,7 @@ Output:
    收集 markdown 文件，检查 heading 结构、README 必需章节、分类放置、层级归属、禁止命名、重复主题、单一事实源冲突、readable layer 第二事实源风险、归档候选与可读层生成目标。此阶段默认只观察，不写入文档。
 
 3. `report`：输出治理结果。  
-   生成工程层摘要、阅读层摘要、高优先级问题、建议动作、冲突清单和归档候选；如启用 `--json`，输出机器可读结果；如指定 `--report`，则将治理报告写入目标文件。报告应清楚区分“问题发现”和“建议修复”，而不是把建议动作当成已执行事实。
+   生成工程层摘要、阅读层摘要、高优先级问题、建议动作、冲突清单和归档候选；如启用 `--json`，输出机器可读结果；如指定 `--report`，则将治理报告写入目标文件。报告应清楚区分“问题发现”和“建议修复”，而不是把建议动作当成已执行事实。需要 assessment 口径时，引用 shared assessment output protocol，并按文档审计场景裁剪字段，不强制所有字段满配。
 
 4. `fix`：决定是否进行显式修复。  
    只有在用户明确授权，且治理结论已经清楚时，才允许进入 fix，例如使用 `--write` 为 README 补齐缺失章节，或在后续单独执行归档、去重、readable 生成等受控动作。默认不应自动合并、删除、重命名或改写文档内容。

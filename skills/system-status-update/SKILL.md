@@ -22,6 +22,7 @@ This execution-focused skill definition keeps the behavior, invocation shape, an
 - Human-oriented context: [README.md](README.md)
 - Reusable prompts: [prompts/reusable_prompts.md](prompts/reusable_prompts.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
+- Shared assessment output protocol: [../_protocol/skill_assessment_output.md](../_protocol/skill_assessment_output.md)
 
 ## 4. 核心模式（Pattern）
 
@@ -49,6 +50,7 @@ Output:
 - `Current Phase`
 - `Capabilities`
 - `Stability`
+- status evidence / open_questions / risk_priority / phase_risk / freshness_risk awareness; do not force `maturity_score`
 
 这样组织的原因是，system status 的价值在于说明系统边界和成熟度，而不是把最近提交翻译成文件级流水账。底层刷新能力继续由 canonical skill `update-project-status` 提供，这个 wrapper 只负责 system-oriented 收口。
 
@@ -87,7 +89,7 @@ Output:
    读取状态文档中的 `Updated at` 时间；若距离当前日期超过 `14` 天，必须在输出中显式增加 `Staleness` 提示，并把该项写入 `Risks / Gaps`。若在门槛内，也应说明本次刷新已满足时效门槛。
 
 6. 回传风险与未确认项。  
-   若证据不足，应明确说明哪些判断来自代码与文档证据，哪些仍需后续验证，避免把推断写成确定事实。
+   若证据不足，应明确说明哪些判断来自代码与文档证据，哪些仍需后续验证，避免把推断写成确定事实。状态输出可引用 shared assessment output protocol 的 `evidence`、`open_questions`、`risk_priority` 口径，并保留本 skill 的 `phase_risk` / `freshness_risk` 判断；不要强制使用 `maturity_score`。
 
 7. 处理与 system-handoff 的联动。  
    若本轮还要更新 `docs/HANDOFF.md`，应先完成 status 刷新，再把 `Current Phase` 和关键边界提供给 `system-handoff`；handoff 落盘前必须通过 phase consistency 检查。

@@ -22,6 +22,7 @@ This execution-focused skill definition keeps the behavior, invocation shape, an
 - Reusable prompts: [prompts/reusable_prompts.md](prompts/reusable_prompts.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
 - References: [references/](references/)
+- Shared assessment output protocol: [../_protocol/skill_assessment_output.md](../_protocol/skill_assessment_output.md)
 
 ## 4. 核心模式（Pattern）
 
@@ -48,6 +49,7 @@ Process:
 
 Output:
 - 三类接管文档
+- takeover assessment fields from `skill_assessment_output` where applicable: `maturity_score`, `evidence`, `inference`, `open_questions`, `risk_priority`, `impact_scope`, `next_action`
 - 风险与后续动作
 - 环境结论
 
@@ -88,7 +90,7 @@ Output:
    按配置或默认路径输出 `project_takeover_report.md`、`project_onboarding_summary.md`、`welcome_email.md`；若指定了 `--shared-dir`，则同步到本地共享目录；若处于 `--dry-run`，则预览动作与输出路径而不真正写文件。
 
 6. 输出执行回顾。  
-   在最终结果中说明：使用了哪些输入参数、发现了哪些关键文档和任务来源、环境是否就绪、是否执行了结构/文档审计、是否发生副作用，以及当前最重要的风险与后续动作。
+   在最终结果中说明：使用了哪些输入参数、发现了哪些关键文档和任务来源、环境是否就绪、是否执行了结构/文档审计、是否发生副作用，以及当前最重要的风险与后续动作。接管类 assessment 输出应按 shared assessment output protocol 在适用时补充 `maturity_score`、`evidence`、`inference`、`open_questions`、`risk_priority`、`impact_scope` 和 `next_action`。
 
 ## 7. 约束（Constraints）
 

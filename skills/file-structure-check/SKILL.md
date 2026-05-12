@@ -22,6 +22,7 @@ This execution-focused skill definition keeps the behavior, invocation shape, an
 - Reusable prompts: [prompts/reusable_prompts.md](prompts/reusable_prompts.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
 - References: [references/](references/)
+- Shared assessment output protocol: [../_protocol/skill_assessment_output.md](../_protocol/skill_assessment_output.md)
 
 ## 4. 核心模式（Pattern）
 
@@ -50,6 +51,7 @@ Output:
 - 结构化 `report`
 - 缺失项与错位项
 - 建议修复动作
+- evidence / risk / scope / next-action fields from `skill_assessment_output`, trimmed to the structure-audit scenario
 
 这样组织的原因是，结构治理首先需要可靠审计，而不是直接改动。先做 `audit`，再看 `report`，最后才决定是否需要 `fix`，可以避免把启发式规则误当成自动改造命令。
 
@@ -79,7 +81,7 @@ Output:
    递归扫描仓库文件，跳过配置中列出的忽略目录；检查 required directories、optional directories、required paths，并按 source / config / test / doc 分类识别错位文件。此阶段只检查结构，不创建目录、不移动文件。
 
 3. `report`：生成结构化结果。  
-   输出缺失目录、缺失必需路径、错位文件、建议修复项以及本次使用的配置路径；如启用 `--json`，则输出机器可读结构；否则输出可读文本报告。这里的 suggested fixes 属于建议，不等于已经执行 fix。
+   输出缺失目录、缺失必需路径、错位文件、建议修复项以及本次使用的配置路径；如启用 `--json`，则输出机器可读结构；否则输出可读文本报告。这里的 suggested fixes 属于建议，不等于已经执行 fix。需要 assessment 口径时，引用 shared assessment output protocol，并按结构审计场景裁剪字段，不强制所有字段满配。
 
 4. `fix`：决定是否进入后续修复。  
    只有在用户或项目流程显式要求时，才基于报告进入后续修复动作，例如人工调整目录、补充 required path，或更新项目本地配置。默认不在本 skill 内自动执行修复。

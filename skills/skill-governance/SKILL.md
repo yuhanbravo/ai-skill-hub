@@ -22,6 +22,7 @@ This execution-focused skill definition keeps the behavior, invocation shape, an
 - Reusable prompts: [prompts/reusable_prompts.md](prompts/reusable_prompts.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
 - References: [references/](references/)
+- Shared assessment output protocol: [../_protocol/skill_assessment_output.md](../_protocol/skill_assessment_output.md)
 
 ## 4. 核心模式（Pattern）
 
@@ -47,6 +48,7 @@ Process:
 
 Output:
 - 治理结论
+- assessment fields from `skill_assessment_output` where applicable: `maturity_score`, `evidence`, `inference`, `open_questions`, `risk_priority`, `impact_scope`, `next_action`
 - 风险边界
 - 可选的受控重写结果
 
@@ -78,7 +80,7 @@ Output:
    读取目标目录中的 `README.md`、`SKILL.md`、相关 prompt 或 agent 文件，确认其是否完整、是否符合 `SKILL_TEMPLATE.md` 的 10 段结构、以及其主要类型和职责边界。
 
 2. `diagnose`：生成治理诊断。  
-   输出 `SCORECARD`、`DIAGNOSIS` 和 `LEVEL`，明确结构缺口、原则偏差、类型错位、prompt 不可执行点和潜在风险，不在此阶段做任何改写。
+   输出 `SCORECARD`、`DIAGNOSIS` 和 `LEVEL`，明确结构缺口、原则偏差、类型错位、prompt 不可执行点和潜在风险，不在此阶段做任何改写。治理 assessment 应按 shared assessment output protocol 在适用时标注 `maturity_score`、`evidence`、`inference`、`open_questions`、`risk_priority`、`impact_scope` 和 `next_action`。
 
 3. `decide`：决定是否进入重写。  
    根据评分和诊断判断是否需要重写；若 `rewrite=false`，则停留在 dry-run 治理结果；若 `rewrite=true`，则明确本次只允许对当前 skill 做受控重写。

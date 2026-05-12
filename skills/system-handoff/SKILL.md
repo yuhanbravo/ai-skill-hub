@@ -21,6 +21,7 @@ This execution-focused skill definition keeps the behavior, invocation shape, an
 - Human-oriented context: [README.md](README.md)
 - Reusable prompts: [prompts/reusable_prompts.md](prompts/reusable_prompts.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
+- Shared assessment output protocol: [../_protocol/skill_assessment_output.md](../_protocol/skill_assessment_output.md)
 
 ## 4. 核心模式（Pattern）
 
@@ -46,6 +47,7 @@ Process:
 Output:
 - 增量更新后的 system handoff sections
 - 简短 execution report
+- handoff evidence / open_questions / risk_priority / phase_risk / freshness_risk awareness; do not force `maturity_score`
 
 这样组织的原因是，handoff 在 system repo 中的作用是保持长期边界清晰，而不是每轮都重新生成一份说明文档。底层 merge 方法继续来自 canonical skill `chatgpt-handoff-pilot`，这个 wrapper 只负责 system-oriented 收口。
 
@@ -81,7 +83,7 @@ Output:
    只把新的 system facts 合并到相关 section，保留既有结构和人工内容；不得整体重排或全文重写 `docs/HANDOFF.md`。
 
 5. 输出简短回执。  
-   回执应说明哪些 system sections 被更新、哪些 hard boundaries 保持不变、哪些 intentional gaps 继续保留，以及当前 next-phase direction。`Next Phase Direction` 必须保持方向级表达，不得写成任务清单、逐项施工 next steps 或 implementation backlog。
+   回执应说明哪些 system sections 被更新、哪些 hard boundaries 保持不变、哪些 intentional gaps 继续保留，以及当前 next-phase direction。`Next Phase Direction` 必须保持方向级表达，不得写成任务清单、逐项施工 next steps 或 implementation backlog。handoff 回执可引用 shared assessment output protocol 的 `evidence`、`open_questions`、`risk_priority` 口径，并保留 phase / freshness risk awareness；不要强制使用 `maturity_score`。
 
 6. 执行 phase consistency check。  
    若本轮同时刷新了 `docs/status/skill-hub-status.md`，则 `docs/HANDOFF.md` 中的 phase 表达必须与最新 status 一致；若不一致，应先修正再落盘。

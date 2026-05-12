@@ -4,7 +4,7 @@
 - Scope: `ai-skill-hub`
 - Method: `system-status-update` wrapper over `update-project-status`
 - Config: `.codex/skill-config/update-project-status.json`
-- Data sources: Git history, working tree, `skills/`, `.agents/`, `.github/`, `tools/`, `docs/status/`, workflow-bootstrap task packages, execution reports, Phase 4 Round 1 review memo, orchestration-snippets consistency evidence, and P0 shared assessment output protocol closure evidence
+- Data sources: Git history, working tree, `skills/`, `.agents/`, `.github/`, `tools/`, `docs/status/`, workflow-bootstrap task packages, execution reports, Phase 4 Round 1 review memo, orchestration-snippets consistency evidence, P0 shared assessment output protocol closure evidence, P1 adoption validation evidence, P1 light follow-up examples, and P1.5 system-takeover dogfood evidence
 
 ## Layer Status
 
@@ -23,6 +23,8 @@
 - `chatgpt-handoff-pilot` remains the owner of task package, bounded execution, and execution report protocols.
 - `skills/_protocol/skill_assessment_output.md` now provides the shared output vocabulary for assessment / review / takeover results: `capability_fit`, optional `maturity_score`, `evidence`, `inference`, `open_questions`, `risk_priority`, `impact_scope`, and `next_action`.
 - Core assessment / takeover / governance skills now reference the shared protocol, while audit / migration / status / handoff / workflow skills use thin or scenario-specific references. This partially closes the previous cross-skill inconsistency around scoring, evidence, inference, risk priority, and impact scope.
+- P1 adoption validation accepted the shared protocol with light follow-up, and the follow-up added mini examples plus a `system-takeover` invocation snippet without changing protocol fields.
+- P1.5 system-takeover dogfood concluded `Pass: protocol works for system-level takeover`, confirming the shared fields can support system-level assessment output with clear confirmed / inferred / pending evidence separation.
 
 ### Distribution Layer (`.agents/` / `.github` / bridge-facing continuity)
 
@@ -40,6 +42,7 @@
 - The canonical boundary is unchanged: local or project-side runtime entries may point to canonical guidance, but they must not become a second rulebook.
 - Orchestration remains a thin layer that points back to `chatgpt-handoff-pilot` for task package, bounded execution, and execution report protocols.
 - Shared assessment output protocol is a horizontal vocabulary layer for more comparable outputs. It is not automation, CI, validator, router / pipeline integration, or an execution controller.
+- P1.5 dogfood kept the protocol in controlled adoption: it validated output shape and repository-state matching, but did not promote the protocol into enforcement or mandatory scoring.
 
 ### Tooling Layer (`tools/`)
 
@@ -52,8 +55,9 @@
 
 - Current phase: `Phase 3 - Controlled System`
 - Workflow-bootstrap track position: Phase 4 Round 1 read-only multi-project pilot review complete; orchestration snippets have passed a first repository-internal Step 1 -> Step 5 consistency run; Git-first evidence gap remains.
-- Recent closure: P0 shared assessment output protocol was added as a canonical output-vocabulary asset and minimally referenced from relevant skills.
-- Phase judgment: the system phase remains unchanged because the latest closure improves assessment output consistency without adding rollout, distribution, enforcement, automation, validators, CI, tests, router / pipeline integration, or new project-side runtime surfaces.
+- Previous closure: P0 shared assessment output protocol was added as a canonical output-vocabulary asset and minimally referenced from relevant skills.
+- Recent closure: P1 adoption validation, P1 light follow-up, and P1.5 system-takeover dogfood confirmed the shared assessment protocol remains suitable as an active horizontal output vocabulary.
+- Phase judgment: the system phase remains unchanged because the latest closures improve assessment output consistency and system-level dogfood evidence without adding rollout, distribution, enforcement, automation, validators, CI, tests, router / pipeline integration, or new project-side runtime surfaces.
 - Why unchanged: the shared protocol clarifies output vocabulary and evidence / risk classification, but it does not turn governance into auto-remediation and does not make `maturity_score` mandatory for status / handoff skills.
 - Main direction: continue controlled adoption and repeatability improvement while preserving the Git-first evidence gap as a separate Phase 4 Round 2 concern.
 
@@ -67,16 +71,17 @@
 - Runtime pack manifest: minimal candidate surfaces are project-aware thin entries or evidence indexes, not mandatory files and not canonical copies.
 - Handoff protocol: `chatgpt-handoff-pilot` still owns task packages, bounded execution, and execution reports.
 - Assessment output vocabulary: shared assessment protocol now gives assessment / review / takeover outputs a common language for capability fit, optional maturity scoring, evidence, inference, open questions, risk priority, impact scope, and next action.
+- System takeover dogfood: `system-takeover` has now been used to validate that the shared assessment protocol can express system structure, protocol adoption, orchestration boundary, handoff/status closure consistency, deferred automation boundary, and `risk_priority` naming boundary without protocol changes.
 - Wrapper coordination: `system-status-update` and `system-handoff` still coordinate through status-first refresh, freshness checking, and phase consistency without becoming an orchestration layer.
 
 ## Stability
 
 - Overall maturity: `evolving`
-- Stable: canonical ownership, workflow-bootstrap boundary, chatgpt-handoff-pilot protocol ownership, thin-entry discipline, the completed Phase 0-3 workflow-bootstrap baseline, and role-chain-first wording for the orchestration snippets surfaces.
-- Evolving: multi-project fit, distribution readiness, derivative-surface governance, local-first validation, same-tool multi-role usage beyond this repository-internal run, and cross-repo runtime-pack portability.
+- Stable: canonical ownership, workflow-bootstrap boundary, chatgpt-handoff-pilot protocol ownership, thin-entry discipline, the completed Phase 0-3 workflow-bootstrap baseline, role-chain-first wording for the orchestration snippets surfaces, and the shared assessment protocol's current suitability for system-level takeover output.
+- Evolving: multi-project fit, distribution readiness, derivative-surface governance, local-first validation, same-tool multi-role usage beyond repository-internal runs, cross-executor assessment-output consistency, and cross-repo runtime-pack portability.
 - Not yet stable: complete Git-first validation evidence, tool adapters, validators / automation / CI, `.github/instructions/`, `.github/agents/`, and generalized rollout guidance across Git-first and non-git / low-git project types.
-- Evidence boundary: this refresh is based on the current working tree, recent Git history, `workflow-bootstrap` canonical assets, `chatgpt-handoff-pilot`, recent workflow-bootstrap task packages / execution reports, `docs/reviews/workflow-bootstrap_phase4_multi_project_pilot_review.md`, `skills/_protocol/skill_assessment_output.md`, and `tasks/p0_shared_assessment_output_protocol_execution_report.md`; it intentionally does not copy per-task report detail into status.
-- Freshness gate: previous `Updated at` was `2026-05-11`, which is within the `14`-day freshness gate on `2026-05-12`; this refresh sets the status date to `2026-05-12`, so no `Staleness` risk is added.
+- Evidence boundary: this refresh is based on the current working tree, recent Git history, `workflow-bootstrap` canonical assets, `chatgpt-handoff-pilot`, recent workflow-bootstrap task packages / execution reports, `docs/reviews/workflow-bootstrap_phase4_multi_project_pilot_review.md`, `skills/_protocol/skill_assessment_output.md`, `tasks/p0_shared_assessment_output_protocol_execution_report.md`, `docs/reviews/shared_assessment_protocol_adoption_review.md`, `tasks/p1_shared_assessment_protocol_examples_execution_report.md`, and `docs/reviews/system_takeover_shared_assessment_protocol_dogfood_review.md`; it intentionally does not copy per-task report detail into status.
+- Freshness gate: previous `Updated at` was `2026-05-12`, which is within the `14`-day freshness gate on `2026-05-12`; this refresh keeps the status date at `2026-05-12`, so no `Staleness` risk is added.
 
 ## Recommended Next Steps
 
@@ -84,6 +89,7 @@
 - Treat the orchestration snippets consistency run as repository-internal workflow guidance closure, not as deterministic orchestration readiness or a universal requirement to run every future task through the full Step 1 -> Step 5 chain.
 - Treat the shared assessment output protocol as output vocabulary for controlled adoption, not as automation, validator, CI, or mandatory scoring rollout.
 - Keep `maturity_score` optional / where applicable, especially for status and handoff skills.
+- Reuse the P1.5 finding template in future system-level reviews to compare whether different executors consistently separate `confirmed` / `inferred` / `pending` and keep `risk_priority` distinct from phase / freshness vocabulary.
 - Plan Phase 4 Round 2 specifically around the Git-first evidence gap from external candidate dubious ownership.
 - Feed back only generalized guidance into canonical assets after a separately reviewed follow-up; do not feed back project paths, business facts, secrets, or environment-specific commands.
 - Keep `tool_adapters/`, validators / automation / CI, `.github/instructions/`, `.github/agents/`, Phase 5 tool adapter candidates, and Phase 6 validator / automation preflight deferred.

@@ -25,6 +25,7 @@ This file is the single source of truth for project handoff.
 - 2026-04-30: Merged the completed `workflow-bootstrap` Phase 4 Round 1 read-only multi-project pilot review into handoff context after confirming the review memo and execution report were committed. This records `docs/reviews/workflow-bootstrap_phase4_multi_project_pilot_review.md` and `tasks/workflow-bootstrap_phase4_multi_project_pilot_execution_report.md` as Round 1 evidence, preserves `Phase 3 - Controlled System`, and keeps Git-first validation explicitly limited by a dubious-ownership evidence gap.
 - 2026-05-11: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-05-11`) and then merged the completed `workflow-bootstrap` orchestration snippets consistency run into handoff context. This records that the snippets completed a first repository-internal Step 1 -> Step 5 run with a final `Go` decision, validated same-tool multi-role execution when guarded by explicit phase-switch text and gate decisions, aligned README wording to role-chain-first language, and introduced no validator / CI / automation / tool adapter expansion.
 - 2026-05-12: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-05-12`) and then merged the completed P0 shared assessment output protocol closure into handoff context. This records `skills/_protocol/skill_assessment_output.md` as the shared assessment output vocabulary, confirms minimal core / related skill integration, preserves `Phase 3 - Controlled System`, keeps `workflow-bootstrap` and `chatgpt-handoff-pilot` ownership boundaries unchanged, and introduces no automation, validator, CI, router / pipeline integration, or mandatory `maturity_score` rollout.
+- 2026-05-12: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-05-12`) and then merged the P1/P1.5 shared assessment protocol adoption and dogfood closure into handoff context. This records that P1 adoption accepted the protocol with light follow-up, P1 light follow-up added mini examples and a `system-takeover` invocation snippet, and P1.5 system-takeover dogfood concluded `Pass: protocol works for system-level takeover`, while preserving `Phase 3 - Controlled System` and keeping validator / CI / automation / router-pipeline integration deferred.
 
 ## Current Status
 
@@ -48,6 +49,8 @@ The P0 shared assessment output protocol closure has now added `skills/_protocol
 
 Core takeover / governance skills now reference that shared vocabulary, and audit / migration / status / handoff / workflow skills use thin or scenario-specific references. This moves the system from "assessment output vocabulary is inconsistent across skills" toward "a shared protocol exists for controlled adoption," without changing phase or turning the protocol into automation, validator, CI, router / pipeline logic, or execution control.
 
+P1 adoption validation has now accepted the shared assessment protocol with light follow-up, and the P1 light follow-up has added protocol mini examples plus a `system-takeover` invocation snippet. The P1.5 `system-takeover` dogfood review concluded `Pass: protocol works for system-level takeover`, confirming that the fields can support system-level assessment output, separate `confirmed` / `inferred` / `pending` evidence, keep `risk_priority` distinct from phase / freshness vocabulary, and keep `maturity_score` optional / where applicable.
+
 ## Hard Boundaries
 
 - `skills/<skill>/` remains the only canonical source of truth inside the hub. No adapter layer may become a second authoritative source.
@@ -59,6 +62,8 @@ Core takeover / governance skills now reference that shared vocabulary, and audi
 - `workflow-bootstrap` owns workflow shell, role split, runtime profile, review tier guidance, and runtime pack manifest guidance. `chatgpt-handoff-pilot` owns task package, bounded execution, and execution report protocols.
 - `skills/_protocol/skill_assessment_output.md` is a shared output vocabulary / assessment protocol. It is not an execution controller, validator, CI mechanism, router / pipeline integration, or auto-remediation path.
 - `maturity_score` remains optional / where applicable and must not be forced onto status / handoff skills.
+- `risk_priority` remains assessment output vocabulary. It must not be treated as a project phase gate or as a freshness / staleness label; `phase_risk` and `freshness_risk` remain status / handoff scenario vocabulary where applicable.
+- P1.5 dogfood validates protocol usability only. It does not authorize protocol-field changes, validator / CI / automation work, router / pipeline integration, or mandatory scoring expansion.
 - Project-side runtime surfaces may be thin entries, adapters, or evidence indexes; they must not become a second rulebook or copy canonical skill bodies.
 - `tasks/` may be a preferred project-local evidence path in non-git / low-git contexts, but it must not be written as a mandatory global path for all projects.
 - Governance at the current stage is read-only. Consistency checks may detect drift, but they must not auto-fix, auto-delete, or silently rewrite adapters.
@@ -103,6 +108,7 @@ Core takeover / governance skills now reference that shared vocabulary, and audi
 - Repository-governance docs were split into `docs/governance/` because commit policy and similar cross-repository rules now deserve an explicit canonical home instead of remaining mixed into the human explanation layer.
 - Local commit validation is installed via a versioned `.githooks/commit-msg` plus `tools/install_git_hooks.ps1` path because Git hook activation is clone-local by design; shipping the hook definition in-repo preserves consistency, while per-clone installation keeps the mechanism aligned with Git's local-hook model.
 - `export_bundle.ps1` reuses the same validator as the local `commit-msg` hook because auto-commit paths should obey the same commit convention instead of creating a second commit-policy surface.
+- The shared assessment protocol remains an output vocabulary rather than an execution controller because P1/P1.5 evidence shows examples and review discipline are currently enough to support system-level assessment without enforcement.
 
 ## Intentional Gaps
 
@@ -135,6 +141,8 @@ Core takeover / governance skills now reference that shared vocabulary, and audi
 - No distribution / rollout / adoption step has started for the future project-side runtime pack; the current refresh is only baseline curation after Phase 0-3.
 - No automation, validators, CI, router / pipeline integration, broader scoring rollout, or auto-remediation was added for the shared assessment output protocol.
 - No mandatory `maturity_score` policy exists for status / handoff skills; scoring remains optional / where applicable.
+- No validator / CI / automation escalation is justified by the P1.5 dogfood alone; cross-executor consistency should be observed through future real outputs first.
+- No handoff/status requirement exists to mirror every assessment finding; status and handoff remain minimal closure surfaces rather than per-task evidence logs.
 
 These gaps are intentional to keep the system legible while distribution and governance semantics are still being stabilized.
 
@@ -149,6 +157,8 @@ Tool adapters, validators / automation / CI, `.github/instructions/`, `.github/a
 The orchestration snippets consistency closure does not require every future workflow-bootstrap task to use the full Step 1 -> Step 5 chain. It should remain an available thin orchestration pattern, with `chatgpt-handoff-pilot` continuing to own task package, bounded execution, and execution report protocol details.
 
 The shared assessment output protocol should next be treated as controlled adoption and repeatability improvement. Future work may observe how consistently skills use `evidence`, `inference`, `open_questions`, `risk_priority`, `impact_scope`, and `next_action`, but that follow-up should not be framed as enforcement, automation, or a requirement to force `maturity_score` onto every skill.
+
+Future system-level reviews may reuse the P1.5 finding template to compare executor consistency across `confirmed` / `inferred` / `pending`, `risk_priority`, `impact_scope`, and `next_action`. Any later move toward validator / CI / automation should require multiple real outputs showing repeatable drift that examples and review discipline cannot absorb.
 
 ## System Takeover Snapshot (2026-04-02)
 

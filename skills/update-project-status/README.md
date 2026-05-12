@@ -154,3 +154,11 @@ The sections below were moved out of `SKILL.md` during the semantic split so the
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
 - Templates: [templates/](templates/)
 - References: [references/](references/)
+
+## 文档语言与 SSOT 说明（2026-05-11）
+
+- 本文档面向开发人员（developer-facing），统一采用**中文为主、英文术语辅助**（例如：`Pattern`、`Invocation`、`Constraints`、`read_only`、`write_files`）。
+- 本仓库的 **SSOT（Single Source of Truth）** 仍是当前 skill 目录下的 `SKILL.md`；`README.md` 仅提供可读性说明与快速上手，不得与 `SKILL.md` 发生规则分叉。
+- 若 `README.md` 与 `SKILL.md` 出现冲突，必须以 `SKILL.md` 为准，并在后续修订中消除偏差。
+- 本节为当前状态声明，更新日期：**2026-05-11**。
+

@@ -24,6 +24,7 @@ This file is the single source of truth for project handoff.
 - 2026-04-29: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-04-29`) and then merged the current `workflow-bootstrap` Phase 0-3 baseline into handoff context. This records non-git / low-git runtime profile absorption, role split canonicalization, review tier guidance, and runtime pack minimal manifest guidance as complete while preserving `Phase 3 - Controlled System`; Phase 4 multi-project pilot remains pending and must start with a separate task package.
 - 2026-04-30: Merged the completed `workflow-bootstrap` Phase 4 Round 1 read-only multi-project pilot review into handoff context after confirming the review memo and execution report were committed. This records `docs/reviews/workflow-bootstrap_phase4_multi_project_pilot_review.md` and `tasks/workflow-bootstrap_phase4_multi_project_pilot_execution_report.md` as Round 1 evidence, preserves `Phase 3 - Controlled System`, and keeps Git-first validation explicitly limited by a dubious-ownership evidence gap.
 - 2026-05-11: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-05-11`) and then merged the completed `workflow-bootstrap` orchestration snippets consistency run into handoff context. This records that the snippets completed a first repository-internal Step 1 -> Step 5 run with a final `Go` decision, validated same-tool multi-role execution when guarded by explicit phase-switch text and gate decisions, aligned README wording to role-chain-first language, and introduced no validator / CI / automation / tool adapter expansion.
+- 2026-05-12: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-05-12`) and then merged the completed P0 shared assessment output protocol closure into handoff context. This records `skills/_protocol/skill_assessment_output.md` as the shared assessment output vocabulary, confirms minimal core / related skill integration, preserves `Phase 3 - Controlled System`, keeps `workflow-bootstrap` and `chatgpt-handoff-pilot` ownership boundaries unchanged, and introduces no automation, validator, CI, router / pipeline integration, or mandatory `maturity_score` rollout.
 
 ## Current Status
 
@@ -43,6 +44,10 @@ The `workflow-bootstrap` orchestration snippets have now completed a first repos
 
 The run produced `tasks/workflow-bootstrap_orchestration_snippets_consistency_task_package.md` and `tasks/workflow-bootstrap_orchestration_snippets_consistency_execution_report.md`, and made one minimal README wording consistency update from tool-name-first to role-chain-first language. No `chatgpt-handoff-pilot` files were modified, and no validators, scripts, hooks, CI, automation, tests, tool adapters, `.github/instructions`, or `.github/agents` assets were added.
 
+The P0 shared assessment output protocol closure has now added `skills/_protocol/skill_assessment_output.md` as a shared output-vocabulary layer for assessment / review / takeover style results. It defines `capability_fit`, optional `maturity_score`, `evidence`, `inference`, `open_questions`, `risk_priority`, `impact_scope`, and `next_action`, while explicitly separating task priority `P0` from `risk_priority` `P0/P1/P2`.
+
+Core takeover / governance skills now reference that shared vocabulary, and audit / migration / status / handoff / workflow skills use thin or scenario-specific references. This moves the system from "assessment output vocabulary is inconsistent across skills" toward "a shared protocol exists for controlled adoption," without changing phase or turning the protocol into automation, validator, CI, router / pipeline logic, or execution control.
+
 ## Hard Boundaries
 
 - `skills/<skill>/` remains the only canonical source of truth inside the hub. No adapter layer may become a second authoritative source.
@@ -52,6 +57,8 @@ The run produced `tasks/workflow-bootstrap_orchestration_snippets_consistency_ta
 - In distributed business-project contexts, `.codex/skills/` is the runtime SSOT for local skill content. Project-local adapters must point to `.codex/skills/`, not back to hub `skills/` paths.
 - `workflow-bootstrap` Phase 0-3 baseline guidance must remain canonical guidance only. It must not be presented as completed Phase 4 multi-project pilot work, distribution readiness, or authorization to expand the project-side file family by default.
 - `workflow-bootstrap` owns workflow shell, role split, runtime profile, review tier guidance, and runtime pack manifest guidance. `chatgpt-handoff-pilot` owns task package, bounded execution, and execution report protocols.
+- `skills/_protocol/skill_assessment_output.md` is a shared output vocabulary / assessment protocol. It is not an execution controller, validator, CI mechanism, router / pipeline integration, or auto-remediation path.
+- `maturity_score` remains optional / where applicable and must not be forced onto status / handoff skills.
 - Project-side runtime surfaces may be thin entries, adapters, or evidence indexes; they must not become a second rulebook or copy canonical skill bodies.
 - `tasks/` may be a preferred project-local evidence path in non-git / low-git contexts, but it must not be written as a mandatory global path for all projects.
 - Governance at the current stage is read-only. Consistency checks may detect drift, but they must not auto-fix, auto-delete, or silently rewrite adapters.
@@ -126,6 +133,8 @@ The run produced `tasks/workflow-bootstrap_orchestration_snippets_consistency_ta
 - No expansion of local validation and check tooling into an automated distribution, rollout, or execution framework; the repository still treats those tools as repeatable local support surfaces rather than a stronger controller layer.
 - No `tool_adapters/`, validators / automation / CI, `.github/instructions/`, `.github/agents/`, Phase 5 tool adapter candidates, or Phase 6 validator / automation preflight work has started.
 - No distribution / rollout / adoption step has started for the future project-side runtime pack; the current refresh is only baseline curation after Phase 0-3.
+- No automation, validators, CI, router / pipeline integration, broader scoring rollout, or auto-remediation was added for the shared assessment output protocol.
+- No mandatory `maturity_score` policy exists for status / handoff skills; scoring remains optional / where applicable.
 
 These gaps are intentional to keep the system legible while distribution and governance semantics are still being stabilized.
 
@@ -138,6 +147,8 @@ Round 1 findings should remain validation evidence only. Any future feedback loo
 Tool adapters, validators / automation / CI, `.github/instructions/`, `.github/agents/`, Phase 5 tool adapter candidates, and Phase 6 validator / automation preflight remain deferred. Phase 4 Round 2 remains pending until it has a separately reviewed task package or explicit maintainer-provided Git evidence.
 
 The orchestration snippets consistency closure does not require every future workflow-bootstrap task to use the full Step 1 -> Step 5 chain. It should remain an available thin orchestration pattern, with `chatgpt-handoff-pilot` continuing to own task package, bounded execution, and execution report protocol details.
+
+The shared assessment output protocol should next be treated as controlled adoption and repeatability improvement. Future work may observe how consistently skills use `evidence`, `inference`, `open_questions`, `risk_priority`, `impact_scope`, and `next_action`, but that follow-up should not be framed as enforcement, automation, or a requirement to force `maturity_score` onto every skill.
 
 ## System Takeover Snapshot (2026-04-02)
 

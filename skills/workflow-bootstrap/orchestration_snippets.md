@@ -1,10 +1,12 @@
-# Orchestration Snippets (Minimal Instance)
+# Orchestration Snippets（最小实例 / Minimal Instance）
 
-> Purpose: provide a thin, reusable orchestration layer that connects `Drafter -> Reviewer -> Implementer -> Reporter -> Final Reviewer` without redefining `chatgpt-handoff-pilot` protocols.
+> 目的：提供一层可复用的薄编排胶水，把 `Drafter -> Reviewer -> Implementer -> Reporter -> Final Reviewer` 串起来；不重写 `chatgpt-handoff-pilot` 协议。
+>
+> Active canonical policy：本文件采用“中文为主、英文术语保留”的 active canonical 形式；不维护中英文双主本以避免 drift；旧版本如需保留仅可作为 historical reference。
 
-## 1) Boundary (Step 0: Pre-Alignment)
+## 1) Boundary（Step 0: Pre-Alignment）
 
-Use this as the first message in a run:
+将下面内容作为每轮的第一条消息：
 
 ```text
 Boundary lock for this run:
@@ -15,9 +17,9 @@ Boundary lock for this run:
 - Use thin wrappers and backreferences only; do not create a second rulebook.
 ```
 
-## 2) Phase-Switch Statement (required when one tool plays multiple roles)
+## 2) PHASE-SWITCH（同一工具多角色必填）
 
-Use this every time role changes but the same tool continues:
+当同一工具在不同角色间切换时，必须显式输出：
 
 ```text
 [PHASE-SWITCH]
@@ -30,11 +32,11 @@ Boundary reminder:
 - Out-of-scope findings are logged, not silently fixed.
 ```
 
-## 3) Drafter Snippet (Step 1)
+## 3) Drafter（起草者）Snippet（Step 1）
 
 ```text
 You are the Drafter.
-Produce Task Package v0 using existing chatgpt-handoff-pilot template fields only:
+Produce task package v0 using existing chatgpt-handoff-pilot template fields only:
 - Background
 - Goal
 - In Scope
@@ -51,9 +53,9 @@ Rules:
 - Do not expand protocol definitions.
 ```
 
-Expected output: `task package v0` draft.
+Expected output：`task package v0` 草案。
 
-## 4) Reviewer Snippet — Safety Gate (Step 2)
+## 4) Reviewer（Safety Gate / 审包者）Snippet（Step 2）
 
 ```text
 You are the Reviewer (Safety Gate).
@@ -80,7 +82,7 @@ Output format:
 
 ### Reviewer rollback branch
 
-If decision is not `Pass`:
+当决策不是 `Pass` 时：
 
 ```text
 Rollback: return to Drafter for revision.
@@ -89,9 +91,9 @@ Round counter: <n/2>
 Only blocking findings are mandatory for next revision.
 ```
 
-## 5) Implementer Snippet — Bounded Execution (Step 3)
+## 5) Implementer（边界执行者）Snippet（Step 3）
 
-Use only after Reviewer returns `Pass`.
+仅在 Reviewer 返回 `Pass` 后使用。
 
 ```text
 You are the Implementer.
@@ -110,7 +112,7 @@ Output:
 2) Validation summary (what was verified vs not verified)
 ```
 
-## 6) Reporter Snippet (Step 4)
+## 6) Reporter（执行报告者）Snippet（Step 4）
 
 ```text
 You are the Reporter.
@@ -127,7 +129,7 @@ Rule:
 - Evidence first; if not verified, mark as not verified.
 ```
 
-## 7) Final Reviewer Snippet — Closure Gate (Step 5)
+## 7) Final Reviewer（Closure Gate / 终审者）Snippet（Step 5）
 
 ```text
 You are the Final Reviewer (Closure Gate).
@@ -151,12 +153,12 @@ Output format:
 - Rollback target
 ```
 
-### Final-review rollback branches
+### Final Reviewer rollback branches
 
-- If `No-Go` because implementation gap: rollback to `Implementer` with minimal backfill list.
-- If `No-Go` because reporting/evidence gap: rollback to `Reporter` for report completion.
+- 若 `No-Go` 原因是 implementation gap：回退到 `Implementer`，并给最小 backfill 列表。
+- 若 `No-Go` 原因是 reporting/evidence gap：回退到 `Reporter` 补齐报告证据。
 
-Use explicit branch statement:
+统一使用显式分支语句：
 
 ```text
 [ROLLBACK]
@@ -171,16 +173,16 @@ Minimum backfill required:
 
 1. Step 0 Boundary lock
 2. Drafter produces task package v0
-3. Reviewer safety gate
-4. (If needed) rollback to Drafter, max 2 rounds
+3. Reviewer Safety Gate
+4. （如需）rollback 到 Drafter，最多 2 轮
 5. Implementer bounded execution
 6. Reporter execution report
-7. Final Reviewer closure gate
-8. (If needed) rollback to Implementer/Reporter until closure decision is satisfied
+7. Final Reviewer Closure Gate
+8. （如需）rollback 到 Implementer/Reporter，直到 closure decision 满足
 
 ## 9) Thin-Wrap Guardrails
 
-- This document is orchestration glue only.
-- Protocol details remain in `chatgpt-handoff-pilot` templates and prompts.
-- Workflow shell ownership remains in `workflow-bootstrap`.
-- Do not duplicate canonical protocol body here.
+- 本文件只做 orchestration glue。
+- 协议细节仍在 `chatgpt-handoff-pilot` prompts/templates。
+- workflow shell ownership 仍在 `workflow-bootstrap`。
+- 不在此处复制 protocol body。

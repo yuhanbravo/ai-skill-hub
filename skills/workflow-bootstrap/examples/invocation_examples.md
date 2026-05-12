@@ -1,10 +1,12 @@
 # Invocation Examples
 
-These examples show how to use `workflow-bootstrap` to frame the workflow shell and runtime-profile boundary before handing task-package protocol work to `chatgpt-handoff-pilot`.
+这些示例用于说明：如何先用 `workflow-bootstrap` 完成 workflow shell 与 runtime profile 的边界对齐，再把 task package / bounded execution / execution report 协议交给 `chatgpt-handoff-pilot`。
+
+> Active canonical policy：本文件采用“中文为主、英文术语保留”的 active canonical 形式；不维护中英文双主本以避免 drift；旧版本如需保留仅作为 historical reference。
 
 ## Example 1: Review a non-git project-side trial
 
-Use `workflow-bootstrap` to review whether a project-side trial keeps the right split among thin entries, task artifacts, and historical material.
+使用 `workflow-bootstrap` 评估一个 project-side 试跑是否保持薄入口与证据线分工。
 
 Example prompt:
 
@@ -16,13 +18,13 @@ Do not redefine the handoff protocol.
 
 Expected framing:
 
-- workflow shell and role split are in scope
-- task package / bounded execution / execution report protocol remains owned by `chatgpt-handoff-pilot`
-- project-local facts stay project-local
+- workflow shell 与 role split 在 scope 内
+- task package / bounded execution / execution report protocol 仍由 `chatgpt-handoff-pilot` 持有
+- project-local facts 保持 project-local，不进入 canonical guidance
 
 ## Example 2: Prepare non-git runtime conventions
 
-Use `workflow-bootstrap` to describe generic non-git / low-git conventions before any project-side thin-entry change.
+使用 `workflow-bootstrap` 描述通用 non-git / low-git 运行约定，再决定是否调整 project-side thin entry。
 
 Example prompt:
 
@@ -34,13 +36,13 @@ Do not add new validators, automation, CI, hooks, or rollout tooling.
 
 Expected framing:
 
-- the result stays at workflow-shell and runtime-profile level
-- the guidance is conservative and optional, not universal for all repos
-- no new task-package schema is introduced
+- 输出停留在 workflow-shell / runtime profile 层
+- 约定是保守、可选、项目感知的，不是全仓强制
+- 不引入新的 task package schema
 
 ## Example 3: Hand off bounded execution cleanly
 
-Use `workflow-bootstrap` first to align the shell, then switch to `chatgpt-handoff-pilot` for the actual bounded-execution protocol.
+先用 `workflow-bootstrap` 对齐壳层，再切换到 `chatgpt-handoff-pilot` 执行 bounded execution。
 
 Example prompt:
 
@@ -52,13 +54,13 @@ Do not move per-task detail into docs/HANDOFF.md or reactivate archive/ as the a
 
 Expected framing:
 
-- `workflow-bootstrap` defines the shell, boundaries, and artifact placement guidance
-- `chatgpt-handoff-pilot` owns the task package, bounded execution, and execution report protocol
-- the active workflow line remains in current task artifacts rather than historical surfaces
+- `workflow-bootstrap` 定义 shell、边界与证据放置建议
+- `chatgpt-handoff-pilot` 持有 task package / bounded execution / execution report protocol
+- active workflow line 留在当前 task artifacts，而非 historical surfaces
 
 ## Example 4: Move from tool-name workflow to role-based handoff
 
-Use `workflow-bootstrap` to convert a tool-name workflow into explicit role phases before handing execution protocol details to `chatgpt-handoff-pilot`.
+将 tool-name-first 表达改写为 role-chain-first，再把协议细节交回 `chatgpt-handoff-pilot`。
 
 Example prompt:
 
@@ -70,13 +72,13 @@ Keep task package, bounded execution, and execution report protocol ownership wi
 
 Expected framing:
 
-- role boundaries and stage switches are explicit
-- task package review is the safety gate before implementation
-- tool names remain examples rather than requirements
+- role boundary 与阶段切换清晰
+- task package review 是实现前 Safety Gate
+- tool names 仅作 adapter examples，不是 requirements
 
 ## Example 5: Select review tier before bounded execution
 
-Use `workflow-bootstrap` review tier guidance to choose an advisory review strength before implementation.
+使用 `workflow-bootstrap` 的 review tier 指引，在执行前确定 Reviewer 的审阅强度（advisory）。
 
 Example prompt:
 
@@ -87,13 +89,13 @@ Keep the tier advisory, preserve chatgpt-handoff-pilot protocol ownership, and d
 
 Expected framing:
 
-- review tier selection supports Reviewer judgment
-- `chatgpt-handoff-pilot` remains protocol owner
-- runtime pack and automation mentions stay classification examples only
+- review tier 支持 Reviewer 判断
+- `chatgpt-handoff-pilot` 仍是 protocol owner
+- runtime pack / automation examples 不构成 implementation authorization
 
 ## Example 6: Review runtime pack minimal surfaces
 
-Use `workflow-bootstrap` to check whether project-side runtime surfaces stay thin and optional.
+使用 `workflow-bootstrap` 检查 runtime pack minimal surface guidance 是否仍薄、仍可选。
 
 Example prompt:
 
@@ -105,14 +107,13 @@ Keep task package and execution report protocol ownership with chatgpt-handoff-p
 
 Expected framing:
 
-- runtime pack guidance stays project-aware and optional
-- `skills/` remains the canonical source
-- deferred surfaces such as .github/instructions, .github/agents, tool adapters, validators, and automation are not implementation targets
-
+- runtime pack guidance 维持 project-aware 且 optional
+- `skills/` 仍是 canonical source
+- deferred surfaces（如 .github/instructions、.github/agents、tool adapters、validators、automation）不是 implementation targets
 
 ## Transition: from invocation example to orchestration instance
 
-When an invocation example has already aligned workflow-shell boundaries, switch to the minimal orchestration instance in `../orchestration_snippets.md` with this bridge prompt:
+当 invocation example 已完成 workflow-shell 对齐后，可用下面 bridge prompt 切到 `../orchestration_snippets.md` 的最小编排实例。
 
 ```text
 Workflow shell is aligned. Now switch to the minimal orchestration instance:

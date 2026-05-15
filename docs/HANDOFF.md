@@ -26,6 +26,7 @@ This file is the single source of truth for project handoff.
 - 2026-05-11: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-05-11`) and then merged the completed `workflow-bootstrap` orchestration snippets consistency run into handoff context. This records that the snippets completed a first repository-internal Step 1 -> Step 5 run with a final `Go` decision, validated same-tool multi-role execution when guarded by explicit phase-switch text and gate decisions, aligned README wording to role-chain-first language, and introduced no validator / CI / automation / tool adapter expansion.
 - 2026-05-12: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-05-12`) and then merged the completed P0 shared assessment output protocol closure into handoff context. This records `skills/_protocol/skill_assessment_output.md` as the shared assessment output vocabulary, confirms minimal core / related skill integration, preserves `Phase 3 - Controlled System`, keeps `workflow-bootstrap` and `chatgpt-handoff-pilot` ownership boundaries unchanged, and introduces no automation, validator, CI, router / pipeline integration, or mandatory `maturity_score` rollout.
 - 2026-05-12: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-05-12`) and then merged the P1/P1.5 shared assessment protocol adoption and dogfood closure into handoff context. This records that P1 adoption accepted the protocol with light follow-up, P1 light follow-up added mini examples and a `system-takeover` invocation snippet, and P1.5 system-takeover dogfood concluded `Pass: protocol works for system-level takeover`, while preserving `Phase 3 - Controlled System` and keeping validator / CI / automation / router-pipeline integration deferred.
+- 2026-05-15: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-05-15`) and then merged the documentation-governance mutable-status SSOT boundary into handoff context. This records that current phase, next-phase direction, latest validation, blocker, and pending-merge facts must stay in declared HANDOFF/status surfaces unless a maintainer declares another current-state SSOT, while preserving `Phase 3 - Controlled System` and adding no automation, validator, CI, or controller behavior.
 
 ## Current Status
 
@@ -51,6 +52,8 @@ Core takeover / governance skills now reference that shared vocabulary, and audi
 
 P1 adoption validation has now accepted the shared assessment protocol with light follow-up, and the P1 light follow-up has added protocol mini examples plus a `system-takeover` invocation snippet. The P1.5 `system-takeover` dogfood review concluded `Pass: protocol works for system-level takeover`, confirming that the fields can support system-level assessment output, separate `confirmed` / `inferred` / `pending` evidence, keep `risk_priority` distinct from phase / freshness vocabulary, and keep `maturity_score` optional / where applicable.
 
+The latest system status refresh keeps the repository in `Phase 3 - Controlled System` and adds one governance-facing capability signal: `documentation-governance` now explicitly states that mutable project-status facts belong in declared current-state SSOT surfaces. This makes `docs/HANDOFF.md` and `docs/status/skill-hub-status.md` the active places for current phase, next-phase direction, latest validation, blocker, and pending-merge facts unless a maintainer deliberately declares another current-state SSOT.
+
 ## Hard Boundaries
 
 - `skills/<skill>/` remains the only canonical source of truth inside the hub. No adapter layer may become a second authoritative source.
@@ -64,6 +67,7 @@ P1 adoption validation has now accepted the shared assessment protocol with ligh
 - `maturity_score` remains optional / where applicable and must not be forced onto status / handoff skills.
 - `risk_priority` remains assessment output vocabulary. It must not be treated as a project phase gate or as a freshness / staleness label; `phase_risk` and `freshness_risk` remain status / handoff scenario vocabulary where applicable.
 - P1.5 dogfood validates protocol usability only. It does not authorize protocol-field changes, validator / CI / automation work, router / pipeline integration, or mandatory scoring expansion.
+- Mutable project-status facts must remain in declared current-state SSOT surfaces. README, docs index, technical onboarding, agent wrapper, and blueprint docs may point to HANDOFF/status, but they must not copy active phase status, next-phase decisions, latest validation results, blocker status, or pending-merge state into parallel durable summaries.
 - Project-side runtime surfaces may be thin entries, adapters, or evidence indexes; they must not become a second rulebook or copy canonical skill bodies.
 - `tasks/` may be a preferred project-local evidence path in non-git / low-git contexts, but it must not be written as a mandatory global path for all projects.
 - Governance at the current stage is read-only. Consistency checks may detect drift, but they must not auto-fix, auto-delete, or silently rewrite adapters.
@@ -95,6 +99,7 @@ P1 adoption validation has now accepted the shared assessment protocol with ligh
 - Hub self-detection stays conservative because boundary protection matters more than aggressive classification; it is better to miss some hubs than to misclassify ordinary projects as system repositories.
 - Documentation was split into `docs/ai`, `docs/human`, and a bridge layer because protocol, explanation, and handoff/exchange assets serve different audiences and should not compete for ownership in the same file.
 - Documentation-status coordination was documented as a minimum governance note because `documentation-governance` and `update-project-status` now intersect on artifact roles, but that intersection should clarify lanes rather than introduce a pipeline or controller layer.
+- The mutable-status SSOT rule belongs in `documentation-governance` because document audits need to detect when durable overview or blueprint docs copy active state out of HANDOFF/status; the rule strengthens fact-source discipline without creating a new status engine.
 - Bridge-reference cleanup remains audit-first because the current explicit bridge-layer references are documentation-facing; path switches should happen deliberately and only where the active source is clearer than the bridge-facing copy.
 - Repository-wide bridge auditing now distinguishes direct path dependency from bridge semantics, mirror ownership, and historical context so later cleanup can stay evidence-driven instead of trying to erase every bridge mention.
 - Adapter governance remains project-local by design because the distribution contract in consumer repositories is `.codex/skills` -> `.agents/.github`, while the hub itself still uses thin wrappers that point back to canonical `skills/`.
@@ -143,6 +148,7 @@ P1 adoption validation has now accepted the shared assessment protocol with ligh
 - No mandatory `maturity_score` policy exists for status / handoff skills; scoring remains optional / where applicable.
 - No validator / CI / automation escalation is justified by the P1.5 dogfood alone; cross-executor consistency should be observed through future real outputs first.
 - No handoff/status requirement exists to mirror every assessment finding; status and handoff remain minimal closure surfaces rather than per-task evidence logs.
+- No automated mutable-status fact checker has been added. The new documentation-governance rule clarifies the boundary, but detection and remediation remain audit/report driven unless a future task explicitly authorizes stronger validation.
 
 These gaps are intentional to keep the system legible while distribution and governance semantics are still being stabilized.
 
@@ -159,6 +165,8 @@ The orchestration snippets consistency closure does not require every future wor
 The shared assessment output protocol should next be treated as controlled adoption and repeatability improvement. Future work may observe how consistently skills use `evidence`, `inference`, `open_questions`, `risk_priority`, `impact_scope`, and `next_action`, but that follow-up should not be framed as enforcement, automation, or a requirement to force `maturity_score` onto every skill.
 
 Future system-level reviews may reuse the P1.5 finding template to compare executor consistency across `confirmed` / `inferred` / `pending`, `risk_priority`, `impact_scope`, and `next_action`. Any later move toward validator / CI / automation should require multiple real outputs showing repeatable drift that examples and review discipline cannot absorb.
+
+Documentation maintenance should treat HANDOFF/status as the current-state SSOT pair for mutable system facts. Future docs work may add links or short pointers from README, technical onboarding, agent wrappers, and blueprint docs, but should avoid copying active phase, next-phase, validation, blocker, or pending-merge state unless a maintainer first declares a new current-state SSOT.
 
 ## System Takeover Snapshot (2026-04-02)
 

@@ -42,6 +42,7 @@ The sections below were moved out of `SKILL.md` during the semantic split so the
 - 需要识别重复文档、同主题多源、命名违规或归档候选文件
 - 需要判断新文档应新建、合并、归档，还是生成 readable summary
 - 需要对 README 章节完整性做治理检查，或在结构已明确后显式补写缺失章节
+- 需要检查 README、technical docs、agent wrapper 或 blueprint docs 是否复制 mutable project-status facts，从而削弱 HANDOFF/status 这类 current-state SSOT
 
 ## 3. 不适用场景（When NOT to Use）
 
@@ -59,6 +60,7 @@ The sections below were moved out of `SKILL.md` during the semantic split so the
 - 误修复风险：如果在未确认事实源前就执行归档、合并或 README 补写，可能强化错误结构
 - 规则不完整风险：项目实际文档体系若未被配置充分描述，报告可能遗漏冲突或给出过强建议
 - readable layer 风险：若忽视 `docs_readable/` 的衍生定位，可能让阅读文档反向成为第二事实源
+- mutable status 风险：若 README、docs/technical、CLAUDE.md、AGENTS.md 或 blueprint docs 复制 current phase、next phase、latest validation、blocker 或 pending-merge 状态，可能形成 current-state SSOT 之外的第二事实源
 - 权威冲突风险：若使用 supporting files 覆盖 `SKILL.md` 规则，可能造成治理口径不一致
 
 ## 9. Prompt 模板（Reusable Prompt）
@@ -129,4 +131,3 @@ The sections below were moved out of `SKILL.md` during the semantic split so the
 - 本仓库的 **SSOT（Single Source of Truth）** 仍是当前 skill 目录下的 `SKILL.md`；`README.md` 仅提供可读性说明与快速上手，不得与 `SKILL.md` 发生规则分叉。
 - 若 `README.md` 与 `SKILL.md` 出现冲突，必须以 `SKILL.md` 为准，并在后续修订中消除偏差。
 - 本节为当前状态声明，更新日期：**2026-05-11**。
-

@@ -63,6 +63,9 @@ Output:
 - 一个主题只保留一个工程事实源。  
   Keep one engineering source of truth per topic.
 
+- 可变项目状态事实必须留在已声明的 current-state SSOT 中。
+  Mutable project-status facts must stay in the declared current-state SSOT. `README.md`、`docs/README.md`、`docs/technical/`、`CLAUDE.md`、`AGENTS.md` 和 blueprint docs 可以引用 SSOT，但不应复制 active phase status、next-phase decisions、latest validation results、blocker status 或 pending-merge state，避免形成第二事实源。
+
 - 默认不改变项目，只做观察和结构化输出。  
   Do not modify the project unless explicitly allowed.
 
@@ -95,6 +98,7 @@ Output:
 - `fix` 必须显式触发；`--write` 仅用于治理已经清楚后的 README 章节补写，不应扩展为任意文档重写
 - 不得改变既有 CLI 参数、双层文档模型、分类词汇、命名禁用规则或报告语义
 - `docs/` 应继续被视为工程事实层，`docs_readable/` 只能是衍生层，不能升格为第二权威层
+- README、docs index、technical onboarding、agent wrapper 和 blueprint 文档不应默认复制 mutable project-status facts；如项目需要在这些入口展示状态，应保持短引用并指向已声明的 HANDOFF/status SSOT
 - 支持文件可以解释规则，但 `SKILL.md` 仍是该 skill 的顶层规则表达，不应被辅助文件覆盖
 
 ## Invocation

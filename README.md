@@ -22,6 +22,7 @@
 - `system-status-update`
 - `system-takeover`
 - `update-project-status`
+- `workflow-bootstrap`
 
 ## 仓库结构（Repository Layout）
 

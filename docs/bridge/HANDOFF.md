@@ -6,6 +6,12 @@
 >
 > Purpose: bridge-facing handoff continuity for AI and human maintainers without changing the active handoff path
 
+> Bridge mirror notice:
+> This file is a non-canonical bridge/mirror reference for compatibility or exchange workflows.
+> Canonical source: `docs/HANDOFF.md`
+> If this bridge copy conflicts with the canonical source, the canonical source wins.
+> Do not treat this bridge copy as the current-state SSOT.
+
 This file is the single source of truth for project handoff.
 
 ## Update Log

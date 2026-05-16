@@ -6,6 +6,12 @@
 >
 > Purpose: bridge-facing status continuity for handoff and layer-oriented navigation without changing the active status path
 
+> Bridge mirror notice:
+> This file is a non-canonical bridge/mirror reference for compatibility or exchange workflows.
+> Canonical source: `docs/status/skill-hub-status.md`
+> If this bridge copy conflicts with the canonical source, the canonical source wins.
+> Do not treat this bridge copy as the current-state SSOT.
+
 - Updated at: `2026-04-07`
 - Scope: `ai-skill-hub`
 - Method: `system-status-update` wrapper over `update-project-status`

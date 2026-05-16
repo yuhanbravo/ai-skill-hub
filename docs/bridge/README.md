@@ -1,5 +1,11 @@
 # Bridge Layer
 
+> Bridge mirror notice:
+> This file is a non-canonical bridge/mirror reference for compatibility or exchange workflows.
+> Canonical source: `see per-asset canonical sources listed in this file`
+> If this bridge copy conflicts with the canonical source, the canonical source wins.
+> Do not treat this bridge copy as the current-state SSOT.
+
 This directory holds handoff, status, and structured exchange artifacts that bridge human intent and AI execution.
 
 ## Role

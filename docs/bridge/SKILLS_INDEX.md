@@ -6,6 +6,12 @@
 >
 > Purpose: keep a bridge-layer discovery index available next to handoff and status artifacts without redefining canonical discovery rules
 
+> Bridge mirror notice:
+> This file is a non-canonical bridge/mirror reference for compatibility or exchange workflows.
+> Canonical source: `SKILLS_INDEX.md`
+> If this bridge copy conflicts with the canonical source, the canonical source wins.
+> Do not treat this bridge copy as the current-state SSOT.
+
 This file is the cross-AI, repository-level skill index for tools that cannot automatically discover canonical skills or need a quick invocation-oriented overview.
 
 ## Naming

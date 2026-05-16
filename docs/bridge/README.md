@@ -1,5 +1,12 @@
 # Bridge Layer
 
+> Bridge mirror notice:
+> This file is a non-canonical bridge/mirror index for compatibility or exchange workflows.
+> Canonical sources remain the active source files listed for each bridge asset below.
+> For repository-level entry and navigation, use `README.md` and `SKILLS_INDEX.md`.
+> If any bridge reference conflicts with its active source, the active source wins.
+> Do not treat this file as the current-state SSOT.
+
 This directory holds handoff, status, and structured exchange artifacts that bridge human intent and AI execution.
 
 ## Role

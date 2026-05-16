@@ -6,6 +6,12 @@
 >
 > Purpose: keep the task-package exchange format visible in the Bridge layer without changing skill-local ownership
 
+> Bridge mirror notice:
+> This file is a non-canonical bridge/mirror reference for compatibility or exchange workflows.
+> Canonical source: `skills/chatgpt-handoff-pilot/templates/TASK_PACKAGE_TEMPLATE.md`
+> If this bridge copy conflicts with the canonical source, the canonical source wins.
+> Do not treat this bridge copy as the current-state SSOT.
+
 ## 任务标识
 
 - 名称：

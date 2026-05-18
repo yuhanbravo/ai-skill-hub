@@ -28,12 +28,9 @@ This execution-focused skill definition keeps the behavior, invocation shape, an
 
 ### Phase-Based Migration Advisory Pattern（阶段化迁移顾问模式）
 
-这个 pattern 的核心是把迁移建议组织成 `scan -> understand -> structure -> output` 四个阶段：
+这个 pattern 的核心是把迁移建议组织成：
 
-- `scan`：扫描目录结构、脚本分布、Excel 资产、文档入口和运行耦合信号
-- `understand`：判断项目类型、迁移阶段和固定风险，尤其识别是否属于桌面 Excel + Wind + 网络盘耦合脚本系统
-- `structure`：组织目标结构建议、文件角色分类、映射示例和最小迁移 TODO
-- `output`：输出迁移 advisory 结果，并把结论衔接到后续 skill 或后续阶段工作
+`scan current scripts -> classify runtime coupling -> classify migration readiness -> choose desktop-script vs package-project path -> propose target src profile -> define wrapper and test safety net -> produce first executable task package`
 
 Input:
 - 项目根目录
@@ -44,26 +41,160 @@ Input:
 
 Process:
 - `scan`
-- `understand`
-- `structure`
-- `output`
+- `coupling classification`
+- `readiness classification`
+- `path decision`
+- `target profile planning`
+- `wrapper/test planning`
+- `task package output`
 
 Output:
 - 项目类型
-- 迁移阶段
-- 固定风险
-- evidence / risk / scope / next-action fields from `skill_assessment_output`, trimmed to the migration-advisory scenario
-- 目标结构建议
-- 映射候选与最小 TODO
+- 运行耦合分类矩阵
+- 迁移 readiness 分类
+- desktop-script vs package-project 决策结论
+- `src/` 目标蓝图 profile（规划型）
+- legacy wrapper 策略
+- 最小测试安全网
+- 第一阶段可执行任务包（仅计划，不执行迁移）
 
-这样组织的原因是，这类项目真正困难的不在“如何设计理想结构”，而在“是否已经到了能安全迁移的阶段”。先 `scan`，再 `understand`，再 `structure`，最后 `output`，可以避免跳过现实边界直接给出激进方案。
+### Coupling Taxonomy & Readiness Scoring（耦合分类与迁移就绪度）
 
-### Phase → Execution Mapping
+对每个耦合维度使用 `0-3` 分值（0=无明显耦合，1=弱耦合，2=中耦合，3=强耦合），并给出证据路径：
 
-- `scan` → `directory inspection`、`python file collection`、`excel asset collection`、`document entrypoint detection`、`runtime coupling signal detection`
-- `understand` → `project type classification`、`migration stage detection`、`fixed risk extraction`、`desktop Excel / Wind conservative downgrade`
-- `structure` → `target layout recommendation`、`file role classification`、`example mapping candidate generation`、`minimal migration TODO drafting`
-- `output` → `migration advisory summary`、`next-step coordination with related skills`、`safe follow-up recommendations`
+1. Excel file coupling（Excel 文件耦合）
+2. Wind / external data source coupling（Wind 或外部数据源耦合）
+3. local absolute path coupling（本机绝对路径耦合）
+4. network drive coupling（网络盘耦合）
+5. current working directory coupling（当前工作目录耦合）
+6. manual desktop operation coupling（人工桌面操作耦合）
+7. database coupling（数据库耦合）
+8. scheduler / batch coupling（调度/批处理耦合）
+9. report output coupling（报表产物耦合）
+
+Readiness 分类建议（可按总分与阻塞项联合判断）：
+
+- `inventory_only`
+  - 典型条件：存在 1 个以上强耦合阻塞项（例如手工桌面流程 + 网络盘 + 绝对路径）。
+  - 建议：只做资产清单、入口清单、依赖清单和风险登记。
+- `wrapper_first`
+  - 典型条件：逻辑可识别，但入口耦合仍重，直接拆包风险高。
+  - 建议：先加兼容 wrapper，把可纯化逻辑边界显式化。
+- `module_extract_ready`
+  - 典型条件：已有可复用函数片段，可在不改变外部行为前提下提取模块。
+  - 建议：先抽取 `src/` 外围的纯函数或数据转换模块，再评估包化。
+- `src_package_ready`
+  - 典型条件：耦合可控、入口稳定、最小测试可建立。
+  - 建议：进入标准 `src/` 布局规划（仍需分阶段执行，不自动重构）。
+
+### Desktop Script vs Package Project Decision Tree（桌面脚本 vs 包化项目决策树）
+
+按以下顺序做保守决策：
+
+1. 是否存在强人工桌面操作 + 强外部客户端依赖（如 Wind 终端绑定）？
+   - 是：`Keep as desktop script for now`，只做清单和边界识别。
+2. 是否存在多个历史入口且业务方依赖固定脚本路径？
+   - 是：`Add wrapper only`，先保留旧入口并增加 wrapper 层。
+3. 是否能稳定识别纯计算、清洗、映射等可复用逻辑边界？
+   - 是：`Extract reusable functions`，先做模块抽取建议。
+4. 是否已具备最小测试安全网并能约束 I/O 副作用？
+   - 是：`Introduce src/ layout`。
+5. 是否已经需要可发布包、可测试接口、可复用命令入口？
+   - 是：`Introduce package + tests + CLI`。
+6. 是否需要跨团队服务化访问？
+   - 是：`Introduce API / service layer later`（后续阶段，不在本轮执行）。
+
+### Target `src/` Blueprint Profiles（目标 src 规划蓝图）
+
+这些 profile 是“规划参考”，不是强制目录模板：
+
+1. `script_wrapper_profile`
+   - 适用：历史脚本多、先保留入口兼容。
+   - 典型方向：`scripts/` 保留入口，`src/<pkg>/` 逐步承载纯逻辑。
+2. `batch_pipeline_profile`
+   - 适用：批处理、调度任务、日终/周终作业。
+   - 典型方向：`src/<pkg>/pipelines`、`jobs`、`io`、`transforms`。
+3. `data_service_profile`
+   - 适用：已有稳定数据访问边界，计划走服务/API。
+   - 典型方向：`clients`、`repositories`、`services`，接口层后置。
+4. `analytics_report_profile`
+   - 适用：分析与报表主导项目。
+   - 典型方向：`analysis`、`metrics`、`reporting`、`templates`。
+
+### Legacy Wrapper Strategy（旧入口兼容包装策略）
+
+在建议迁移时，必须写出 wrapper 策略：
+
+- wrapper purpose：保证旧脚本入口、参数和调用习惯在过渡期可用。
+- compatibility window：给出兼容窗口（例如 1-2 个发布周期或 2-4 周）。
+- rollback trigger：定义回滚触发条件（关键报表失败、核心表字段偏差、批量任务异常）。
+- old script preservation：旧脚本保留为 thin wrapper，不删除历史入口。
+- module extraction boundary：只提取纯逻辑与稳定 I/O 适配层，避免一次性搬迁全部副作用逻辑。
+
+### Minimal Test Safety Net（最小测试安全网）
+
+在进入模块提取或 `src/` 规划前，至少定义这些测试：
+
+1. import smoke test：新模块与 wrapper 可以被导入。
+2. sample input/output test：对代表性样本做输入输出一致性检查。
+3. schema/column test：关键 DataFrame/表结构字段一致性检查。
+4. idempotency or duplicate-write test（如相关）：避免重复写入或重复入库。
+5. report artifact existence check（如相关）：关键报表文件是否按预期生成。
+
+### First Executable Migration Task Package Template（首个可执行迁移任务包模板）
+
+输出模板（用于下一轮 bounded execution，不代表本 skill 自动执行迁移）：
+
+```md
+# Task Package: <migration_step_name>
+
+## Scope
+- 本轮只做：<single bounded step>
+- 本轮不做：<explicit exclusions>
+
+## Files to Inspect
+- <paths>
+
+## Files Allowed to Change
+- <paths>
+
+## Files Not Allowed to Change
+- <paths>
+
+## Migration Readiness Class
+- <inventory_only | wrapper_first | module_extract_ready | src_package_ready>
+
+## Coupling Matrix
+- Excel coupling: <0-3> (evidence: <path/line>)
+- Wind/external coupling: <0-3> (evidence: <path/line>)
+- Local absolute path coupling: <0-3> (evidence: <path/line>)
+- Network drive coupling: <0-3> (evidence: <path/line>)
+- CWD coupling: <0-3> (evidence: <path/line>)
+- Manual desktop coupling: <0-3> (evidence: <path/line>)
+- Database coupling: <0-3> (evidence: <path/line>)
+- Scheduler/batch coupling: <0-3> (evidence: <path/line>)
+- Report output coupling: <0-3> (evidence: <path/line>)
+
+## Proposed First Step
+- <wrapper creation | function extraction | inventory freeze>
+
+## Validation Commands
+- <command 1>
+- <command 2>
+
+## Rollback Notes
+- trigger:
+- rollback action:
+
+## Execution Report Requirement
+- 必须输出结构化 execution report：
+  - Scope Restatement
+  - Files Changed
+  - What Changed / What Not Changed
+  - Validation Performed
+  - Boundary Checks
+  - Risks and Assumptions
+```
 
 ## 5. 核心原则（Principles）
 
@@ -76,6 +207,9 @@ Output:
 - 风险越强，建议越保守。  
   The stronger the runtime coupling, the more conservative the migration advice should be.
 
+- 明确区分 assessment 与 execution。  
+  Keep assessment output separate from execution work.
+
 - 优先给出最小安全下一步，而不是理想化终局。  
   Prefer the smallest safe next step over an idealized end state.
 
@@ -84,27 +218,31 @@ Output:
 
 ## 6. 执行流程（Execution Steps）
 
-1. `scan`：收集当前仓库事实。  
-   读取项目根目录，检查顶层目录与文件分布，收集 Python 文件、Excel 资产、文档入口和可能的运行痕迹；特别观察 `src/` 是否存在、根目录脚本数量、Excel 文件占比、报表或归档目录分布。
+1. `scan current scripts`：收集当前仓库事实。  
+   读取项目根目录，检查脚本分布、Excel 资产、文档入口和运行痕迹；观察 `src/` 是否存在、根目录脚本数量与类型。
 
-2. `scan`：识别运行耦合信号。  
-   检查是否存在 `WindPy`、`xlwings`、`openpyxl`、网络盘路径、当前工作目录依赖、脚本式 orchestration 入口，以及抓取、计算、Excel 写入混在单脚本内的单体脚本信号。此阶段默认只观察，不做任何文件移动或结构写入。
+2. `classify runtime coupling`：填充耦合矩阵。  
+   按 9 维耦合 taxonomy 打分并记录证据，仅观察不改造。
 
-3. `understand`：判断项目类型与迁移阶段。  
-   基于脚本命名、依赖信号、目录结构和资产分布，判断项目更接近 `data-extraction`、`analysis-reporting`、`batch-pipeline`、`migration-transition`，还是 `desktop_excel_wind_script_project`。如果 Excel 资产和桌面运行耦合较强，应优先下调到 `冻结现状 / 建立清单 / 边界识别`，而不是直接给出 package-first 建议。
+3. `classify migration readiness`：给出 readiness class。  
+   输出 `inventory_only / wrapper_first / module_extract_ready / src_package_ready`，并解释触发条件。
 
-4. `understand`：提炼固定风险。  
-   明确是否存在外部桌面环境依赖、网络盘依赖、当前工作目录依赖、Excel 资产角色不清等固定风险，并区分哪些风险会阻止立即迁移，哪些风险只影响后续阶段设计。
+4. `desktop-script vs package-project`：做路径决策。  
+   使用决策树明确本轮建议停在哪一层（保持脚本、wrapper、模块抽取、src、包化+CLI）。
 
-5. `structure`：组织迁移 advisory。  
-   在理解当前阶段后，整理目标结构建议、文件角色分类、示例映射候选和最小迁移 TODO；强调生成产物、缓存、本地数据和运行时资产不应直接混入 `src/` 包结构。
+5. `propose target src blueprint profile`：选择规划蓝图。  
+   在 `script_wrapper_profile / batch_pipeline_profile / data_service_profile / analytics_report_profile` 中选择最匹配项，必要时给出主次 profile。
 
-6. `output`：输出下一阶段建议。  
-   形成迁移 advisory 结果，说明当前项目类型、迁移阶段、固定风险、目标结构方向、保守建议和后续协同 skill；如果项目尚未具备安全迁移条件，应把结论明确写成 inventory-first 或 boundary-first，而不是伪装成准备就绪。需要 assessment 口径时，引用 shared assessment output protocol，并按迁移 advisory 场景裁剪字段，不强制所有字段满配。
+6. `define wrapper strategy + minimal test safety net`：明确风险控制。  
+   输出 wrapper 兼容策略与最小测试集，不触发自动重构。
+
+7. `produce first executable migration task package`：交付下一步可执行包。  
+   生成有边界的任务包模板实例，并要求后续执行方输出 execution report。
 
 ## 7. 约束（Constraints）
 
 - 默认只做迁移 advisory，不自动移动文件、不创建 `src/` 结构、不执行重构
+- 不授权自动化迁移、批量改写、CI/validator 引入
 - 不得改变既有 CLI 行为或脚本原始判断逻辑，只能围绕其语义做文档标准化
 - 对 Excel-heavy、Wind、网络盘、桌面环境强耦合项目，必须优先保守判断，避免 package-first 建议
 - 生成报表、导出文件、缓存、本地数据和运行时资产应继续被视为非源码对象，不应被纳入源代码包
@@ -114,12 +252,10 @@ Output:
 
 ### When to use
 
-- 当你面对一个 Excel、Wind、桌面运行或根目录脚本耦合较强的 Python 项目，需要先判断迁移边界时使用。
-
+- 当你面对一个 Excel、Wind、桌面运行或根目录脚本耦合较强的 Python 项目，需要先判断迁移边界并规划首个可执行迁移步骤时使用。
 
 ### Supporting assets
 - Human-oriented context: [README.md](README.md)
 - Reusable prompts: [prompts/reusable_prompts.md](prompts/reusable_prompts.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
 - References: [references/](references/)
-

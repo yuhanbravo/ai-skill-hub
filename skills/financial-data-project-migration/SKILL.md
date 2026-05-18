@@ -60,90 +60,123 @@ Output:
 
 ### Coupling Taxonomy & Readiness Scoring（耦合分类与迁移就绪度）
 
-对每个耦合维度使用 `0-3` 分值（0=无明显耦合，1=弱耦合，2=中耦合，3=强耦合），并给出证据路径：
+对每个耦合维度使用 `0-3` 分值（0=无明显耦合，1=弱耦合，2=中耦合，3=强耦合），并给出证据路径。评分只用于 advisory，不自动授权改造。
 
 1. Excel file coupling（Excel 文件耦合）
+   - 观察：硬编码 workbook/sheet 名称、宏、公式依赖、人工打开保存步骤、共享 Excel 模板。
+   - 风险：数据输入和业务逻辑混在文件状态中，直接搬迁容易改变计算口径。
 2. Wind / external data source coupling（Wind 或外部数据源耦合）
-3. local absolute path coupling（本机绝对路径耦合）
+   - 观察：WindPy、桌面终端、行情客户端、HTTP/SDK token、外部系统登录状态。
+   - 风险：运行依赖不可在普通 CI 或无桌面环境中复现。
+3. absolute local path coupling（本机绝对路径耦合）
+   - 观察：`C:\...`、`D:\...`、用户目录、桌面路径、单机安装路径。
+   - 风险：迁移后路径不可用，且可能泄露本机环境假设。
 4. network drive coupling（网络盘耦合）
+   - 观察：盘符映射、UNC 路径、共享目录、权限依赖、手动同步目录。
+   - 风险：权限、锁文件、延迟和离线状态影响可重复运行。
 5. current working directory coupling（当前工作目录耦合）
+   - 观察：相对路径基于启动目录、`os.chdir`、从 IDE 或批处理目录启动才成功。
+   - 风险：包化后入口变化会改变文件解析位置。
 6. manual desktop operation coupling（人工桌面操作耦合）
+   - 观察：复制粘贴、手动下载、弹窗确认、Excel 刷新、人工改文件名。
+   - 风险：自动化前缺少可验证边界，必须先记录人工步骤。
 7. database coupling（数据库耦合）
+   - 观察：直连生产库、存储过程、写表副作用、隐式 schema、共享账号。
+   - 风险：迁移测试可能误写真实环境或改变事务语义。
 8. scheduler / batch coupling（调度/批处理耦合）
+   - 观察：Windows Task Scheduler、bat 文件、crontab、手工日终顺序、依赖前置产物。
+   - 风险：单脚本改动可能破坏批处理顺序、重跑策略或时间窗口。
 9. report output coupling（报表产物耦合）
+   - 观察：固定输出文件名、覆盖写、邮件附件、监管/客户报表、人工归档路径。
+   - 风险：路径或格式变化会影响下游阅读、归档或审计。
 
-Readiness 分类建议（可按总分与阻塞项联合判断）：
+Readiness 分类必须同时写明使用条件、允许事项、不授权事项和下一步：
 
 - `inventory_only`
-  - 典型条件：存在 1 个以上强耦合阻塞项（例如手工桌面流程 + 网络盘 + 绝对路径）。
-  - 建议：只做资产清单、入口清单、依赖清单和风险登记。
+  - When to use：存在强人工桌面流程、强外部客户端依赖、生产数据库写入不清、网络盘/绝对路径密集，或无法用样本数据复现。
+  - Allows：资产清单、入口清单、依赖清单、耦合矩阵、风险登记、样本数据需求说明。
+  - Does not authorize：移动文件、创建 `src/`、抽取模块、改入口、接触真实生产数据或执行迁移。
+  - Next safe step：冻结 inventory，向维护者确认真实入口、样本数据和不可变输出口径。
 - `wrapper_first`
-  - 典型条件：逻辑可识别，但入口耦合仍重，直接拆包风险高。
-  - 建议：先加兼容 wrapper，把可纯化逻辑边界显式化。
+  - When to use：业务方依赖旧脚本路径或运行习惯，逻辑边界可见但入口/路径/调度耦合仍重。
+  - Allows：设计兼容 wrapper、声明参数/环境约束、选择一个无副作用或低副作用的第一步边界。
+  - Does not authorize：删除旧脚本、改变 CLI/批处理行为、大规模搬迁副作用逻辑、强制包化。
+  - Next safe step：保留旧入口，先让 wrapper 调用原逻辑或一个小的已验证函数边界。
 - `module_extract_ready`
-  - 典型条件：已有可复用函数片段，可在不改变外部行为前提下提取模块。
-  - 建议：先抽取 `src/` 外围的纯函数或数据转换模块，再评估包化。
+  - When to use：可识别纯计算、清洗、映射、schema 标准化等可复用逻辑，且样本输入/输出可验证。
+  - Allows：提取小型模块、增加 import smoke/sample/schema 测试、保持旧入口输出不变。
+  - Does not authorize：重排项目结构、引入服务层、改数据库写入策略、一次性迁移全部脚本。
+  - Next safe step：抽取一个低耦合函数或文件级模块，并用 wrapper 或旧脚本继续承接入口。
 - `src_package_ready`
-  - 典型条件：耦合可控、入口稳定、最小测试可建立。
-  - 建议：进入标准 `src/` 布局规划（仍需分阶段执行，不自动重构）。
+  - When to use：耦合可控、入口稳定、样本数据可用、最小测试安全网可建立，且维护者接受 staged package path。
+  - Allows：规划 `src/` layout profile、分阶段移动可复用模块、添加测试与可选 CLI 入口。
+  - Does not authorize：自动重构、删除兼容入口、默认新增 API/service、改变真实调度或生产写入。
+  - Next safe step：生成一个 bounded task package，先迁移最小模块或 wrapper-to-`src` 调用链。
 
 ### Desktop Script vs Package Project Decision Tree（桌面脚本 vs 包化项目决策树）
 
-按以下顺序做保守决策：
+按以下顺序做保守决策，并把结论写成“建议路径”，不是直接执行许可：
 
 1. 是否存在强人工桌面操作 + 强外部客户端依赖（如 Wind 终端绑定）？
-   - 是：`Keep as desktop script for now`，只做清单和边界识别。
-2. 是否存在多个历史入口且业务方依赖固定脚本路径？
-   - 是：`Add wrapper only`，先保留旧入口并增加 wrapper 层。
-3. 是否能稳定识别纯计算、清洗、映射等可复用逻辑边界？
-   - 是：`Extract reusable functions`，先做模块抽取建议。
+   - 是：`Keep as desktop script for now`，只做清单、运行手册、样本数据需求和风险边界。
+2. 是否存在多个历史入口、批处理或业务方依赖固定脚本路径？
+   - 是：`Add compatibility wrapper`，先保留旧入口，并让 wrapper 逐步隔离参数、路径和环境。
+3. 是否能稳定识别纯计算、清洗、映射、schema 归一化等可复用逻辑边界？
+   - 是：`Extract reusable modules`，先抽取一个小模块，旧脚本继续负责外部行为。
 4. 是否已具备最小测试安全网并能约束 I/O 副作用？
-   - 是：`Introduce src/ layout`。
-5. 是否已经需要可发布包、可测试接口、可复用命令入口？
-   - 是：`Introduce package + tests + CLI`。
-6. 是否需要跨团队服务化访问？
-   - 是：`Introduce API / service layer later`（后续阶段，不在本轮执行）。
+   - 是：`Move toward src/ layout`，仅迁移已验证模块，不把 `src/` 当成全量搬家命令。
+5. 是否已经需要可测试接口、可复用命令入口或团队内重复调用？
+   - 是：`Add CLI/tests`，优先覆盖旧入口等价性和样本输出，不默认改调度。
+6. 是否需要跨团队服务化访问、长期 API、权限模型或在线系统集成？
+   - 是：`Defer API/service layer`，把服务化写入后续任务包；本 skill 只记录前置条件与风险。
 
-### Target `src/` Blueprint Profiles（目标 src 规划蓝图）
+### Target `src/` Planning Profiles（目标 src 规划蓝图）
 
-这些 profile 是“规划参考”，不是强制目录模板：
+这些 profile 是 planning-only profiles，不是强制目录结构，也不代表必须创建 `src/`。输出时可以选择主 profile 和 fallback profile。
 
 1. `script_wrapper_profile`
-   - 适用：历史脚本多、先保留入口兼容。
-   - 典型方向：`scripts/` 保留入口，`src/<pkg>/` 逐步承载纯逻辑。
+   - Use when：历史脚本多、旧路径被批处理/人工手册引用、需要兼容窗口。
+   - Planning direction：旧入口保留在原位置或 `scripts/`，`src/<pkg>/` 只逐步承载纯逻辑和稳定适配层。
+   - First step：让一个旧脚本通过 wrapper 调用一个小的可测试函数。
 2. `batch_pipeline_profile`
-   - 适用：批处理、调度任务、日终/周终作业。
-   - 典型方向：`src/<pkg>/pipelines`、`jobs`、`io`、`transforms`。
+   - Use when：日终/周终批处理、调度任务、顺序依赖、重跑和幂等性是主要风险。
+   - Planning direction：把 pipeline step、I/O adapter、transform、job config 分层表达。
+   - First step：抽出一个无生产写入的 transform，并定义重跑/重复写入检查。
 3. `data_service_profile`
-   - 适用：已有稳定数据访问边界，计划走服务/API。
-   - 典型方向：`clients`、`repositories`、`services`，接口层后置。
+   - Use when：数据访问边界相对稳定，未来可能由多个消费者复用。
+   - Planning direction：把 external clients、repositories、services 的责任分开；API/service layer 后置。
+   - First step：先封装只读 client 或 repository 边界，不创建在线服务。
 4. `analytics_report_profile`
-   - 适用：分析与报表主导项目。
-   - 典型方向：`analysis`、`metrics`、`reporting`、`templates`。
+   - Use when：分析、指标、Excel/HTML/PDF 报表或归档产物是核心输出。
+   - Planning direction：把 metrics、reporting、template、artifact output 规划为可测试边界。
+   - First step：用样本数据验证一个报表 artifact 存在、schema 稳定、文件名策略不变。
 
 ### Legacy Wrapper Strategy（旧入口兼容包装策略）
 
-在建议迁移时，必须写出 wrapper 策略：
+在建议迁移时，必须写出 wrapper 策略；wrapper 是过渡控制面，不是掩盖不受控重构的理由。
 
-- wrapper purpose：保证旧脚本入口、参数和调用习惯在过渡期可用。
-- compatibility window：给出兼容窗口（例如 1-2 个发布周期或 2-4 周）。
-- rollback trigger：定义回滚触发条件（关键报表失败、核心表字段偏差、批量任务异常）。
-- old script preservation：旧脚本保留为 thin wrapper，不删除历史入口。
-- module extraction boundary：只提取纯逻辑与稳定 I/O 适配层，避免一次性搬迁全部副作用逻辑。
+- preserving old entrypoints：旧脚本路径、文件名、参数和调用习惯默认保留，除非任务包明确授权变更。
+- extracting logic into modules：先提取纯逻辑、schema 标准化、只读数据转换或稳定 I/O adapter；不把所有副作用一起搬入模块。
+- compatibility window：给出兼容窗口（例如 1-2 个发布周期或 2-4 周），最终由维护者确认。
+- rollback trigger：关键报表缺失、核心字段偏差、批处理失败、重复写入、数据库异常或业务方无法按原方式运行。
+- old script preservation：旧脚本保留为 thin wrapper 或 frozen legacy entry；不得在首轮删除。
+- wrapper retirement condition：新入口连续通过样本/生产影子验证，旧入口无调用者，回滚窗口结束，并有维护者确认。
+- first-step extraction boundary：首轮只选择一个低耦合、可测试、可回滚的函数/模块/adapter；不做跨项目或跨目录大搬迁。
 
 ### Minimal Test Safety Net（最小测试安全网）
 
-在进入模块提取或 `src/` 规划前，至少定义这些测试：
+在进入模块提取或 `src/` 规划前，至少定义这些测试；默认使用 sample data / no-real-data-first，除非任务包明确授权真实数据访问。
 
-1. import smoke test：新模块与 wrapper 可以被导入。
-2. sample input/output test：对代表性样本做输入输出一致性检查。
-3. schema/column test：关键 DataFrame/表结构字段一致性检查。
-4. idempotency or duplicate-write test（如相关）：避免重复写入或重复入库。
-5. report artifact existence check（如相关）：关键报表文件是否按预期生成。
+1. import smoke test：新模块、wrapper、旧入口调用链可以被导入或以 dry-run 方式加载。
+2. sample input/output test：对代表性样本做输入输出一致性检查，记录样本来源和脱敏假设。
+3. schema/column test：关键 DataFrame、Excel sheet、数据库结果或报表字段保持一致。
+4. idempotency or duplicate-write test（如相关）：批处理、写库、导出、归档任务不得重复写入或重复入库。
+5. report artifact existence check（如相关）：关键报表文件、命名规则、sheet 名称或导出目录按预期生成。
+6. side-effect boundary check：需要写入文件、数据库、网络盘或发送邮件时，必须先使用临时目录、样本库或 dry-run。
 
 ### First Executable Migration Task Package Template（首个可执行迁移任务包模板）
 
-输出模板（用于下一轮 bounded execution，不代表本 skill 自动执行迁移）：
+输出模板（用于下一轮 bounded execution，不代表本 skill 自动执行迁移）。模板必须实例化到一个最小可执行步骤，并保留 assessment 与 execution 分离：
 
 ```md
 # Task Package: <migration_step_name>
@@ -151,6 +184,7 @@ Readiness 分类建议（可按总分与阻塞项联合判断）：
 ## Scope
 - 本轮只做：<single bounded step>
 - 本轮不做：<explicit exclusions>
+- Advisory source：<assessment report / migration planning note>
 
 ## Files to Inspect
 - <paths>
@@ -163,6 +197,11 @@ Readiness 分类建议（可按总分与阻塞项联合判断）：
 
 ## Migration Readiness Class
 - <inventory_only | wrapper_first | module_extract_ready | src_package_ready>
+- Rationale: <why this class was chosen>
+
+## Desktop Script vs Package Decision
+- Recommended path: <keep desktop script | compatibility wrapper | extract reusable module | move toward src layout | add CLI/tests | defer API/service>
+- Deferred path(s): <what is intentionally not happening now>
 
 ## Coupling Matrix
 - Excel coupling: <0-3> (evidence: <path/line>)
@@ -174,6 +213,26 @@ Readiness 分类建议（可按总分与阻塞项联合判断）：
 - Database coupling: <0-3> (evidence: <path/line>)
 - Scheduler/batch coupling: <0-3> (evidence: <path/line>)
 - Report output coupling: <0-3> (evidence: <path/line>)
+
+## Target Planning Profile
+- Primary profile: <script_wrapper_profile | batch_pipeline_profile | data_service_profile | analytics_report_profile>
+- Fallback profile: <optional>
+- Note: planning profile only; not a mandatory folder template.
+
+## Legacy Wrapper Strategy
+- old entrypoint preservation:
+- first-step extraction boundary:
+- compatibility window:
+- rollback trigger:
+- wrapper retirement condition:
+
+## Minimal Test Safety Net
+- import smoke test:
+- sample input/output test:
+- schema/column test:
+- idempotency or duplicate-write test, if relevant:
+- report artifact existence check, if relevant:
+- no-real-data / sample-data-first assumption:
 
 ## Proposed First Step
 - <wrapper creation | function extraction | inventory freeze>
@@ -194,6 +253,7 @@ Readiness 分类建议（可按总分与阻塞项联合判断）：
   - Validation Performed
   - Boundary Checks
   - Risks and Assumptions
+  - Deferred Follow-ups
 ```
 
 ## 5. 核心原则（Principles）

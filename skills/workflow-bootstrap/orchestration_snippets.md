@@ -498,7 +498,7 @@ gh pr comment <PR_NUMBER_OR_URL> --body-file codex_review_comment.md
 - base branch 不明确。
 - commit scope 含糊不清。
 - PR 已存在且用户未请求“更新/评论已有 PR”。
-- 未获得明确 live push / PR / comment 授权。
+- 未获得明确 live commit / push / PR / comment 授权。
 - 命令将修改 SSH config、`known_hosts`、GitHub auth、hooks 或 repo settings。
 
 ### Output requirements

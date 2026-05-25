@@ -22,6 +22,7 @@
 ## Not changed
 - No update to `skills/workflow-bootstrap/examples/invocation_examples.md` (optional file intentionally left unchanged to avoid duplication).
 - No changes to `skills/chatgpt-handoff-pilot/*` protocols.
+- No live `gh pr create`, `gh pr comment`, `git push`, or other GitHub side-effect operation was executed during this task.
 - No new automation scripts, no hooks, no auth/config edits.
 
 ## Risks / assumptions

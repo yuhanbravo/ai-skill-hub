@@ -226,6 +226,7 @@ Purpose：在一轮开发结束后，用一个薄编排模板串起：
 - refresh mode：`dry-run | write`
 - status output paths：`<status files/logs, if authorized>`
 - sync authorization：`yes | no`
+- handoff write authorization：`yes | no`
 - handoff target：`<handoff path, if separately authorized>`
 - evidence pointers：`<files / commits / task artifacts>`
 - assumptions：`<explicit assumptions>`

@@ -63,12 +63,12 @@ The new snippet chains `update-project-status` and `chatgpt-handoff-pilot` by re
 - Confirmed no diff in real handoff/status paths.
 - Confirmed no diff in delegated `SKILL.md` protocol files.
 
-Note: Git emitted local permission warnings for `C:\Users\imado/.config/git/ignore` and `.pytest_cache/` during status/diff checks. These warnings did not indicate changed forbidden files.
+Note: Git emitted local permission warnings for global ignore/cache directories during status/diff checks. These warnings did not indicate changed forbidden files.
 
 ## 9. Remaining Risks
 
 - The source cloud draft body was not separately present; implementation followed the approved local task package and execution prompt.
-- The new task package file from Phase A remains untracked unless the final reviewer chooses to include it in the eventual commit.
+- The Phase A task package file is included in this PR change set; final reviewer should confirm that inclusion is intentional.
 - Final reviewer should confirm the appended section is the preferred long-term placement inside `orchestration_snippets.md`.
 
 ## 10. Recommended Next Action Owner

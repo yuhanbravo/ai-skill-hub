@@ -186,3 +186,177 @@ Minimum backfill required:
 - 协议细节仍在 `chatgpt-handoff-pilot` prompts/templates。
 - workflow shell ownership 仍在 `workflow-bootstrap`。
 - 不在此处复制 protocol body。
+
+## 10) Post-Dev Dual Refresh Orchestration（开发后双刷新编排）
+
+Template type：`orchestration snippet / invocation template`
+
+Owner layer：`workflow-bootstrap`
+
+Delegated skills：`update-project-status`、`chatgpt-handoff-pilot`
+
+Purpose：在一轮开发结束后，用一个薄编排模板串起：
+
+1. `update-project-status` status refresh
+2. `chatgpt-handoff-pilot` handoff refresh
+3. merged round receipt
+
+本模板不是新 skill，不替代 delegated skills，不重写任何 delegated protocol。模板 authoring 本身不执行真实 status / handoff 写入。
+
+### When to use
+
+- 一轮开发完成后，需要先整理当前状态，再把状态摘要交给 handoff 闭环。
+- 需要显式区分 `dry-run`、write mode、sync authorization 与 handoff write authorization。
+- 需要把 status 输出整理成结构化 handoff input，但不想引入第三套 protocol。
+
+### Non-goals / boundaries
+
+- 不创建新 skill。
+- 不复制或改写 `update-project-status` protocol。
+- 不复制或改写 `chatgpt-handoff-pilot` protocol。
+- 不把 YAML block 写成 schema、validator 或 third protocol。
+- 不默认执行真实 status / handoff writes。
+- 不默认更新 `docs/HANDOFF.md`、status docs、status log 或外部 sync 目标。
+- 不安装 hooks，不提交，不推送，不同步 adapter。
+
+### Required inputs
+
+- repository path：`<repo-root>`
+- source mode：`git | workspace | hybrid | unknown`
+- refresh mode：`dry-run | write`
+- status output paths：`<status files/logs, if authorized>`
+- sync authorization：`yes | no`
+- handoff write authorization：`yes | no`
+- handoff target：`<handoff path, if separately authorized>`
+- evidence pointers：`<files / commits / task artifacts>`
+- assumptions：`<explicit assumptions>`
+
+### Side-effect matrix
+
+| Action | Side effect | Authorization |
+| --- | --- | --- |
+| Template authoring | no status or handoff writes | always read-only for project state |
+| Status dry-run | preview only | allowed when requested |
+| Status write mode | may write status snapshot/log | requires explicit `update-project-status` authorization |
+| External sync | may publish/sync status output | opt-in only |
+| Handoff refresh | may update handoff target | requires explicit `chatgpt-handoff-pilot` scope |
+| Hook install / commit / push | not part of this template | out of scope |
+
+### Step 0: preflight and boundary confirmation
+
+```text
+Post-dev dual refresh boundary lock:
+- This is a workflow-bootstrap orchestration snippet / invocation template.
+- Delegated skills:
+  - update-project-status owns status refresh behavior.
+  - chatgpt-handoff-pilot owns handoff refresh and execution report behavior.
+- Do not create a new skill.
+- Do not rewrite delegated skill protocols.
+- Confirm refresh mode: <dry-run | write>.
+- Confirm sync authorization: <yes | no>.
+- Confirm handoff write authorization: <yes | no>.
+- If authorization is unclear, stop before writes.
+```
+
+### Step 1: update-project-status invocation
+
+```text
+Use update-project-status for the post-development status refresh.
+
+Inputs:
+- repository path: <repo-root>
+- source mode: <git | workspace | hybrid | unknown>
+- refresh mode: <dry-run | write>
+- status output paths: <paths, if write mode is authorized>
+- sync authorization: <yes | no>
+- evidence pointers: <files / commits / task artifacts>
+
+Output needed for Step 2:
+- status headline
+- key progress
+- open risks or blockers
+- recommended next steps
+- evidence pointers
+- source mode
+- writes performed
+- sync performed
+- freshness note
+- assumptions
+```
+
+### Step 1 -> Step 2 structured handoff input block
+
+The block below is only a transfer payload between Step 1 and Step 2. It is not a new schema, validator, or third protocol.
+
+```yaml
+handoff_input:
+  status_headline:
+  key_progress:
+    -
+  open_risks_blockers:
+    -
+  recommended_next_steps:
+    -
+  evidence_pointers:
+    files:
+      -
+    commits:
+      -
+  source_mode: git | workspace | hybrid | unknown
+  writes_performed:
+    -
+  sync_performed: yes | no
+  freshness_note:
+  assumptions:
+    -
+```
+
+### Step 2: chatgpt-handoff-pilot invocation
+
+```text
+Use chatgpt-handoff-pilot for post-development handoff closure.
+
+Inputs:
+- task package or approved scope: <handoff refresh scope>
+- handoff target: <path, if a real handoff refresh is authorized>
+- handoff_input: <YAML block from Step 1>
+
+Rules:
+- Preserve chatgpt-handoff-pilot protocol ownership.
+- Use section-aware handoff maintenance only when a real handoff write is explicitly authorized.
+- If no handoff write is authorized, produce a dry-run handoff summary or stop with required authorization.
+```
+
+### Step 3: merged round receipt
+
+```text
+Merged round receipt:
+- Status refresh result: <dry-run | written | skipped>
+- Handoff refresh result: <dry-run | written | skipped>
+- Sync result: <not configured | not authorized | completed | failed>
+- Evidence pointers:
+  - <files / commits / task artifacts>
+- Remaining risks:
+  - <risk / blocker>
+- Recommended next action:
+  - <next action owner and action>
+```
+
+### Stop conditions
+
+- Required files or delegated skill guidance cannot be located.
+- Requested writes are not explicitly authorized.
+- A real status refresh or handoff refresh would exceed the approved scope.
+- The handoff block starts behaving like a new protocol, schema, or validator.
+- Implementation requires editing delegated skill protocols.
+- Adapter changes, hook installation, commit, push, or external sync become necessary without explicit approval.
+- Status output and handoff target disagree in a way that could overwrite current-state facts.
+
+### Output requirements
+
+- State whether the run was `dry-run` or write mode.
+- List status outputs written, or state `none`.
+- List handoff outputs written, or state `none`.
+- State whether sync was performed.
+- Include the merged round receipt.
+- Record assumptions and unresolved risks.

@@ -1,10 +1,10 @@
 # Skill Hub Status
 
-- Updated at: `2026-05-15`
+- Updated at: `2026-05-26`
 - Scope: `ai-skill-hub`
 - Method: `system-status-update` wrapper over `update-project-status`
 - Config: `.codex/skill-config/update-project-status.json`
-- Data sources: Git history, working tree, `skills/`, `.agents/`, `.github/`, `tools/`, `docs/status/`, workflow-bootstrap task packages, execution reports, Phase 4 Round 1 review memo, orchestration-snippets consistency evidence, P0 shared assessment output protocol closure evidence, P1 adoption validation evidence, P1 light follow-up examples, P1.5 system-takeover dogfood evidence, and the documentation-governance mutable-status SSOT rule
+- Data sources: Git history, working tree, `skills/`, `.agents/`, `.github/`, `tools/`, `docs/status/`, workflow-bootstrap task packages, execution reports, Phase 4 Round 1 review memo, orchestration-snippets consistency evidence, P0 shared assessment output protocol closure evidence, P1 adoption validation evidence, P1 light follow-up examples, P1.5 system-takeover dogfood evidence, and the documentation-governance mutable-status SSOT rule, Skill Catalog / Template Registry Phase 1 artifacts (`docs/SKILL_CATALOG.md`, `docs/TEMPLATE_REGISTRY.md`), and Phase 1.5 entry-wiring updates
 
 ## Layer Status
 
@@ -12,6 +12,8 @@
 
 - Status: `stable`
 - `skills/` remains the sole canonical source of truth.
+- Skill Catalog / Template Registry Phase 1 is complete: `docs/SKILL_CATALOG.md` and `docs/TEMPLATE_REGISTRY.md` are now centralized documentation entrypoints for discovery, boundaries, reusable assets, and historical candidate lookup.
+- These catalog/registry docs are indexes only; they do not replace canonical `skills/`, and they do not promote historical `tasks/` evidence into canonical templates.
 - The current `workflow-bootstrap` baseline is complete through Phase 3:
   - Phase 0 absorbed non-git / low-git runtime profile guidance.
   - Phase 1 completed role split canonicalization around `Drafter -> Reviewer -> Implementer -> Reporter -> Final Reviewer`.
@@ -32,6 +34,7 @@
 - Status: `evolving`
 - `.agents/skills/` and `.github/skills/` remain derivative discoverability surfaces; they are not authoring or canonical layers.
 - Project-side runtime surfaces are still treated as thin entries, adapters, or evidence indexes that route back to canonical guidance.
+- Phase 1.5 minimal entry wiring / dogfood closure is now applied on navigation surfaces: README now includes thin pointers to the catalog and registry entrypoints, while source boundaries remain unchanged.
 - `tasks/` may be a preferred project-local evidence path for non-git / low-git work, but it is not a mandatory global path for every project type.
 - This refresh does not add project-side runtime files, distribution assets, adapters, or broader rollout surfaces.
 
@@ -85,10 +88,13 @@
 - Evolving: multi-project fit, distribution readiness, derivative-surface governance, local-first validation, same-tool multi-role usage beyond repository-internal runs, cross-executor assessment-output consistency, and cross-repo runtime-pack portability.
 - Not yet stable: complete Git-first validation evidence, tool adapters, validators / automation / CI, `.github/instructions/`, `.github/agents/`, and generalized rollout guidance across Git-first and non-git / low-git project types.
 - Evidence boundary: this refresh is based on the current working tree, recent Git history, `workflow-bootstrap` canonical assets, `chatgpt-handoff-pilot`, recent workflow-bootstrap task packages / execution reports, `docs/reviews/workflow-bootstrap_phase4_multi_project_pilot_review.md`, `skills/_protocol/skill_assessment_output.md`, `tasks/p0_shared_assessment_output_protocol_execution_report.md`, `docs/reviews/shared_assessment_protocol_adoption_review.md`, `tasks/p1_shared_assessment_protocol_examples_execution_report.md`, `docs/reviews/system_takeover_shared_assessment_protocol_dogfood_review.md`, and the current `documentation-governance` mutable-status SSOT rule; it intentionally does not copy per-task report detail into status.
-- Freshness gate: previous `Updated at` was `2026-05-12`, which is within the `14`-day freshness gate on `2026-05-15`; this refresh updates the status date to `2026-05-15`, so no `Staleness` risk is added.
+- Freshness gate: previous `Updated at` was `2026-05-12`, which is within the `14`-day freshness gate on `2026-05-26`; this refresh updates the status date to `2026-05-26`, so no `Staleness` risk is added.
 
 ## Recommended Next Steps
 
+- Dogfood the catalog/registry entrypoints in the next real skill change and record where navigation or source-boundary confusion still appears.
+- Optionally define lightweight maintenance rules later (ownership, update triggers, and minimal review checks) if dogfood evidence shows drift risk.
+- Consider candidate-promotion protocol or audit tooling only after repeated dogfood rounds show persistent ambiguity that lightweight discipline cannot absorb.
 - Treat Phase 4 Round 1 as closed read-only validation evidence, not as completed full multi-project validation.
 - Treat the orchestration snippets consistency run as repository-internal workflow guidance closure, not as deterministic orchestration readiness or a universal requirement to run every future task through the full Step 1 -> Step 5 chain.
 - Treat the shared assessment output protocol as output vocabulary for controlled adoption, not as automation, validator, CI, or mandatory scoring rollout.

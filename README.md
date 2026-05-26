@@ -4,6 +4,11 @@
 
 它可以理解为 AI Capability OS 的 skill layer：以 `skills/` 作为 canonical source，通过 adapter、index、tools 和 automation 为不同 AI 入口提供统一的技能发现与分发能力。
 
+## Documentation Entry Points
+
+For skill selection and source-surface boundaries, see `docs/SKILL_CATALOG.md`.
+For reusable templates, snippets, prompts, examples, and historical candidates, see `docs/TEMPLATE_REGISTRY.md`.
+
 ## Legacy Alias
 
 - canonical name: `ai-skill-hub`

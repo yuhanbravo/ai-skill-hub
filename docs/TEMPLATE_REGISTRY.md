@@ -35,7 +35,7 @@
 | `skills/workflow-bootstrap/examples/invocation_examples.md` | example | `workflow-bootstrap` | supporting asset | 查询 workflow-bootstrap 触发与调用方式 | `skills/` | read-only | 仅示例入口 |
 | `skills/update-project-status/templates/skillhub_status_template.md` | template | `update-project-status` | supporting asset | 状态文档刷新时的结构参考 | `skills/` | status / handoff update | 状态模板，不是实时状态事实 |
 | `.agents/skills/chatgpt-handoff-pilot/SKILL.md` | adapter | `chatgpt-handoff-pilot` | adapter / discovery copy | agent discovery fallback | `.agents/skills/` | read-only | 非 canonical authoring surface |
-| `.github/skills/chatgpt-handoff-pilot/SKILL.md` | adapter | `chatgpt-handoff-pilot` | adapter / discovery copy | GitHub Copilot discovery fallback | `.github/skills/` | read-only | 非 canonical authoring surface |
+| `.github/skills/chatgpt-handoff-pilot.md` | adapter | `chatgpt-handoff-pilot` | adapter / discovery copy | GitHub Copilot discovery fallback | `.github/skills/` | read-only | 非 canonical authoring surface |
 | `docs/bridge/templates/TASK_PACKAGE_TEMPLATE.md` | template | bridge mirror | bridge mirror / reference | 历史 mirror 参考 | `docs/bridge/` | read-only | mirror/reference，不作为 active template source |
 | `docs/bridge/templates/EXECUTION_REPORT_TEMPLATE.md` | template | bridge mirror | bridge mirror / reference | 历史 mirror 参考 | `docs/bridge/` | read-only | 需优先回到 `skills/` 原始资产 |
 | `tasks/copilot-codex-workflow_phase3a_template_sketch_task_package.md` | candidate | N/A | historical / candidate | 参考阶段性 template sketch 结构 | `tasks/` | read-only | historical evidence，不自动晋升 canonical |

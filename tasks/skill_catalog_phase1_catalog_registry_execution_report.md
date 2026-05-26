@@ -46,7 +46,7 @@
 ## Validation commands and results
 - `git status --short`（实施前后检查工作区变更范围）
 - `find skills -maxdepth 2 -type f | sort`（枚举 skill 可发现面）
-- `find skills -maxdepth 3 \( -path "*/examples/*" -o -path "*/templates/*" -o -path "*/snippets/*" \) -type f | sort`（枚举可复用资产）
+- `find skills -maxdepth 3 \( -path "*/examples/*" -o -path "*/templates/*" -o -path "*/snippets/*" -o -path "*/prompts/*" \) -type f | sort`（枚举可复用资产）
 - `find tasks -maxdepth 1 -type f | sort`（扫描历史候选面）
 - `find docs -maxdepth 3 -type f | sort`（扫描 docs source surfaces）
 - `git diff --name-only`（确认仅 3 个目标文件）

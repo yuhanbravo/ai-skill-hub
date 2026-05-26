@@ -88,7 +88,7 @@
 - Evolving: multi-project fit, distribution readiness, derivative-surface governance, local-first validation, same-tool multi-role usage beyond repository-internal runs, cross-executor assessment-output consistency, and cross-repo runtime-pack portability.
 - Not yet stable: complete Git-first validation evidence, tool adapters, validators / automation / CI, `.github/instructions/`, `.github/agents/`, and generalized rollout guidance across Git-first and non-git / low-git project types.
 - Evidence boundary: this refresh is based on the current working tree, recent Git history, `workflow-bootstrap` canonical assets, `chatgpt-handoff-pilot`, recent workflow-bootstrap task packages / execution reports, `docs/reviews/workflow-bootstrap_phase4_multi_project_pilot_review.md`, `skills/_protocol/skill_assessment_output.md`, `tasks/p0_shared_assessment_output_protocol_execution_report.md`, `docs/reviews/shared_assessment_protocol_adoption_review.md`, `tasks/p1_shared_assessment_protocol_examples_execution_report.md`, `docs/reviews/system_takeover_shared_assessment_protocol_dogfood_review.md`, and the current `documentation-governance` mutable-status SSOT rule; it intentionally does not copy per-task report detail into status.
-- Freshness gate: previous `Updated at` was `2026-05-12`, which is within the `14`-day freshness gate on `2026-05-15`; this refresh updates the status date to `2026-05-15`, so no `Staleness` risk is added.
+- Freshness gate: previous `Updated at` was `2026-05-12`, which is within the `14`-day freshness gate on `2026-05-26`; this refresh updates the status date to `2026-05-26`, so no `Staleness` risk is added.
 
 ## Recommended Next Steps
 

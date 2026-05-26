@@ -28,11 +28,15 @@ This file is the single source of truth for project handoff.
 - 2026-05-12: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-05-12`) and then merged the P1/P1.5 shared assessment protocol adoption and dogfood closure into handoff context. This records that P1 adoption accepted the protocol with light follow-up, P1 light follow-up added mini examples and a `system-takeover` invocation snippet, and P1.5 system-takeover dogfood concluded `Pass: protocol works for system-level takeover`, while preserving `Phase 3 - Controlled System` and keeping validator / CI / automation / router-pipeline integration deferred.
 - 2026-05-15: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-05-15`) and then merged the documentation-governance mutable-status SSOT boundary into handoff context. This records that current phase, next-phase direction, latest validation, blocker, and pending-merge facts must stay in declared HANDOFF/status surfaces unless a maintainer declares another current-state SSOT, while preserving `Phase 3 - Controlled System` and adding no automation, validator, CI, or controller behavior.
 
+- 2026-05-26: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-05-26`) and then applied a minimal Phase 1.5 closure merge into handoff context. This records that Skill Catalog / Template Registry Phase 1 is complete with centralized index entrypoints in `docs/SKILL_CATALOG.md` and `docs/TEMPLATE_REGISTRY.md`, preserves `skills/` as canonical with thin adapter discovery and bridge-reference boundaries unchanged, and explicitly leaves template migration, adapter sync, bridge refresh, canonical promotion, validator, and automation work deferred.
+
 ## Current Status
 
 `ai-skill-hub` is currently in `Phase 3 - Controlled System`.
 
 The repository continues to operate as a layered AI capability system rather than a normal business-project codebase. `skills/` remains the stable canonical source, `.agents/skills/` and `.github/skills/` remain derivative discoverability surfaces, governance and tooling remain read-only / local-first, and `docs/HANDOFF.md` plus `docs/status/skill-hub-status.md` remain the active-source coordination documents for system state.
+
+Skill Catalog / Template Registry Phase 1 is now complete as a documentation indexing closure: `docs/SKILL_CATALOG.md` centralizes skill selection and source-surface boundaries, and `docs/TEMPLATE_REGISTRY.md` centralizes reusable templates, snippets, prompts, examples, and historical candidates. These are index surfaces only; they do not replace canonical `skills/`, they do not promote `tasks/` historical artifacts into canonical templates, and they do not change thin adapter or bridge-reference boundaries.
 
 The `workflow-bootstrap` line has now reached its Phase 0-3 baseline without changing system phase. Phase 0 absorbed non-git / low-git runtime profile guidance; Phase 1 canonicalized the tool-agnostic role chain; Phase 2 added advisory review tier guidance; and Phase 3 completed runtime pack minimal manifest guidance. This baseline defines workflow shell, role split, runtime profile, review tiers, and minimal runtime-pack surface guidance only.
 
@@ -167,6 +171,8 @@ The shared assessment output protocol should next be treated as controlled adopt
 Future system-level reviews may reuse the P1.5 finding template to compare executor consistency across `confirmed` / `inferred` / `pending`, `risk_priority`, `impact_scope`, and `next_action`. Any later move toward validator / CI / automation should require multiple real outputs showing repeatable drift that examples and review discipline cannot absorb.
 
 Documentation maintenance should treat HANDOFF/status as the current-state SSOT pair for mutable system facts. Future docs work may add links or short pointers from README, technical onboarding, agent wrappers, and blueprint docs, but should avoid copying active phase, next-phase, validation, blocker, or pending-merge state unless a maintainer first declares a new current-state SSOT.
+
+Documentation follow-up should prioritize dogfooding and maintenance discipline for the new catalog/registry indexes (for example, using them during the next real skill change and observing upkeep friction) before considering candidate-promotion protocol work, validators, or automation.
 
 ## System Takeover Snapshot (2026-04-02)
 

@@ -25,10 +25,12 @@
 
 ### 4.1 新增内置分类维度（内建，不依赖外部工具）
 1) `audience`（独立维度）
-- `human_machine_shared`
+- `human_ai_shared`
 - `human_primary_archive`
 - `ai_only_wrapper`
 - `unknown_or_mixed`
+
+> **命名说明：** `human_ai_shared` 采用与 `ai_only_wrapper` 一致的 AI 命名口径。此处 AI 涵盖 agent、assistant、automation 等消费上下文。
 
 2) `authority_role`
 - `current_status_ssot`
@@ -106,7 +108,7 @@
 - 项目是否需要 `AGENTS.md`
 - 是否需要 ADR / decision records
 - `README.md` 与 `docs/README.md` 是否保持 navigation-only
-- `docs/status.md` 与 `docs/HANDOFF.md` 是否正确承担 SSOT 角色
+- project-declared status SSOT（例如 `docs/status.md`、`docs/status/**`、或仓库声明的 status snapshot doc）与 project-declared handoff SSOT（例如 `docs/HANDOFF.md`）是否正确承担 SSOT 角色
 - `docs/archive/**` 是否被错误当作 current fact 引用
 - shared docs 是否应采用 Chinese-first prose，并保留 English technical terms
 
@@ -126,6 +128,7 @@
   - `docs/HANDOFF.md` = handoff context / operating boundaries SSOT
   - `README.md` 与 `docs/README.md` = navigation only
   - `docs/archive/**` = historical / human-primary archive
+- This path (`docs/status.md`) is an AMS_Report dogfood scenario fact and must not be generalized as a required status SSOT path for all projects.
 - 当前未观察到 `AGENTS.md` / `CLAUDE.md` / `.agents`，但需本地扫描确认
 - shared docs 倾向中文优先，保留英文技术术语
 

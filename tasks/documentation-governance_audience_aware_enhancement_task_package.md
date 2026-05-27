@@ -88,6 +88,7 @@
 7. execution report 再记录 dogfood result。
 8. PR final review。
 9. 回到 AI_Workbench，把 pending_trigger 更新为 `dogfood_recorded / done`。
+   - If the target project has no AI_Workbench / pending_trigger management entry, skip this step or record the dogfood state in the PR checklist, issue checklist, or execution report instead.
 
 ## 7. 验证要求
 - 轻量检查：

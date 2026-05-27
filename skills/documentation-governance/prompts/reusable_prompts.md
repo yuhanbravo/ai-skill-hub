@@ -84,3 +84,11 @@ This file preserves the prompt templates split out of `SKILL.md` during the AI/H
 - 其他文档只保留稳定说明、阅读路径和 SSOT 链接
 - 不把 README 或 technical onboarding 写成 parallel status tracker
 ```
+
+
+## Audience-aware Round 1
+
+- Built-in audience model: `human_machine_shared`, `human_primary_archive`, `ai_only_wrapper`, `unknown_or_mixed`.
+- Built-in authority roles and doc intents are emitted in report fields without replacing existing `document_layer` model.
+- Built-in conflict checks include AI-only SSOT misuse, shared-doc agent-only instructions, archive-as-current-fact references, navigation status duplication, and language mismatch for shared docs.
+- Round 1 remains internal-only and does not integrate markdownlint/lychee/Vale/textlint.

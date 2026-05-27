@@ -219,7 +219,9 @@
     "ai_only_paths": [
       "AGENTS.md",
       "CLAUDE.md",
-      ".agents/**/*.md"
+      ".agents/**/*.md",
+      ".codex/**/*.md",
+      ".github/skills/**/*.md"
     ],
     "human_primary_paths": [
       "docs/archive/**/*.md"
@@ -228,6 +230,7 @@
       "README.md",
       "docs/README.md",
       "docs/status.md",
+      "docs/status/**/*.md",
       "docs/HANDOFF.md"
     ]
   },

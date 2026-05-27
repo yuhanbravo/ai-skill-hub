@@ -73,9 +73,6 @@ expected_output:
 ```
 
 
-## Audience-aware Round 1
+## Audience-aware Round 1 example expectation
 
-- Built-in audience model: `human_machine_shared`, `human_primary_archive`, `ai_only_wrapper`, `unknown_or_mixed`.
-- Built-in authority roles and doc intents are emitted in report fields without replacing existing `document_layer` model.
-- Built-in conflict checks include AI-only SSOT misuse, shared-doc agent-only instructions, archive-as-current-fact references, navigation status duplication, and language mismatch for shared docs.
-- Round 1 remains internal-only and does not integrate markdownlint/lychee/Vale/textlint.
+Expected output includes non-empty `audience_classification` plus conflict/advisory sections when matched by config rules (`audience_rules`, `language_rules`).

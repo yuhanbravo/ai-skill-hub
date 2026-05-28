@@ -21,7 +21,10 @@
   },
   "categories": {
     "architecture": {
-      "allowed_layers": ["engineering", "readable"],
+      "allowed_layers": [
+        "engineering",
+        "readable"
+      ],
       "globs": [
         "docs/architecture/**/*.md",
         "docs/architecture/*.md",
@@ -30,7 +33,10 @@
       ]
     },
     "design": {
-      "allowed_layers": ["engineering", "readable"],
+      "allowed_layers": [
+        "engineering",
+        "readable"
+      ],
       "globs": [
         "docs/design/**/*.md",
         "docs/design/*.md",
@@ -39,7 +45,10 @@
       ]
     },
     "decisions": {
-      "allowed_layers": ["engineering", "readable"],
+      "allowed_layers": [
+        "engineering",
+        "readable"
+      ],
       "globs": [
         "docs/decisions/**/*.md",
         "docs/decisions/*.md",
@@ -48,7 +57,9 @@
       ]
     },
     "runbooks": {
-      "allowed_layers": ["engineering"],
+      "allowed_layers": [
+        "engineering"
+      ],
       "globs": [
         "docs/runbooks/**/*.md",
         "docs/runbooks/*.md",
@@ -57,7 +68,10 @@
       ]
     },
     "reference": {
-      "allowed_layers": ["engineering", "readable"],
+      "allowed_layers": [
+        "engineering",
+        "readable"
+      ],
       "globs": [
         "docs/reference/**/*.md",
         "docs/reference/*.md",
@@ -66,7 +80,10 @@
       ]
     },
     "api": {
-      "allowed_layers": ["engineering", "readable"],
+      "allowed_layers": [
+        "engineering",
+        "readable"
+      ],
       "globs": [
         "docs/api/**/*.md",
         "docs/api/*.md",
@@ -75,7 +92,9 @@
       ]
     },
     "onboarding": {
-      "allowed_layers": ["readable"],
+      "allowed_layers": [
+        "readable"
+      ],
       "globs": [
         "docs/onboarding/**/*.md",
         "docs/onboarding/*.md",
@@ -130,9 +149,35 @@
     "usage"
   ],
   "readme_section_aliases": {
-    "overview": ["overview", "about", "description", "project overview", "项目描述", "项目简介", "项目总览", "项目目标"],
-    "installation": ["installation", "install", "setup", "getting started", "安装说明", "安装", "部署"],
-    "usage": ["usage", "quick start", "run", "examples", "使用说明", "使用", "快速开始", "运行方式"]
+    "overview": [
+      "overview",
+      "about",
+      "description",
+      "project overview",
+      "项目描述",
+      "项目简介",
+      "项目总览",
+      "项目目标"
+    ],
+    "installation": [
+      "installation",
+      "install",
+      "setup",
+      "getting started",
+      "安装说明",
+      "安装",
+      "部署"
+    ],
+    "usage": [
+      "usage",
+      "quick start",
+      "run",
+      "examples",
+      "使用说明",
+      "使用",
+      "快速开始",
+      "运行方式"
+    ]
   },
   "allow_section_substring_match": true,
   "styleguide_required_section_headings": [
@@ -169,5 +214,32 @@
       "installation": "## 安装说明\n\n请补充本项目支持的安装流程，包括环境要求、包管理器以及至少一个安装命令。\n",
       "usage": "## 使用说明\n\n请补充最常见的运行方式、入口命令或示例，并至少提供一个验证命令。\n"
     }
+  },
+  "audience_rules": {
+    "ai_only_paths": [
+      "AGENTS.md",
+      "CLAUDE.md",
+      ".agents/*.md",
+      ".agents/**/*.md",
+      ".codex/*.md",
+      ".codex/**/*.md",
+      ".github/skills/*.md",
+      ".github/skills/**/*.md"
+    ],
+    "human_primary_paths": [
+      "docs/archive/*.md",
+      "docs/archive/**/*.md"
+    ],
+    "shared_paths": [
+      "README.md",
+      "docs/README.md",
+      "docs/status.md",
+      "docs/status/*.md",
+      "docs/status/**/*.md",
+      "docs/HANDOFF.md"
+    ]
+  },
+  "language_rules": {
+    "shared_docs_preferred": "zh_first_with_english_terms"
   }
 }

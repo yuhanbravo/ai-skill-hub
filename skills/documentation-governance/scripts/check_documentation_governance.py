@@ -11,7 +11,7 @@ import argparse
 import json
 import re
 from dataclasses import asdict, dataclass, field
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 
@@ -59,6 +59,27 @@ class PlacementIssue:
 
 
 @dataclass
+class AudienceClassification:
+    path: str
+    audience: str
+    authority_role: str
+    doc_intent: str
+
+
+@dataclass
+class AudienceConflict:
+    conflict_type: str
+    path: str
+    message: str
+
+
+@dataclass
+class LanguageFinding:
+    path: str
+    message: str
+
+
+@dataclass
 class GovernanceReport:
     root: str
     config_path: str
@@ -80,6 +101,12 @@ class GovernanceReport:
     readable_second_truth_conflicts: list[DuplicateCandidate]
     high_priority_issues: list[str]
     suggestions: list[str]
+    audience_classification: list[AudienceClassification]
+    ai_only_docs: list[str]
+    human_primary_docs: list[str]
+    shared_docs: list[str]
+    audience_conflicts: list[AudienceConflict]
+    language_findings: list[LanguageFinding]
 
 
 def parse_args() -> argparse.Namespace:
@@ -216,6 +243,30 @@ def collect_markdown_files(root: Path, config: dict[str, Any]) -> list[Path]:
                 seen.add(path)
                 results.append(path)
     return sorted(results)
+
+
+def collect_audience_candidate_files(root: Path, config: dict[str, Any]) -> list[Path]:
+    """Collect additional markdown files referenced by audience_rules patterns.
+
+    Files captured here may not appear in scan_globs but still need audience
+    classification.  Non-markdown files and missing patterns are silently ignored.
+    """
+    audience_rules = config.get("audience_rules", {})
+    patterns: list[str] = []
+    for key in ("ai_only_paths", "human_primary_paths", "shared_paths"):
+        patterns.extend(audience_rules.get(key, []))
+
+    results: list[Path] = []
+    seen: set[Path] = set()
+    for pattern in patterns:
+        pattern = pattern.strip().strip("/")
+        if not pattern:
+            continue
+        for path in root.glob(pattern):
+            if path.is_file() and path.suffix.lower() == ".md" and path not in seen:
+                seen.add(path)
+                results.append(path)
+    return results
 
 
 def readme_has_section(content: str, section_name: str, aliases_map: dict[str, list[str]], allow_substring: bool) -> bool:
@@ -505,6 +556,99 @@ def find_readable_second_truth_conflicts(root: Path, engineering_files: list[Pat
     return conflicts
 
 
+
+
+def matches_any_path(relative: str, patterns: list[str]) -> bool:
+    """Match relative paths against simple glob-like patterns via pathlib.PurePosixPath.match."""
+    rel = relative.strip("/")
+    rel_path = PurePosixPath(rel)
+    for raw in patterns:
+        pattern = str(raw).strip()
+        if not pattern:
+            continue
+        normalized = pattern.strip("/")
+        if rel == normalized or rel_path.match(normalized):
+            return True
+    return False
+
+
+def classify_audience_fields(relative: str, config: dict[str, Any]) -> tuple[str, str, str]:
+    lower = relative.lower()
+    rules = dict(config.get("audience_rules", {}))
+    ai_only_paths = list(rules.get("ai_only_paths", []))
+    human_primary_paths = list(rules.get("human_primary_paths", []))
+    shared_paths = list(rules.get("shared_paths", []))
+
+    if matches_any_path(relative, ai_only_paths):
+        return "ai_only_wrapper", "agent_wrapper", "agent_instruction"
+    if matches_any_path(relative, human_primary_paths):
+        return "human_primary_archive", "archive_reference", "archive"
+
+    if lower in {"readme.md", "docs/readme.md"}:
+        return "human_ai_shared", "navigation_index", "navigation"
+    if matches_any_path(relative, shared_paths):
+        if "status" in lower:
+            return "human_ai_shared", "current_status_ssot", "status"
+        if "handoff" in lower:
+            return "human_ai_shared", "handoff_ssot", "handoff"
+        return "human_ai_shared", "stable_reference", "reference"
+    if lower.startswith("docs/"):
+        return "human_ai_shared", "stable_reference", "reference"
+    return "unknown_or_mixed", "derived_summary", "explanation"
+
+
+def contains_agent_only_instruction(text: str) -> bool:
+    patterns = [
+        r"\bsystem prompt\b",
+        r"\bdeveloper message\b",
+        r"\btool call\b",
+        r"\bagent instructions?\b",
+        r"\byou are an agent\b",
+        r"你是一个.*agent",
+        r"调用.*tool",
+        r"使用.*tool",
+        r"不得向用户",
+        r"不要向用户展示",
+        r"\.agents/",
+        r"AGENTS\.md",
+        r"CLAUDE\.md",
+        r"\bCodex\b",
+        r"\bCopilot agent\b",
+    ]
+    return any(re.search(pattern, text, flags=re.IGNORECASE) for pattern in patterns)
+
+
+def detect_audience_issues(root: Path, files: list[Path], config: dict[str, Any]) -> tuple[list[AudienceClassification], list[AudienceConflict], list[LanguageFinding]]:
+    classifications=[]
+    conflicts=[]
+    language=[]
+    current_terms=[t.lower() for t in config.get("current_state_terms", [])]
+    for path in files:
+        rel=path.relative_to(root).as_posix()
+        audience, role, intent = classify_audience_fields(rel, config)
+        classifications.append(AudienceClassification(path=rel,audience=audience,authority_role=role,doc_intent=intent))
+        text=load_text(path)
+        ltext=text.lower()
+        if audience=="ai_only_wrapper" and any(t in ltext for t in current_terms):
+            conflicts.append(AudienceConflict("ai_only_doc_carries_business_ssot", rel, "AI-only wrapper appears to carry mutable/current status facts."))
+        if audience=="human_ai_shared" and contains_agent_only_instruction(text):
+            conflicts.append(AudienceConflict("shared_doc_contains_agent_only_instruction", rel, "Shared doc appears to include agent-only execution instructions."))
+        if role=="navigation_index" and any(t in ltext for t in current_terms):
+            conflicts.append(AudienceConflict("navigation_doc_duplicates_mutable_status", rel, "Navigation doc appears to duplicate mutable status facts."))
+        language_pref = str(dict(config.get("language_rules", {})).get("shared_docs_preferred", "")).lower()
+        if audience=="human_ai_shared" and language_pref=="zh_first_with_english_terms":
+            cjk = sum(1 for ch in text if "\u4e00"<=ch<="\u9fff")
+            latin = sum(1 for ch in text if "a"<=ch.lower()<="z")
+            if latin > cjk * 8 and len(text) > 100:
+                language.append(LanguageFinding(rel, "language_mismatch_for_shared_doc: shared doc seems English-dominant in zh-first configuration."))
+    for c in classifications:
+        if c.authority_role=="archive_reference":
+            continue
+        text=load_text(root/c.path).lower()
+        if "docs/archive/" in text and any(t in text for t in ["current", "latest", "当前", "最新"]):
+            conflicts.append(AudienceConflict("archive_referenced_as_current_fact", c.path, "Archive content appears referenced as current fact."))
+    return classifications, conflicts, language
+
 def build_markdown_report(report: GovernanceReport) -> str:
     lines = [
         "# Documentation Governance OS Report",
@@ -600,6 +744,21 @@ def build_markdown_report(report: GovernanceReport) -> str:
             lines.append(f"- `{issue.path}:{issue.line}` {issue.message}")
     else:
         lines.append("- No heading hierarchy issues detected")
+    lines.extend(["", "## Audience Classification", ""])
+    for item in report.audience_classification:
+        lines.append(f"- `{item.path}` -> audience={item.audience}, authority_role={item.authority_role}, doc_intent={item.doc_intent}")
+    lines.extend(["", "## Audience Conflicts", ""])
+    if report.audience_conflicts:
+        for item in report.audience_conflicts:
+            lines.append(f"- [{item.conflict_type}] `{item.path}`: {item.message}")
+    else:
+        lines.append("- No audience conflicts detected")
+    lines.extend(["", "## Language Findings", ""])
+    if report.language_findings:
+        for item in report.language_findings:
+            lines.append(f"- `{item.path}`: {item.message}")
+    else:
+        lines.append("- No language findings detected")
     lines.extend(["", "## Suggestions", ""])
     for item in report.suggestions:
         lines.append(f"- {item}")
@@ -639,12 +798,18 @@ def build_governance_report(root: Path, config: dict[str, Any], config_path: Pat
     archive_candidates = find_archive_candidates(markdown_files, root, config)
     readable_generation_targets = find_readable_generation_targets(root, engineering_files, readable_files, config)
     readable_second_truth_conflicts = find_readable_second_truth_conflicts(root, engineering_files, readable_files, config)
+    audience_files = sorted(
+        set(markdown_files).union(collect_audience_candidate_files(root, config)),
+        key=lambda path: path.relative_to(root).as_posix(),
+    )
+    audience_classification, audience_conflicts, language_findings = detect_audience_issues(root, audience_files, config)
 
     high_priority_issues: list[str] = []
     high_priority_issues.extend(f"Forbidden filename: {item}" for item in forbidden_documents)
     high_priority_issues.extend(f"Engineering SSOT conflict: {', '.join(item.paths)}" for item in ssot_conflicts)
     high_priority_issues.extend(f"Readable second-truth conflict: {', '.join(item.paths)}" for item in readable_second_truth_conflicts)
     high_priority_issues.extend(f"Layer placement conflict: {item.path}" for item in layer_placement_conflicts)
+    high_priority_issues.extend(f"Audience conflict [{item.conflict_type}]: {item.path}" for item in audience_conflicts)
 
     suggestions: list[str] = []
     if not styleguide_found:
@@ -691,6 +856,12 @@ def build_governance_report(root: Path, config: dict[str, Any], config_path: Pat
         readable_second_truth_conflicts=readable_second_truth_conflicts,
         high_priority_issues=high_priority_issues,
         suggestions=suggestions,
+        audience_classification=audience_classification,
+        ai_only_docs=sorted([item.path for item in audience_classification if item.audience=="ai_only_wrapper"]),
+        human_primary_docs=sorted([item.path for item in audience_classification if item.audience=="human_primary_archive"]),
+        shared_docs=sorted([item.path for item in audience_classification if item.audience=="human_ai_shared"]),
+        audience_conflicts=audience_conflicts,
+        language_findings=language_findings,
     )
 
 

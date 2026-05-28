@@ -56,6 +56,39 @@
     {
       "path": "readable_docs.category_counts.onboarding",
       "equals": 1
+    },
+    {
+      "path": "audience_classification",
+      "len_at_least": 1
+    },
+    {
+      "path": "ai_only_docs",
+      "contains": [
+        "AGENTS.md"
+      ]
+    },
+    {
+      "path": "human_primary_docs",
+      "contains": [
+        "docs/archive/legacy-notes.md"
+      ]
+    },
+    {
+      "path": "shared_docs",
+      "contains": [
+        "README.md",
+        "docs/README.md",
+        "docs/status.md",
+        "docs/HANDOFF.md"
+      ]
+    },
+    {
+      "path": "audience_conflicts",
+      "len_at_least": 4
+    },
+    {
+      "path": "language_findings",
+      "len_at_least": 1
     }
   ]
 }

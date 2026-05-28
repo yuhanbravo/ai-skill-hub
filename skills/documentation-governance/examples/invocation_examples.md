@@ -71,3 +71,8 @@ expected_output:
 - Recommend replacing duplicated status facts with SSOT links.
 - Preserve stable technical onboarding content.
 ```
+
+
+## Audience-aware Round 1 example expectation
+
+Expected output includes non-empty `audience_classification` plus conflict/advisory sections when matched by config rules (`audience_rules`, `language_rules`).

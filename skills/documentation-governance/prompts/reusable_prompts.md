@@ -84,3 +84,8 @@ This file preserves the prompt templates split out of `SKILL.md` during the AI/H
 - 其他文档只保留稳定说明、阅读路径和 SSOT 链接
 - 不把 README 或 technical onboarding 写成 parallel status tracker
 ```
+
+
+## Audience-aware Round 1 prompt snippet
+
+请在输出中显式包含：`audience_classification`、`audience_conflicts`、`language_findings`，并说明 `audience` 独立于 `document_layer`，且不启用任何 external checker。

@@ -11,7 +11,7 @@ import argparse
 import json
 import re
 from dataclasses import asdict, dataclass, field
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 
@@ -243,6 +243,30 @@ def collect_markdown_files(root: Path, config: dict[str, Any]) -> list[Path]:
                 seen.add(path)
                 results.append(path)
     return sorted(results)
+
+
+def collect_audience_candidate_files(root: Path, config: dict[str, Any]) -> list[Path]:
+    """Collect additional markdown files referenced by audience_rules patterns.
+
+    Files captured here may not appear in scan_globs but still need audience
+    classification.  Non-markdown files and missing patterns are silently ignored.
+    """
+    audience_rules = config.get("audience_rules", {})
+    patterns: list[str] = []
+    for key in ("ai_only_paths", "human_primary_paths", "shared_paths"):
+        patterns.extend(audience_rules.get(key, []))
+
+    results: list[Path] = []
+    seen: set[Path] = set()
+    for pattern in patterns:
+        pattern = pattern.strip().strip("/")
+        if not pattern:
+            continue
+        for path in root.glob(pattern):
+            if path.is_file() and path.suffix.lower() == ".md" and path not in seen:
+                seen.add(path)
+                results.append(path)
+    return results
 
 
 def readme_has_section(content: str, section_name: str, aliases_map: dict[str, list[str]], allow_substring: bool) -> bool:
@@ -537,7 +561,7 @@ def find_readable_second_truth_conflicts(root: Path, engineering_files: list[Pat
 def matches_any_path(relative: str, patterns: list[str]) -> bool:
     """Match relative paths against simple glob-like patterns via pathlib.PurePosixPath.match."""
     rel = relative.strip("/")
-    rel_path = Path(rel)
+    rel_path = PurePosixPath(rel)
     for raw in patterns:
         pattern = str(raw).strip()
         if not pattern:
@@ -617,7 +641,6 @@ def detect_audience_issues(root: Path, files: list[Path], config: dict[str, Any]
             latin = sum(1 for ch in text if "a"<=ch.lower()<="z")
             if latin > cjk * 8 and len(text) > 100:
                 language.append(LanguageFinding(rel, "language_mismatch_for_shared_doc: shared doc seems English-dominant in zh-first configuration."))
-    by_path={c.path:c for c in classifications}
     for c in classifications:
         if c.authority_role=="archive_reference":
             continue
@@ -775,7 +798,11 @@ def build_governance_report(root: Path, config: dict[str, Any], config_path: Pat
     archive_candidates = find_archive_candidates(markdown_files, root, config)
     readable_generation_targets = find_readable_generation_targets(root, engineering_files, readable_files, config)
     readable_second_truth_conflicts = find_readable_second_truth_conflicts(root, engineering_files, readable_files, config)
-    audience_classification, audience_conflicts, language_findings = detect_audience_issues(root, markdown_files, config)
+    audience_files = sorted(
+        set(markdown_files).union(collect_audience_candidate_files(root, config)),
+        key=lambda path: path.relative_to(root).as_posix(),
+    )
+    audience_classification, audience_conflicts, language_findings = detect_audience_issues(root, audience_files, config)
 
     high_priority_issues: list[str] = []
     high_priority_issues.extend(f"Forbidden filename: {item}" for item in forbidden_documents)

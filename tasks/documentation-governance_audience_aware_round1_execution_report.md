@@ -18,16 +18,26 @@ Applied PR #9 review fixes for Round 1 only: enum unification, config-driven aud
 - Kept `audit -> report -> fix(optional)` and layer model unchanged.
 
 ## 4. Added / changed config fields
-No new keys in this round; refined Round 1 defaults in `audience_rules` and kept `language_rules.shared_docs_preferred` configurable.
+Round 1 adds additive config fields:
+- `audience_rules`
+  - `ai_only_paths`
+  - `human_primary_paths`
+  - `shared_paths`
+- `language_rules`
+  - `shared_docs_preferred`
+
+Review fixes refined the default audience patterns to include both direct-child and nested-child glob forms where needed.
 
 ## 5. Added / changed report fields
-No schema expansion in this fix round; retained Round 1 fields:
+Round 1 adds additive report fields:
 - `audience_classification`
 - `ai_only_docs`
 - `human_primary_docs`
 - `shared_docs`
 - `audience_conflicts`
 - `language_findings`
+
+Review fixes did not add further report fields; they corrected enum/config behavior and report accuracy.
 
 ## 6. Tests / checks run (with outcomes)
 1) **Passed**
@@ -59,7 +69,7 @@ Assessment: pre-existing test harness issue; not introduced by this PR.
 - New behavior is configuration-driven and additive to existing Round 1 output fields.
 
 ## 8. Known limitations
-- Path matching uses stdlib `Path.match` semantics; behavior depends on supplied glob patterns.
+- Path matching uses stdlib `PurePosixPath.match` semantics; behavior depends on supplied glob patterns.
 - Agent-only detection is keyword/pattern heuristic and intentionally conservative in this round.
 
 ## 9. Follow-ups

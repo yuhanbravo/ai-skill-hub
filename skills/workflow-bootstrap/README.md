@@ -34,6 +34,8 @@
 
 首轮可复用的五角色编排胶水见 [orchestration_snippets.md](orchestration_snippets.md)（薄封装，不重写 handoff 协议）。
 
+首轮可复用的外部仓库初始化提示词模板见 [prompts/repo_initialization_prompt_for_copilot_codex.md](prompts/repo_initialization_prompt_for_copilot_codex.md)。
+
 ## Phase 2 Draft Assets (Canonical Only)
 
 - [canonical_backreference_rules_draft.md](canonical_backreference_rules_draft.md)

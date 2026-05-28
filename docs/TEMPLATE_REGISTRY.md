@@ -32,6 +32,7 @@
 | `skills/chatgpt-handoff-pilot/examples/example_task_package.md` | example | `chatgpt-handoff-pilot` | supporting asset | 参考 task package 写法 | `skills/` | read-only | 示例，不是模板强约束 |
 | `skills/chatgpt-handoff-pilot/examples/example_execution_report.md` | example | `chatgpt-handoff-pilot` | supporting asset | 参考 execution report 写法 | `skills/` | read-only | 示例，不是 canonical 协议文本 |
 | `skills/workflow-bootstrap/orchestration_snippets.md` | snippet | `workflow-bootstrap` | supporting asset | 协作编排片段复用 | `skills/` | documentation-only | workflow shell 片段 |
+| `skills/workflow-bootstrap/prompts/role_optional_orchestration_invocation_prompt.md` | prompt | `workflow-bootstrap` | supporting asset | 显式调用完整或部分 role chain | `skills/` | documentation-only | copy-ready 角色可选调用入口 |
 | `skills/workflow-bootstrap/examples/invocation_examples.md` | example | `workflow-bootstrap` | supporting asset | 查询 workflow-bootstrap 触发与调用方式 | `skills/` | read-only | 仅示例入口 |
 | `skills/update-project-status/templates/skillhub_status_template.md` | template | `update-project-status` | supporting asset | 状态文档刷新时的结构参考 | `skills/` | status / handoff update | 状态模板，不是实时状态事实 |
 | `.agents/skills/chatgpt-handoff-pilot/SKILL.md` | adapter | `chatgpt-handoff-pilot` | adapter / discovery copy | agent discovery fallback | `.agents/skills/` | read-only | 非 canonical authoring surface |

@@ -31,7 +31,7 @@
 | `skills/system-status-update/` | system 状态文档更新与层级化状态输出 | governance / status | canonical | 需要刷新系统状态快照与阶段结论时 | `skills/update-project-status/`, `skills/system-handoff/` | status / handoff update |
 | `skills/system-takeover/` | 跨能力域系统接管与全局治理评估 | takeover / system scope | canonical | 需要跨多个 capability hub 做系统级接管分析时 | `skills/project-takeover/`, `skills/workflow-bootstrap/` | documentation-only |
 | `skills/update-project-status/` | 基于 Git/执行证据的项目状态刷新与周报归纳 | governance / status operations | canonical | 需要周期性更新项目状态、周报、handoff-ready 摘要时 | `skills/system-status-update/`, `skills/chatgpt-handoff-pilot/` | status / handoff update |
-| `skills/workflow-bootstrap/` | 定义默认 role chain、薄入口与 runtime pack 映射壳层 | workflow / orchestration | canonical | 需要先搭建协作工作流框架再进入具体实施时 | `skills/chatgpt-handoff-pilot/`, `skills/project-takeover/`, `skills/system-takeover/` | documentation-only |
+| `skills/workflow-bootstrap/` | 定义默认 role chain、薄入口与 runtime pack 映射壳层 | workflow / orchestration | canonical | 需要先搭建协作工作流框架、或在具体实施前选择要运行的 role chain segment 时 | `skills/chatgpt-handoff-pilot/`, `skills/project-takeover/`, `skills/system-takeover/` | documentation-only |
 
 ## Boundary Notes for Similar Skills
 - `project-takeover` vs `system-takeover`：前者聚焦单一 repo/project 的接管与落地；后者聚焦跨能力域、跨子系统的系统级接管，分析半径更大。

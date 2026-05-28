@@ -113,7 +113,7 @@ Expected framing:
 
 ## Transition: from invocation example to orchestration instance
 
-当 invocation example 已完成 workflow-shell 对齐后，可用下面 bridge prompt 切到 `../orchestration_snippets.md` 的最小编排实例。
+当 invocation example 已完成 workflow-shell 对齐后，完整串行执行可用下面 bridge prompt 切到 `../orchestration_snippets.md` 的最小编排实例；如果只需要运行部分角色，使用 `../prompts/role_optional_orchestration_invocation_prompt.md`。
 
 ```text
 Workflow shell is aligned. Now switch to the minimal orchestration instance:

@@ -3,6 +3,8 @@
 > 目的：提供一层可复用的薄编排胶水，把 `Drafter -> Reviewer -> Implementer -> Reporter -> Final Reviewer` 串起来；不重写 `chatgpt-handoff-pilot` 协议。
 >
 > Active canonical policy：本文件采用“中文为主、英文术语保留”的 active canonical 形式；不维护中英文双主本以避免 drift；旧版本如需保留仅可作为 historical reference。
+>
+> 本文件是 snippet library。需要可直接复制、且允许只运行部分角色的调用入口时，使用 [prompts/role_optional_orchestration_invocation_prompt.md](prompts/role_optional_orchestration_invocation_prompt.md)。
 
 ## 1) Boundary（Step 0: Pre-Alignment）
 

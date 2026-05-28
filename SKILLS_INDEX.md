@@ -128,12 +128,12 @@ This file is the cross-AI, repository-level skill index for tools that cannot au
 
 ### workflow-bootstrap
 
-- Use scenario classification: `workflow bootstrap`, `role split`, `runtime-pack mapping`
-- Triggers: `bootstrap a Copilot-led Codex-implemented workflow`; `define planner implementer reviewer boundaries`; `map canonical guidance to a future runtime pack`; `explain thin entry versus full canonical guidance`; `document workflow shell boundaries without replacing handoff protocols`
+- Use scenario classification: `workflow bootstrap`, `role split`, `role-optional orchestration`, `runtime-pack mapping`
+- Triggers: `bootstrap a role-based workflow`; `define drafter reviewer implementer reporter final reviewer boundaries`; `select a role chain segment before bounded execution`; `map canonical guidance to a future runtime pack`; `explain thin entry versus full canonical guidance`; `document workflow shell boundaries without replacing handoff protocols`
 - Side effects: `read_only`, `write_files`
-- Invocation example: `Use workflow-bootstrap for this task. task_description: Define the default Copilot-led / Codex-implemented workflow shell for this repository and map it to a future runtime pack without implementing the project-side files yet.`
+- Invocation example: `Use workflow-bootstrap for this task. task_description: Select the needed Drafter -> Reviewer -> Implementer -> Reporter -> Final Reviewer role segment for this repository task, keeping chatgpt-handoff-pilot as the task package and execution report protocol owner.`
 - Inputs: repository workflow goal, task boundaries, local collaboration rules, related canonical skills
-- Outputs: workflow-shell guidance, role split, canonical-to-runtime-pack mapping, thin-entry usage guidance
+- Outputs: workflow-shell guidance, role split, role-optional invocation guidance, canonical-to-runtime-pack mapping, thin-entry usage guidance
 - Boundary: reuse `chatgpt-handoff-pilot` for task packages and execution reports; do not implement the future runtime pack inside the hub
 
 ## Interpretation Rules For Other AI Tools

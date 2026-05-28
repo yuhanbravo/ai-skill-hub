@@ -1,10 +1,11 @@
 ---
 name: workflow-bootstrap
-description: "Adapter entry for the default Copilot-led / Codex-implemented workflow shell, minimal role split, and future runtime-pack mapping. Canonical source is in skills/workflow-bootstrap."
+description: "Adapter entry for the role-based workflow shell, minimal role split, role-optional orchestration, and future runtime-pack mapping. Canonical source is in skills/workflow-bootstrap."
 metadata:
   triggers:
-    - bootstrap a Copilot-led Codex-implemented workflow
-    - define planner implementer reviewer boundaries
+    - bootstrap a role-based workflow
+    - define drafter reviewer implementer reporter final reviewer boundaries
+    - select a role chain segment before bounded execution
     - map canonical guidance to a future runtime pack
     - explain thin entry versus full canonical guidance
     - document workflow shell boundaries without replacing handoff protocols

@@ -30,6 +30,8 @@ This file is the single source of truth for project handoff.
 
 - 2026-05-26: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-05-26`) and then applied a minimal Phase 1.5 closure merge into handoff context. This records that Skill Catalog / Template Registry Phase 1 is complete with centralized index entrypoints in `docs/SKILL_CATALOG.md` and `docs/TEMPLATE_REGISTRY.md`, preserves `skills/` as canonical with thin adapter discovery and bridge-reference boundaries unchanged, and explicitly leaves template migration, adapter sync, bridge refresh, canonical promotion, validator, and automation work deferred.
 
+- 2026-06-02: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-06-02`) and then applied a lightweight post-merge handoff refresh after PR #10 and PR #11. This records that Post-Dev Dual Refresh v2 governance gates and the focused orchestration asset split are merged, with PR #11 merge commit `7eb65c9f1860c07925292fb438354b84b422819a`, while preserving `Phase 3 - Controlled System`, delegated protocol ownership, and no skill-behavior / adapter / metadata changes.
+
 ## Current Status
 
 `ai-skill-hub` is currently in `Phase 3 - Controlled System`.
@@ -46,9 +48,9 @@ The `workflow-bootstrap` line has completed Phase 4 Round 1 as a read-only multi
 
 Round 1 supports only limited generalized findings: `task package + execution report` pairing is useful when Git evidence is weak or unavailable; `docs/HANDOFF.md` and status surfaces should remain minimal closure rather than per-task trace logs; and no single project layout should be promoted into canonical guidance. It does not authorize canonical guidance changes, rollout, distribution, validators, CI, automation, tool adapters, `.github/instructions`, or `.github/agents`.
 
-The `workflow-bootstrap` orchestration snippets have now completed a first repository-internal Step 1 -> Step 5 consistency run using the full `Drafter -> Reviewer -> Implementer -> Reporter -> Final Reviewer` role chain. The final decision was `Go`. This validates that same-tool multi-role execution is usable when guarded by explicit phase-switch text and gate decisions, while keeping orchestration as thin workflow glue rather than a duplicate of `chatgpt-handoff-pilot` protocols.
+The `workflow-bootstrap` orchestration line has now moved from one oversized snippet surface to a focused-asset structure. PR #10 merged Post-Dev Dual Refresh v2 governance gates into orchestration guidance, and PR #11 merged the snippet split at `7eb65c9f1860c07925292fb438354b84b422819a`. The lightweight `skills/workflow-bootstrap/orchestration_snippets.md` index now points to `skills/workflow-bootstrap/orchestration/post_dev_dual_refresh.md` and `skills/workflow-bootstrap/orchestration/github_pr_bootstrap.md`; the PR #11 execution evidence remains in `tasks/workflow_bootstrap_orchestration_snippets_split_execution_report.md`.
 
-The run produced `tasks/workflow-bootstrap_orchestration_snippets_consistency_task_package.md` and `tasks/workflow-bootstrap_orchestration_snippets_consistency_execution_report.md`, and made one minimal README wording consistency update from tool-name-first to role-chain-first language. No `chatgpt-handoff-pilot` files were modified, and no validators, scripts, hooks, CI, automation, tests, tool adapters, `.github/instructions`, or `.github/agents` assets were added.
+This current structure preserves the earlier repository-internal Step 1 -> Step 5 consistency result and keeps orchestration as thin workflow glue rather than a duplicate of `chatgpt-handoff-pilot` protocols. No `chatgpt-handoff-pilot` files were modified, and no validators, scripts, hooks, CI, automation, tests, tool adapters, `.github/instructions`, or `.github/agents` assets were added by the post-merge refresh.
 
 The P0 shared assessment output protocol closure has now added `skills/_protocol/skill_assessment_output.md` as a shared output-vocabulary layer for assessment / review / takeover style results. It defines `capability_fit`, optional `maturity_score`, `evidence`, `inference`, `open_questions`, `risk_priority`, `impact_scope`, and `next_action`, while explicitly separating task priority `P0` from `risk_priority` `P0/P1/P2`.
 
@@ -56,7 +58,7 @@ Core takeover / governance skills now reference that shared vocabulary, and audi
 
 P1 adoption validation has now accepted the shared assessment protocol with light follow-up, and the P1 light follow-up has added protocol mini examples plus a `system-takeover` invocation snippet. The P1.5 `system-takeover` dogfood review concluded `Pass: protocol works for system-level takeover`, confirming that the fields can support system-level assessment output, separate `confirmed` / `inferred` / `pending` evidence, keep `risk_priority` distinct from phase / freshness vocabulary, and keep `maturity_score` optional / where applicable.
 
-The latest system status refresh keeps the repository in `Phase 3 - Controlled System` and adds one governance-facing capability signal: `documentation-governance` now explicitly states that mutable project-status facts belong in declared current-state SSOT surfaces. This makes `docs/HANDOFF.md` and `docs/status/skill-hub-status.md` the active places for current phase, next-phase direction, latest validation, blocker, and pending-merge facts unless a maintainer deliberately declares another current-state SSOT.
+The latest system status refresh keeps the repository in `Phase 3 - Controlled System` and adds a current workflow-bootstrap capability signal: PR #10 and PR #11 are now merged evidence, not branch-only or pre-merge work. `documentation-governance` still states that mutable project-status facts belong in declared current-state SSOT surfaces, so `docs/HANDOFF.md` and `docs/status/skill-hub-status.md` remain the active places for current phase, next-phase direction, latest validation, blocker, and pending-merge facts unless a maintainer deliberately declares another current-state SSOT.
 
 ## Hard Boundaries
 
@@ -164,7 +166,7 @@ Round 1 findings should remain validation evidence only. Any future feedback loo
 
 Tool adapters, validators / automation / CI, `.github/instructions/`, `.github/agents/`, Phase 5 tool adapter candidates, and Phase 6 validator / automation preflight remain deferred. Phase 4 Round 2 remains pending until it has a separately reviewed task package or explicit maintainer-provided Git evidence.
 
-The orchestration snippets consistency closure does not require every future workflow-bootstrap task to use the full Step 1 -> Step 5 chain. It should remain an available thin orchestration pattern, with `chatgpt-handoff-pilot` continuing to own task package, bounded execution, and execution report protocol details.
+The orchestration snippets consistency closure and PR #11 focused-asset split do not require every future workflow-bootstrap task to use the full Step 1 -> Step 5 chain. The focused orchestration assets should remain available thin orchestration patterns, with `chatgpt-handoff-pilot` continuing to own task package, bounded execution, and execution report protocol details.
 
 The shared assessment output protocol should next be treated as controlled adoption and repeatability improvement. Future work may observe how consistently skills use `evidence`, `inference`, `open_questions`, `risk_priority`, `impact_scope`, and `next_action`, but that follow-up should not be framed as enforcement, automation, or a requirement to force `maturity_score` onto every skill.
 

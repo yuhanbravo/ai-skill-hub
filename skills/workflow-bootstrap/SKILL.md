@@ -27,6 +27,8 @@ This execution-focused skill definition keeps the workflow-shell behavior, invoc
 - Reusable prompts: [prompts/repo_initialization_prompt_for_copilot_codex.md](prompts/repo_initialization_prompt_for_copilot_codex.md)
 - Role-optional orchestration invocation prompt: [prompts/role_optional_orchestration_invocation_prompt.md](prompts/role_optional_orchestration_invocation_prompt.md)
 - Orchestration minimal instance snippets: [orchestration_snippets.md](orchestration_snippets.md)
+- Post-Dev Dual Refresh orchestration: [orchestration/post_dev_dual_refresh.md](orchestration/post_dev_dual_refresh.md)
+- GitHub PR Bootstrap orchestration: [orchestration/github_pr_bootstrap.md](orchestration/github_pr_bootstrap.md)
 - Shared assessment output protocol: [../_protocol/skill_assessment_output.md](../_protocol/skill_assessment_output.md)
 
 ## 4. 核心模式（Pattern）

@@ -14,5 +14,6 @@ This directory holds execution-facing protocol material for `ai-skill-hub`.
 - `INVOCATION_PROTOCOL.md`: unified invocation contract mirrored from `skills/_protocol/skill_invocation.md`
 - `DISCOVERY_AND_INVOCATION.md`: AI-facing repository discovery and invocation guidance split out of `AI_USAGE.md`
 - `PATTERNS/`: shared execution shapes extracted from project and tool documentation
+- `PATTERNS/THIN_WRAPPER_EXTRACTION_PATTERN.md`: thin wrapper extraction pattern for local duplicated-implementation convergence
 
 These files are semantic layer copies intended to make the AI layer explicit without changing existing runtime or adapter entrypoints.

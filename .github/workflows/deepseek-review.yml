@@ -1,27 +1,32 @@
 name: DeepSeek Code Review
 
 on:
-  pull_request_target:
-    types: [opened, reopened, synchronize]
   issue_comment:
     types: [created]
 
 permissions:
+  contents: read
   pull-requests: write
   issues: read
 
 jobs:
-  review-on-mention:
+  deepseek-review-on-command:
+    name: DeepSeek review on PR comment command
     runs-on: ubuntu-latest
     if: |
-      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@github-actions')) ||
-      (github.event_name == 'pull_request_target' && github.event.action != 'synchronize')
+      github.event.issue.pull_request &&
+      contains(github.event.comment.body, '/deepseek-review') &&
+      (
+        github.event.comment.author_association == 'OWNER' ||
+        github.event.comment.author_association == 'MEMBER' ||
+        github.event.comment.author_association == 'COLLABORATOR'
+      )
     steps:
       - name: DeepSeek Code Review
         uses: hustcer/deepseek-review@v1
         with:
           chat-token: ${{ secrets.CHAT_TOKEN }}
-          watch-mention: "@github-actions"
+          watch-mention: "/deepseek-review"
           allowed-associations: "OWNER,MEMBER,COLLABORATOR"
           model: "deepseek-chat"
           temperature: 0.1

@@ -12,131 +12,92 @@
 > If this bridge copy conflicts with the canonical source, the canonical source wins.
 > Do not treat this bridge copy as the current-state SSOT.
 
-- Updated at: `2026-04-07`
+
+
+- Updated at: `2026-06-08`
 - Scope: `ai-skill-hub`
 - Method: `system-status-update` wrapper over `update-project-status`
 - Config: `.codex/skill-config/update-project-status.json`
-- Data sources: Git history, working tree, `skills/`, distribution surfaces, governance assets, `tools/`, `tests/`
-
-## Current Status
-
-`ai-skill-hub` 当前处于 `Phase 3 - Controlled System`：它已经不再只是 skill 集合，而是一个具备 canonical source、distribution surfaces、局部治理能力、显式文档分层、bridge 引用边界可见性和可重复工具链的 capability system。本轮新增的是 human docs quick-command surface：`docs/human/SYSTEM_TAKEOVER_QUICK_COMMANDS.md` 作为独立速查页落地，`SYSTEM_SKILL_QUICK_COMMANDS.md` 也补上了相关速查页导航入口；这提升的是维护者侧文档可发现性与复用性，而不是 protocol、routing、governance 或 enforcement 能力变化。
-
-- Overall maturity: `evolving`
-- Stable core: canonical skill layer 已形成稳定事实源
-- Main direction: 从“可发现、可调用”继续推进到“可分发、可校验、可控漂移、可解释本地验证入口”的系统阶段
+- Data sources: Git history through PR #12 merge commit `981fdb94d0bad2eaec58addf717effdac1b2ec40`, working tree, `skills/`, `.agents/`, `.github/`, `tools/`, `docs/status/`, `docs/HANDOFF.md`, and PR #12 post-merge closeout facts supplied by the maintainer.
 
 ## Layer Status
 
 ### Canonical Skill Layer (`skills/`)
 
 - Status: `stable`
-- Current shape: canonical source 维持在 `10` 个正式 skill 上，覆盖 `template / audit / project / governance / system` 五类能力，并补齐了 system-level status 与 handoff wrapper 入口；同时 `SKILL.md` 已进一步收口为 execution-focused contract，由 `README / prompts / examples / templates` 分担说明与交换资产。
-- Maturity judgment: canonical layer 继续保持单一事实源；新引入的 `system-status-update` 与 `system-handoff` 通过 wrapper 方式复用 canonical skill，没有制造第二套实现或新的 source-of-truth 歧义；skill 文档职责边界也比上一阶段更清晰。
+- `skills/` remains the sole canonical source of truth.
+- PR #12 is merged into `main` at `981fdb94d0bad2eaec58addf717effdac1b2ec40`.
+- PR #12 completes the P0 first batch of canonical skill prompt / template / example entrypoint cleanup for `workflow-bootstrap`, `financial-data-project-migration`, `system-status-update`, and `system-handoff`.
+- This closeout records the merged state only; it does not reopen P0 or authorize additional P0 expansion.
 
-### Distribution Layer (`.codex / .agents / .github`)
-
-- Status: `evolving`
-- Current shape: hub 内 discovery layer 已覆盖新的 system wrapper skills，项目侧 distribution 继续以 `.codex/skills` 为内容落点、`.agents/.github` 为 project-local adapter surfaces，并新增了 `Targets` 选择以控制 rollout scope。
-- Maturity judgment: distribution 已从“能下发 skill 内容”推进到“下发后仍保持 multi-AI discoverability 且可选择 rollout layer”的阶段；但这一层仍主要依赖本地工具与脚本执行，不属于强约束治理。
-
-### Governance Layer (consistency checker)
+### Prompt / Template / Example Asset Layer
 
 - Status: `evolving`
-- Current shape: governance 已从“结构约定 + 人工观察”推进到“脚本辅助漂移检测 + 关键回归覆盖 + 文档层角色冻结”，能够对 `.codex/skills`、`.agents/skills`、`.github/skills` 三层关系做只读一致性检查，并锁定 DryRun 无副作用、adapter 引用正确性、re-seed 前目标分类，以及 `AI / Human / Bridge` 三层文档中的 active-source 与 mirror 关系；本轮进一步把 adapter validation 明确拆成 `consumer` 与 `hub` 两种 contract，使 hub root 不再只能以 consumer-project 口径解释检查结果。
-- Maturity judgment: 当前治理能力已经能发现 missing adapter、orphan adapter、wrong reference，以及“哪些项目适合进入 clean re-seed 流程”这一类 rollout 前问题；当前还具备了 repository-local commit message 校验能力，并把 commit policy、validator 规则资产和 regression coverage 收口到同一治理面。`check_adapter_consistency.py` 现在已经具备 hub-aware interface，但治理仍保持 read-only，本地脚本与 hook 仍不是 CI 级 enforcement。
+- Reusable prompt entrypoints are clearer after PR #12.
+- Heavy generated-output structures are easier to discover from `templates/` instead of being embedded as prompt prose.
+- `workflow-bootstrap` now has a project-level post-dev dual-refresh prompt and a GitHub PR bootstrap prompt.
+- `financial-data-project-migration` now separates the first executable migration task package template from the first executable migration task package prompt.
+- `system-status-update` now owns the system-level status-first linked refresh prompt.
+- `system-handoff` now has clearer receiver-side examples and entry references for status-baseline-driven handoff refreshes.
 
-### Tooling Layer (sync / tools)
+### Workflow Bootstrap Layer
+
+- Status: `stable-to-evolving`
+- `workflow-bootstrap` remains the project-level orchestration owner for role-chain and thin project-side workflow guidance.
+- The GitHub PR bootstrap prompt is aligned with the canonical orchestration contract after Copilot review corrections to authorization flags: `commit`, `push`, `pr`, and `comment`.
+- This layer continues to route implementation evidence and closeout through `chatgpt-handoff-pilot`, `update-project-status`, `system-status-update`, and `system-handoff` instead of replacing those owners.
+
+### System Status / Handoff Layer
+
+- Status: `stable`
+- `system-status-update` owns system-level status-first linked refresh and produces the concise status baseline for handoff.
+- `system-handoff` is the handoff receiver and handoff output boundary owner.
+- This refresh uses the `2026-06-08` status baseline before updating `docs/HANDOFF.md`, preserving phase consistency with the handoff document.
+- Current-state SSOT remains the `docs/status/skill-hub-status.md` plus `docs/HANDOFF.md` pair unless a maintainer explicitly declares another current-state SSOT.
+
+### Review Tooling Layer
 
 - Status: `evolving`
-- Current shape: tooling 已覆盖 canonical sync、project-local adapter emit、metadata build、router、pipeline、本地 governance check，以及 `sync_skills_to_nongit_project.ps1` 的 target-scoped rollout 与无副作用 DryRun contract；同时新增了 `audit_reseed_targets.ps1`，把 clean re-seed 前的批量预审计收口为独立只读工具，并能识别 hub repository 以避免把 `ai-skill-hub` 本体误当成普通消费项目；本地 commit 自动校验则通过版本化 `.githooks/commit-msg` 加 `tools/install_git_hooks.ps1` 启用，`export_bundle.ps1` 的 auto-commit 也已复用同一套 commit validator。本轮新增 `tools/run_local_checks.ps1` 作为默认本地验证入口，把 router、governance、smoke 与 all 四组检查收口到一个更可重复的本地调用面。
-- Maturity judgment: 工具链已经能够把多 AI capability system 的维护工作从手工操作推进到可重复流程，并开始支持更可控的分发边界、rollout 前分流判断，以及统一的本地验证入口；但执行器选择与检查聚合仍属于本地韧性增强，不构成 CI 级 enforcement。
+- Review tooling remains outside this closeout's write scope.
+- The DeepSeek review workflow may still have a trigger-strategy problem and should be handled by an independent small PR focused only on PR comment command behavior.
+- This closeout does not modify `.github/workflows/`, review actions, adapter logic, index logic, sync/export/import/check tools, or tests.
 
-## Phase Assessment
+## Current Phase
 
-- Current phase: `Phase 3 - Controlled System`
-- Phase meaning: 系统已经具备稳定 canonical layer、可用 distribution layer、脚本辅助 governance、可重复 tooling，以及面向系统操作的标准 wrapper 入口，但还没有进入 CI-backed governance 或更强 orchestration 的下一阶段。
-- Stability: `stable` for canonical definition, `evolving` for distribution and governance, `evolving` for system-level invocation surfaces, `evolving` for heuristic routing behavior, `evolving` for maintainer-facing human-doc discoverability.
+- System phase: `Phase 3 - Controlled System`.
+- Closeout state: P0 first batch canonical skill asset entrypoint cleanup is merged and complete.
+- Phase judgment: the system is in post-merge closeout before P1 / second-batch examples coverage.
+- Direction: do not continue expanding P0. After the independent DeepSeek workflow small fix, move into P1-A / P1-B / P1-C examples coverage.
+- Freshness gate: previous status date was `2026-06-02`; this refresh on `2026-06-08` is within the `14`-day freshness gate, so no staleness warning is added.
 
-## New Capabilities In This Phase
+## Capabilities
 
-- Distribution capability: 项目侧 skill distribution 已具备 project-local adapter surfaces，不再只停留在内容复制。
-- Governance capability: 系统已具备 adapter drift detection，能够识别缺失、孤儿和错误引用三类一致性问题。
-- Layer clarity: canonical source、distribution surfaces 和 governance check 三层职责更加清晰，系统边界比上一阶段更明确。
-- Operational repeatability: 本地维护者或后续 AI agent 已可以用统一工具完成分发、发现层闭环和只读治理检查。
-- System invocation capability: 系统现在具备 `system-status-update` 与 `system-handoff` 两个标准 wrapper 入口，用于把 status 与 handoff 收口到 system-layer 语义。
-- Controlled rollout capability: 分发工具现在支持 target-scoped rollout，在保持默认行为不变的前提下控制 `codex / agents / github` 层级输出。
-- Preflight audit capability: 系统现在具备独立的 re-seed 预审计工具，可批量判断项目是 `already_seeded`、`ready_for_reseed`、`risky_manual_review`、`missing_config`、`no_skill_structure`、`inaccessible` 还是 `hub_repository`。
-- Hub boundary awareness: 工具层现在显式识别 `ai-skill-hub` 本体属于 hub repository，而不是普通 clean re-seed 目标，从而减少把系统仓库误送入 rollout 流程的风险。
-- Documentation layering capability: 系统现在具备显式的 AI / Human / Bridge 三层文档架构，并通过总导航文档收口各层入口；本轮 `docs/human/` 进一步补齐了独立的 `SYSTEM_TAKEOVER_QUICK_COMMANDS.md` 页面以及从 `SYSTEM_SKILL_QUICK_COMMANDS.md` 过去的轻量导航，但这仍属于 human-oriented quick-command surface 补充，而不是核心系统层能力变更。
-- Bridge continuity capability: handoff、status、skill index 与任务交换模板现在已经显式区分 active source 与 bridge-facing mirror/copy，降低了后续维护时的语义歧义。
-- Bridge reference audit capability: 系统现在可以显式枚举 bridge-layer 路径引用面，并确认全仓范围内未发现脚本、配置或运行时对 bridge mirror 路径的激活依赖。
-- Repository-wide bridge audit capability: 系统现在能够把 bridge 命中区分为直接路径引用、角色说明、mirror/ownership 声明和 compatibility/navigation 语句，并确认当前残留主要是语义层或自说明层，而不是需要立刻迁移的路径依赖。
-- Protocol boundary capability: `EXECUTION_PROTOCOL`、`INVOCATION_PROTOCOL`、`DISCOVERY_AND_INVOCATION` 的职责边界与 `AI_USAGE` 的 compatibility 定位已经显式冻结，减少了 AI 规则面与入口面混写的风险。
-- Commit governance capability: 系统现在已把 repository-governance 文档 canonical home 收口到 `docs/governance/`，并具备 `skill-governance` 规则资产、`.githooks/commit-msg` 本地自动校验入口，以及 `export_bundle.ps1` auto-commit 对同一 validator 的复用路径。
-- Explicit system routing capability: router 现在能够在显式点名 `system-takeover` 时优先命中对应 system wrapper，同时保持普通 project takeover 语义的稳定性。
-- Hub-aware governance capability: `check_adapter_consistency.py` 现在显式区分 `consumer` 与 `hub` mode，使 hub-health validation 与 consumer-project adapter validation 不再共享同一默认口径。
-- Default local validation capability: `tools/run_local_checks.ps1` 现在作为默认本地验证入口收口 router、governance、smoke 与 all 四组检查，并按 `python -> py -3 -> conda run` 选择执行器以增强本地环境韧性。
+- Reusable prompt entrypoints are clearer and easier to invoke.
+- Heavy task-package template structure can be discovered from `templates/`.
+- Project-level dual-refresh prompting belongs to `workflow-bootstrap`.
+- System-level status-first linked refresh belongs to `system-status-update`.
+- `system-handoff` is explicitly the receiver for a status baseline and the owner of handoff output boundaries.
+- GitHub PR bootstrap authorization flags now align with the canonical orchestration contract: `commit`, `push`, `pr`, and `comment`.
+
+## Stability
+
+- Overall maturity: `evolving`
+- Stable: canonical ownership in `skills/`, thin adapter / wrapper discipline, status-first linked refresh ordering, and handoff phase consistency.
+- Stable boundary: this round is documentation / prompt asset governance; it does not change runtime tools.
+- Stable boundary: this round does not modify adapters, `.agents/skills/*`, GitHub entrypoints, `.github/workflows/*`, tools, tests, or P1 skill examples.
+- Stable boundary: `workflow-bootstrap` owns project-level orchestration; `system-status-update` owns system-level status-first linked refresh; `system-handoff` owns handoff receiver / output boundary; `financial-data-project-migration` keeps assessment and execution separated, with templates representing generated-output structure rather than skill behavior.
+- Not yet stable: DeepSeek workflow trigger strategy, P1 examples coverage, and cross-skill executor consistency around specialized examples.
 
 ## Risks / Gaps
 
-- Canonical layer 已稳定，但 distribution 和 governance 仍依赖本地执行路径，尚未形成仓库级强制校验。
-- Routing 与 pipeline 仍具有启发式特征；虽然 explicit `system-takeover` 误判已修复，但系统整体还不是 fully deterministic orchestration stack。
-- 当前 system wrapper 仍依赖显式调用；若退回普通项目模板或普通 handoff 口径，会削弱系统层表达能力。
-- [docs/WORKSPACE_DIRECTORY_MAP.zh-CN.md](../WORKSPACE_DIRECTORY_MAP.zh-CN.md) 仍存在编码异常，影响系统文档面的一致性。
-- 在未提交阶段，working tree 对状态判断影响较大，意味着 status refresh 仍然部分依赖即时工作上下文，而不是纯 Git 历史。
-- hub self-detection 目前刻意保持保守，只在强信号足够明确时才判为 `hub_repository`；这降低了误伤普通项目的概率，但也意味着未来可能存在“应识别但未识别”的漏判空间。
-- bridge 层目前仍是“active source + mirror/copy”双份承载模型；虽然全仓审计已经确认没有 direct bridge-path dependency，但 mirror/copy 仍缺少自动同步或仓库级一致性检查来防止后续漂移。
-- `AI_USAGE.md` 已切换到根目录 `SKILLS_INDEX.md` 作为 quick index；后续若继续收缩 bridge-facing copy，应保持兼容入口与 active source 一致，避免重新引入断链。
-- 当前剩余的 bridge 相关命中主要分布在 `docs/bridge/` 自说明、状态/交接历史记录，以及 active-source vs mirror 的架构说明中；若要继续收缩，应通过后续正常刷新逐步改写，而不是一次性“清零 bridge 痕迹”。
-- `docs/ai` 三份协议文档目前已经冻结职责边界，但其中仍有来自历史镜像和模板资产的延续性内容，后续若要继续收口，应先做引用面审计而不是直接路径切换。
-- commit hook 不是天然随 clone / worktree 自动启用；新的 clone / worktree 仍需手动运行一次 `tools/install_git_hooks.ps1`。
-- 当前 commit body 校验仍保持轻量描述性约束；是否继续收紧，应以后续真实使用反馈为准，而不是先行扩张规则面。
-- `check_adapter_consistency.py` 虽已具备 `hub|consumer` 双 mode，但当前仍依赖操作者显式选择口径，而不是自动推断仓库身份。
-- `tools/run_local_checks.ps1` 已成为默认本地验证入口，但它仍是本地 wrapper，不是 CI、也不是自动修复器；当活动环境不可用时，仍可能需要显式传入 conda 环境名。
-
-## DryRun Contract Fix (sync_skills_to_nongit_project.ps1)
-
-### Before
-
-- DryRun 仍会进入部分分发路径，存在 adapter 写入和目标路径依赖风险。
-- DryRun 语义不够严格，不能稳定保证“只预览不执行”。
-- 在部分路径下，DryRun 的退出状态可能被非执行分支影响。
-
-### What changed
-
-- 引入统一 DryRun gate `$IsDryRun`，把副作用路径集中隔离。
-- robocopy、adapter emit、version file 写入和 stale entry 删除在 DryRun 下只输出计划。
-- DryRun 输出统一使用 `[PLAN]`，不再执行实际写入。
-- DryRun 正常流程固定返回 exit code `0`。
-
-### Now guarantees
-
-- 不创建 `.codex`、`.agents`、`.github` 目标目录。
-- 不写入任何 canonical 或 adapter 文件。
-- 不修改已有 adapter / canonical 内容，也不依赖目标路径预先存在。
-- 输出计划信息 `[PLAN]`，并保持 exit code = `0`。
-
-### Test coverage
-
-- 已添加回归测试：[tests/test_dryrun_no_side_effects.py](../../tests/test_dryrun_no_side_effects.py)。
-- 覆盖空项目场景，以及已有 `.codex/skills` 与 adapter 层的场景。
-- 验证范围：无副作用、目录与内容不变、exit code == `0`、stdout 包含 `[PLAN]`。
+- DeepSeek workflow may still respond too broadly or use the wrong trigger strategy; fix it in a separate small PR limited to PR comment command behavior.
+- P1 / second-batch examples coverage has not started.
+- `skill-governance` batch evaluator semantics still need P1 clarification as read-only sequential evaluation, not batch rewrite.
+- This closeout intentionally does not update bridge mirror files; active current-state sources remain `docs/status/skill-hub-status.md` and `docs/HANDOFF.md`.
 
 ## Recommended Next Steps
 
-- 把 `run_local_checks.ps1` 继续收口为仓库默认本地验证入口，并逐步减少维护者对分散测试命令的隐性知识依赖。
-- 继续保持 `system-status-update` 与 `system-handoff` 的 wrapper 定位，避免把 system invocation surface 扩张成新的 controller framework。
-- 在不引入 controller framework 的前提下，继续为 router 与 pipeline 补充更稳定的意图提示或别名层，降低启发式误选的系统风险。
-- 视后续使用反馈决定是否为 governance checker 增加更明确的 mode 选择引导，但不要把 read-only checker 扩张为 auto-fix 工具。
-- 修复 [docs/WORKSPACE_DIRECTORY_MAP.zh-CN.md](../WORKSPACE_DIRECTORY_MAP.zh-CN.md) 的编码问题，避免文档层拖累系统治理成熟度。
-- 若后续进入更大规模 rollout，可继续迭代 re-seed 审计规则与报告格式，但应保持“先审计、再 DryRun、再分发”的只读前置模式，而不是把审计器扩展成执行器。
-- 在不替换当前活跃路径的前提下，为 bridge mirror/copy 增加轻量一致性检查或维护清单，进一步降低文档双份承载的长期漂移风险。
-- 若后续继续清理 bridge 兼容入口，优先保持 `AI_USAGE.md -> SKILLS_INDEX.md` 这类纯导航引用指向 active source，避免重新引入对 mirror 页的直接依赖。
-- 若后续进入下一阶段文档治理，应继续把 bridge 命中区分为路径依赖、历史记录和层级语义，再决定是否收缩 mirror 或切换路径所有权，而不是直接把 bridge 层升级为新的活跃源。
-
-## Notes
-
-- 本次状态更新按 capability-system 视角组织，重点是 layer maturity 与 readiness，而不是普通项目的功能进度。
-- 当前判断反映的是“最近 commit + 当前 working tree”的综合系统状态，而不是仅基于已提交历史生成的业务型周报。
-- 本次刷新已吸收 bridge 引用面审计结果：当前活动文档中已不再保留对 bridge mirror 路径的直接依赖，且全仓范围内未发现脚本或配置级激活依赖。
+1. Open an independent small PR to fix the DeepSeek review workflow so it only responds to the intended PR comment command.
+2. Start P1-A by adding `chatgpt-handoff-pilot` invocation examples.
+3. Continue P1-B by adding `project-takeover` prompt branch examples.
+4. Continue P1-C by adding `skill-governance` specialized prompt examples and explicitly documenting the batch evaluator boundary as read-only sequential evaluation, not batch rewrite.

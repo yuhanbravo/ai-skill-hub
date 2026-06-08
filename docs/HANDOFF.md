@@ -31,12 +31,15 @@ This file is the single source of truth for project handoff.
 - 2026-05-26: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-05-26`) and then applied a minimal Phase 1.5 closure merge into handoff context. This records that Skill Catalog / Template Registry Phase 1 is complete with centralized index entrypoints in `docs/SKILL_CATALOG.md` and `docs/TEMPLATE_REGISTRY.md`, preserves `skills/` as canonical with thin adapter discovery and bridge-reference boundaries unchanged, and explicitly leaves template migration, adapter sync, bridge refresh, canonical promotion, validator, and automation work deferred.
 
 - 2026-06-02: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-06-02`) and then applied a lightweight post-merge handoff refresh after PR #10 and PR #11. This records that PR #10 merged Post-Dev Dual Refresh v2 governance gates, PR #11 merged the workflow-bootstrap orchestration split, and PR #11 merge commit `7eb65c9f1860c07925292fb438354b84b422819a` is the narrow merge evidence pointer, while preserving `Phase 3 - Controlled System`, delegated protocol ownership, and no skill-behavior / adapter / metadata changes.
+- 2026-06-08: Refreshed system status first (`docs/status/skill-hub-status.md`, Updated at `2026-06-08`) and then applied the PR #12 post-merge closeout. This records PR #12 merged at `981fdb94d0bad2eaec58addf717effdac1b2ec40`, closes the P0 first batch canonical skill prompt / template / example entrypoint cleanup, and sets the next direction as a small independent DeepSeek workflow fix followed by P1 examples coverage rather than continued P0 expansion.
 
 ## Current Status
 
 `ai-skill-hub` is currently in `Phase 3 - Controlled System`.
 
 The repository continues to operate as a layered AI capability system rather than a normal business-project codebase. `skills/` remains the stable canonical source, `.agents/skills/` and `.github/skills/` remain derivative discoverability surfaces, governance and tooling remain read-only / local-first, and `docs/HANDOFF.md` plus `docs/status/skill-hub-status.md` remain the active-source coordination documents for system state.
+
+As of the `2026-06-08` status baseline, PR #12 is merged into `main` at `981fdb94d0bad2eaec58addf717effdac1b2ec40`. It completed the P0 first batch of canonical skill prompt / template / example entrypoint governance for `workflow-bootstrap`, `financial-data-project-migration`, `system-status-update`, and `system-handoff`. The current state is post-merge closeout before P1 / second-batch examples coverage; P0 should not be widened further in this line.
 
 Skill Catalog / Template Registry Phase 1 is now complete as a documentation indexing closure: `docs/SKILL_CATALOG.md` centralizes skill selection and source-surface boundaries, and `docs/TEMPLATE_REGISTRY.md` centralizes reusable templates, snippets, prompts, examples, and historical candidates. These are index surfaces only; they do not replace canonical `skills/`, they do not promote `tasks/` historical artifacts into canonical templates, and they do not change thin adapter or bridge-reference boundaries.
 
@@ -60,6 +63,8 @@ P1 adoption validation has now accepted the shared assessment protocol with ligh
 
 The latest system status refresh keeps the repository in `Phase 3 - Controlled System` and adds a current workflow-bootstrap capability signal: PR #10 and PR #11 are now merged evidence, not branch-only or pre-merge work. `documentation-governance` still states that mutable project-status facts belong in declared current-state SSOT surfaces, so `docs/HANDOFF.md` and `docs/status/skill-hub-status.md` remain the active places for current phase, next-phase direction, latest validation, blocker, and pending-merge facts unless a maintainer deliberately declares another current-state SSOT.
 
+The latest closeout adds PR #12 as merged evidence for clearer reusable prompt entrypoints, discoverable heavy templates, project-level dual-refresh prompting in `workflow-bootstrap`, system-level status-first linked refresh in `system-status-update`, and receiver/output boundary clarification in `system-handoff`. Copilot review corrections aligned the GitHub PR bootstrap authorization flags to `commit`, `push`, `pr`, and `comment`.
+
 ## Hard Boundaries
 
 - `skills/<skill>/` remains the only canonical source of truth inside the hub. No adapter layer may become a second authoritative source.
@@ -69,6 +74,12 @@ The latest system status refresh keeps the repository in `Phase 3 - Controlled S
 - In distributed business-project contexts, `.codex/skills/` is the runtime SSOT for local skill content. Project-local adapters must point to `.codex/skills/`, not back to hub `skills/` paths.
 - `workflow-bootstrap` Phase 0-3 baseline guidance must remain canonical guidance only. It must not be presented as completed Phase 4 multi-project pilot work, distribution readiness, or authorization to expand the project-side file family by default.
 - `workflow-bootstrap` owns workflow shell, role split, runtime profile, review tier guidance, and runtime pack manifest guidance. `chatgpt-handoff-pilot` owns task package, bounded execution, and execution report protocols.
+- `workflow-bootstrap` is the project-level orchestration owner for dual-refresh and GitHub PR bootstrap prompting. It must not absorb `system-status-update`, `system-handoff`, or `chatgpt-handoff-pilot` protocol ownership.
+- `system-status-update` owns system-level status-first linked refresh and the concise status baseline used by handoff.
+- `system-handoff` owns the handoff receiver role and handoff output boundary; it consumes the status baseline but does not become a status engine.
+- `financial-data-project-migration` keeps assessment and execution separated. Its templates describe generated task-package structure; they must not become embedded prompt rulebooks or a second execution protocol.
+- `.agents/skills/*` remains thin wrapper / discovery surface and must not carry prompt bodies or canonical payload text.
+- The PR #12 closeout is documentation / prompt asset governance only. It does not authorize runtime tool changes, adapter changes, `.github/workflows/*` changes, tests, or P1 examples.
 - `skills/_protocol/skill_assessment_output.md` is a shared output vocabulary / assessment protocol. It is not an execution controller, validator, CI mechanism, router / pipeline integration, or auto-remediation path.
 - `maturity_score` remains optional / where applicable and must not be forced onto status / handoff skills.
 - `risk_priority` remains assessment output vocabulary. It must not be treated as a project phase gate or as a freshness / staleness label; `phase_risk` and `freshness_risk` remain status / handoff scenario vocabulary where applicable.
@@ -120,6 +131,7 @@ The latest system status refresh keeps the repository in `Phase 3 - Controlled S
 - Local commit validation is installed via a versioned `.githooks/commit-msg` plus `tools/install_git_hooks.ps1` path because Git hook activation is clone-local by design; shipping the hook definition in-repo preserves consistency, while per-clone installation keeps the mechanism aligned with Git's local-hook model.
 - `export_bundle.ps1` reuses the same validator as the local `commit-msg` hook because auto-commit paths should obey the same commit convention instead of creating a second commit-policy surface.
 - The shared assessment protocol remains an output vocabulary rather than an execution controller because P1/P1.5 evidence shows examples and review discipline are currently enough to support system-level assessment without enforcement.
+- PR #12 keeps prompt / template / example entrypoints inside their owning canonical skill assets so discovery improves without creating new runtime ownership. The first-batch P0 cleanup is complete, and any further example coverage belongs to P1 rather than an expanded P0.
 
 ## Intentional Gaps
 
@@ -155,6 +167,9 @@ The latest system status refresh keeps the repository in `Phase 3 - Controlled S
 - No validator / CI / automation escalation is justified by the P1.5 dogfood alone; cross-executor consistency should be observed through future real outputs first.
 - No handoff/status requirement exists to mirror every assessment finding; status and handoff remain minimal closure surfaces rather than per-task evidence logs.
 - No automated mutable-status fact checker has been added. The new documentation-governance rule clarifies the boundary, but detection and remediation remain audit/report driven unless a future task explicitly authorizes stronger validation.
+- No DeepSeek review workflow fix was performed in this closeout; any trigger-strategy correction should be a separate small PR limited to PR comment command behavior.
+- No P1 examples coverage has started yet.
+- No `skill-governance` batch evaluator clarification has been added yet; P1 should make that boundary explicit as read-only sequential evaluation, not batch rewrite.
 
 These gaps are intentional to keep the system legible while distribution and governance semantics are still being stabilized.
 
@@ -175,6 +190,15 @@ Future system-level reviews may reuse the P1.5 finding template to compare execu
 Documentation maintenance should treat HANDOFF/status as the current-state SSOT pair for mutable system facts. Future docs work may add links or short pointers from README, technical onboarding, agent wrappers, and blueprint docs, but should avoid copying active phase, next-phase, validation, blocker, or pending-merge state unless a maintainer first declares a new current-state SSOT.
 
 Documentation follow-up should prioritize dogfooding and maintenance discipline for the new catalog/registry indexes (for example, using them during the next real skill change and observing upkeep friction) before considering candidate-promotion protocol work, validators, or automation.
+
+The immediate direction after PR #12 is not to expand P0. First isolate the DeepSeek review workflow trigger fix in a small PR, then move into P1 / second-batch examples coverage with `chatgpt-handoff-pilot`, `project-takeover`, and `skill-governance` examples.
+
+## Recommended Next Actions
+
+1. Independent small PR: fix the DeepSeek review workflow so it only responds to the intended PR comment command.
+2. P1-A: add `chatgpt-handoff-pilot` invocation examples.
+3. P1-B: add `project-takeover` prompt branch examples.
+4. P1-C: add `skill-governance` specialized prompt examples and clarify the batch evaluator boundary as read-only sequential evaluation, not batch rewrite.
 
 ## System Takeover Snapshot (2026-04-02)
 

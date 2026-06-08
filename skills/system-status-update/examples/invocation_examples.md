@@ -53,3 +53,35 @@ Stability:
 Risks:
 - Some maturity judgments may remain provisional if enforcement evidence is incomplete.
 ```
+
+### System Status to Handoff Linked Refresh Example
+
+```text
+Use system-status-update for a system-level status-first linked refresh.
+Prompt asset: skills/system-status-update/prompts/system_status_to_handoff_refresh_prompt.md
+
+System root: <system-root>
+Status artifact: <status-artifact-path>
+Handoff artifact: <handoff-artifact-path>
+Refresh mode: <dry-run | write>
+Handoff write authorization: <yes | no>
+Status evidence pointers:
+- Canonical Skill Layer: <pointers>
+- Distribution Layer: <pointers>
+- Governance Layer: <pointers>
+- Tooling Layer: <pointers>
+Current phase: <phase-or-unknown>
+Validation provenance: <commands-or-reason-not-run>
+```
+
+Expected output categories:
+
+- status snapshot with Layer Status, Current Phase, Capabilities, Stability
+- handoff refresh boundary for `system-handoff`
+- phase consistency result
+- linked refresh receipt with risks, assumptions, and next action
+
+Boundary note:
+
+- Project-level post-dev dual-refresh remains owned by `workflow-bootstrap`.
+- System-level status-first linked refresh remains owned by `system-status-update` and hands off only the handoff refresh boundary to `system-handoff`.

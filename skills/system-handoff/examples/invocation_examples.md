@@ -52,3 +52,30 @@ Next Phase Direction:
 Risks:
 - section merges still depend on accurate identification of existing system sections.
 ```
+
+### System Handoff from Status Baseline Example
+
+```text
+Use system-handoff to refresh system handoff sections from a status baseline.
+
+Handoff document: <handoff-artifact-path>
+Status baseline source: <status-artifact-path-or-status-summary>
+System phase: <phase>
+System capabilities: <capability-summary>
+Hard boundaries: <boundary-summary>
+Handoff write authorization: <yes | no>
+```
+
+Expected output categories:
+
+- handoff refresh boundary
+- sections targeted for section-aware merge
+- status baseline used
+- phase consistency result
+- handoff write result or dry-run summary
+
+Boundary note:
+
+- `system-handoff` receives the status baseline and owns handoff output boundaries.
+- The system-level status-first orchestration entry remains in `system-status-update`.
+- Do not copy the project-level dual-refresh prompt into system handoff examples.

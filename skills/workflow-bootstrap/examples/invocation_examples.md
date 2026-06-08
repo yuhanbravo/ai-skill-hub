@@ -124,3 +124,61 @@ Workflow shell is aligned. Now switch to the minimal orchestration instance:
 5) Use explicit [PHASE-SWITCH] statements whenever one tool continues across role transitions.
 Keep chatgpt-handoff-pilot as protocol owner and avoid duplicating protocol body text.
 ```
+
+## Example 7: Project-level post-dev dual-refresh
+
+Use the copyable prompt in `../prompts/post_dev_dual_refresh_project_prompt.md` when a completed project-level development round needs a status refresh followed by handoff closure.
+
+Example prompt shape:
+
+```text
+Use workflow-bootstrap for a project-level post-dev dual-refresh.
+Prompt asset: skills/workflow-bootstrap/prompts/post_dev_dual_refresh_project_prompt.md
+Repository path: <project-root>
+Source mode: <git | workspace | hybrid | unknown>
+Refresh mode: <dry-run | write>
+Status outputs: <status-file-path>, <status-log-path>
+Handoff target: <handoff-path>
+Sync authorization: <yes | no>
+Handoff write authorization: <yes | no>
+Evidence pointers: <task-package-or-pr>, <changed-files>, <refreshed-docs>
+Validation provenance: <commands-or-reason-not-run>
+```
+
+Expected output categories:
+
+- status refresh result
+- handoff refresh result
+- sync result
+- merged round receipt
+- assumptions, risks, and next action
+
+## Example 8: GitHub PR bootstrap after bounded execution
+
+Use the copyable prompt in `../prompts/github_pr_bootstrap_prompt.md` after bounded implementation is complete and the operator wants a GitHub PR bootstrap plan or authorized live PR actions.
+
+Example prompt shape:
+
+```text
+Use workflow-bootstrap for GitHub PR bootstrap.
+Prompt asset: skills/workflow-bootstrap/prompts/github_pr_bootstrap_prompt.md
+Repository root: <repo-root>
+Current branch: <current-branch>
+Base branch: <base-branch>
+Remote name: <remote-name>
+Intended PR scope: <scope>
+Files intended for commit: <file-list>
+Authorization flags: commit=<yes|no>, push=<yes|no>, pr=<yes|no>, comment=<yes|no>
+PR title: <pr-title>
+PR body file path: <pr-body-file-path>
+Review comment file path: <review-comment-file-path>
+```
+
+Expected output categories:
+
+- preflight summary
+- proposed commit message
+- PR title/body path
+- exact commands proposed or executed
+- PR URL or skipped reason
+- unresolved risks and next human action

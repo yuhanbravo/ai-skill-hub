@@ -21,6 +21,7 @@ This execution-focused skill definition keeps the behavior, invocation shape, an
 - Human-oriented context: [README.md](README.md)
 - Reusable prompts: [prompts/reusable_prompts.md](prompts/reusable_prompts.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
+- System status-first linked refresh entry: [../system-status-update/prompts/system_status_to_handoff_refresh_prompt.md](../system-status-update/prompts/system_status_to_handoff_refresh_prompt.md)
 - Shared assessment output protocol: [../_protocol/skill_assessment_output.md](../_protocol/skill_assessment_output.md)
 
 ## 4. 核心模式（Pattern）
@@ -112,3 +113,4 @@ Output:
 - Human-oriented context: [README.md](README.md)
 - Reusable prompts: [prompts/reusable_prompts.md](prompts/reusable_prompts.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
+- System status-first linked refresh entry: [../system-status-update/prompts/system_status_to_handoff_refresh_prompt.md](../system-status-update/prompts/system_status_to_handoff_refresh_prompt.md)

@@ -21,6 +21,7 @@ This execution-focused skill definition keeps the behavior, invocation shape, an
 
 - Human-oriented context: [README.md](README.md)
 - Reusable prompts: [prompts/reusable_prompts.md](prompts/reusable_prompts.md)
+- System status to handoff refresh prompt: [prompts/system_status_to_handoff_refresh_prompt.md](prompts/system_status_to_handoff_refresh_prompt.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)
 - Shared assessment output protocol: [../_protocol/skill_assessment_output.md](../_protocol/skill_assessment_output.md)
 
@@ -117,4 +118,5 @@ Output:
 ### Supporting assets
 - Human-oriented context: [README.md](README.md)
 - Reusable prompts: [prompts/reusable_prompts.md](prompts/reusable_prompts.md)
+- System status to handoff refresh prompt: [prompts/system_status_to_handoff_refresh_prompt.md](prompts/system_status_to_handoff_refresh_prompt.md)
 - Invocation examples: [examples/invocation_examples.md](examples/invocation_examples.md)

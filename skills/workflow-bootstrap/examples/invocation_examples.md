@@ -168,7 +168,7 @@ Base branch: <base-branch>
 Remote name: <remote-name>
 Intended PR scope: <scope>
 Files intended for commit: <file-list>
-Authorization flags: commit=<yes|no>, push=<yes|no>, pr_create=<yes|no>, review_comment=<yes|no>
+Authorization flags: commit=<yes|no>, push=<yes|no>, pr=<yes|no>, comment=<yes|no>
 PR title: <pr-title>
 PR body file path: <pr-body-file-path>
 Review comment file path: <review-comment-file-path>

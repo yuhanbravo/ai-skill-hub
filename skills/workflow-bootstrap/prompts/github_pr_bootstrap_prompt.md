@@ -33,8 +33,8 @@ Inputs:
 - Authorization flags:
   - commit: <yes | no>
   - push: <yes | no>
-  - pr_create: <yes | no>
-  - review_comment: <yes | no>
+  - pr: <yes | no>
+  - comment: <yes | no>
 
 Preflight summary requested:
 - Current branch and base branch

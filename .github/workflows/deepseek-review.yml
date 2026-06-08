@@ -1,0 +1,44 @@
+name: DeepSeek Code Review
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
+  issue_comment:
+    types: [created]
+
+permissions:
+  pull-requests: write
+  issues: read
+
+jobs:
+  review-on-mention:
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@github-actions')) ||
+      (github.event_name == 'pull_request_target' && github.event.action != 'synchronize')
+    steps:
+      - name: DeepSeek Code Review
+        uses: hustcer/deepseek-review@v1
+        with:
+          chat-token: ${{ secrets.CHAT_TOKEN }}
+          watch-mention: "@github-actions"
+          allowed-associations: "OWNER,MEMBER,COLLABORATOR"
+          model: "deepseek-chat"
+          temperature: 0.1
+          max-length: 60000
+          exclude-patterns: "*.lock,*.log,*.min.js,*.map,dist/**,build/**"
+          sys-prompt: |
+            You are a strict but helpful code reviewer.
+            Focus only on logic errors, potential bugs, security issues, and obvious performance problems.
+            Ignore style, formatting, or typos.
+            Return your review as a JSON array:
+            [
+              {
+                "path": "file/relative/path",
+                "line": 42,
+                "severity": "high|medium|low",
+                "description": "problem description",
+                "suggestion": "how to fix"
+              }
+            ]
+            If no issues, return empty array [].

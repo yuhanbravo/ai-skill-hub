@@ -23,7 +23,7 @@ jobs:
       )
     steps:
       - name: DeepSeek Code Review
-        uses: hustcer/deepseek-review@v1
+        uses: hustcer/deepseek-review@2c55eac1c25bd36cc1565b0ab85d98b3b3a7f53a
         with:
           chat-token: ${{ secrets.CHAT_TOKEN }}
           watch-mention: "/deepseek-review"

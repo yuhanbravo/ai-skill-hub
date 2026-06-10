@@ -252,8 +252,10 @@ Exclude:
 
 ### Expected entry
 
-Reference `prompts/reusable_prompts.md` Template 2 with the project root, primary goal, config, report directory, dry-run, safe-fix, install, and script override fields narrowed to the requested scope.
+Reference `prompts/reusable_prompts.md` Template 2 as a scoped invocation shape, not as a full-repository takeover requirement.
+
+For limited-scope use, the mandatory fields are `Project root`, `Scope target`, `Path or reference`, `Primary goal`, `Dry run`, `Apply safe fixes`, and `Install`. `Config path`, `Report dir`, `Shared dir`, `Structure script override`, and `Docs script override` may be set to `none` when they are not relevant to the scoped target.
 
 ### Boundary
 
-Do not let limited-scope takeover silently become a full repository scan unless the user explicitly authorizes that expansion. If the limited target is an implementation task package rather than onboarding context, redirect to `chatgpt-handoff-pilot`.
+Keep scanning, evidence collection, risk identification, next actions, and output limited to the declared scope. The output should be a limited-scope onboarding or takeover note, not a full project takeover report, unless the user explicitly requests that expansion. If the limited target is an implementation task package rather than onboarding context, redirect to `chatgpt-handoff-pilot`.

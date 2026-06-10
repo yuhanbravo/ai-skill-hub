@@ -30,7 +30,7 @@ jobs:
           allowed-associations: "OWNER,MEMBER,COLLABORATOR"
           model: "deepseek-v4-pro"
           temperature: 0.3
-          max-length: 30000
+          max-length: 60000
           exclude-patterns: "*.lock,*.log,*.min.js,*.map,dist/**,build/**"
           sys-prompt: |
             You are a strict but helpful code reviewer.

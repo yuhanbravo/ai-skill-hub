@@ -128,7 +128,11 @@ Reference `prompts/skill-refactor.md`. If the caller has not provided `SCORECARD
 
 ### Boundary
 
-Use only after evaluation/governance findings identify a bounded, low-risk change. Do not use it for broad protocol redesign or cross-skill rewrites. Do not refactor prompt bodies, templates, scripts, tests, registry/index files, or workflow configuration unless those exact files are the authorized target for the single skill.
+Use only after evaluation/governance findings identify a bounded, low-risk change. Do not use it for broad protocol redesign or cross-skill rewrites.
+
+This refactor example is limited to controlled single-skill documentation and asset-entrypoint cleanup. Do not modify scripts, tests, registry/index files, workflow configuration, `.agents` wrappers, tools, or other skills through this entry.
+
+If evaluation identifies a need to change those excluded areas, report it as a separate follow-up task or PR recommendation instead of treating it as authorized refactor scope. Prompt bodies and templates should also remain unchanged unless a separate bounded prompt/template PR is explicitly approved.
 
 ## Example 4: Skill Refinement
 
